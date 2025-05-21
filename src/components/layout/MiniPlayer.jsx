@@ -249,7 +249,7 @@ const MiniPlayer = ({ song, isPlaying, onPlayPause }) => {
                 },
               }}
             >
-              {song?.artist || 'Unknown artist'}
+              {song?.type === 'podcast' ? song?.host : song?.artist || 'Unknown artist'}
             </Typography>
           </Box>
         </Box>
