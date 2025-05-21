@@ -18,15 +18,29 @@ const theme = createTheme({
       default: '#121212', // Spotify's dark background
       paper: '#1A1A1A', // Slightly lighter than the default background
       input: '#2a2a2a', // Spotify's input field background color
+      card: '#181818', // Card background color
+      cardHover: '#282828', // Card hover background color
+      gradient: {
+        overlay: 'rgba(0,0,0,0.2)',
+        overlayDark: 'rgba(0,0,0,0.8)',
+        content: 'linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(18,18,18,1) 100%)',
+      },
     },
     text: {
       primary: '#FFFFFF',
       secondary: '#b3b3b3', // Spotify's exact gray text color for secondary text
+      disabled: '#6b6b6b',
     },
     divider: '#282828', // Spotify's exact divider color
-    hover: {
-      row: '#282828', // Proper hover color for table rows
-    }
+    action: {
+      hover: '#282828', // Proper hover color for table rows
+      selected: '#282828',
+      disabled: '#6b6b6b',
+    },
+    common: {
+      black: '#000000',
+      white: '#FFFFFF',
+    },
   },
   typography: {
     fontFamily: '"Poppins", "Montserrat", "Roboto", sans-serif',
@@ -108,7 +122,7 @@ const theme = createTheme({
       },
       styleOverrides: {
         root: {
-          backgroundColor: '#121212', // Match Spotify's navbar color
+          backgroundColor: '#121212',
           borderBottom: '1px solid #282828',
         },
       },
@@ -116,11 +130,11 @@ const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: 500, // Pill-shaped buttons like Spotify
+          borderRadius: 500,
           padding: '6px 20px',
-          backgroundColor: '#031a44', // Dark blue for play button
+          backgroundColor: '#031a44',
           '&:hover': {
-            backgroundColor: '#50C5F9', // Light blue hover effect
+            backgroundColor: '#50C5F9',
           },
         },
         contained: {
@@ -129,16 +143,24 @@ const theme = createTheme({
             boxShadow: '0px 2px 6px rgba(0, 0, 0, 0.2)',
           },
         },
+        text: {
+          color: '#b3b3b3',
+          '&:hover': {
+            backgroundColor: 'transparent',
+            color: '#FFFFFF',
+          },
+        },
       },
     },
     MuiCard: {
       styleOverrides: {
         root: {
-          backgroundColor: '#1A1A1A',
+          backgroundColor: '#181818',
           '&:hover': {
-            backgroundColor: '#282828', // Consistent hover color
+            backgroundColor: '#282828',
+            transform: 'translateY(-4px)',
           },
-          transition: 'background-color 0.3s ease',
+          transition: 'all 0.3s ease',
         },
       },
     },
@@ -146,24 +168,82 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           '&:hover': {
-            backgroundColor: '#282828', // Proper hover color for table rows
+            backgroundColor: '#282828',
           },
+        },
+      },
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        root: {
+          borderBottom: 'none',
+          color: '#b3b3b3',
         },
       },
     },
     MuiInputBase: {
       styleOverrides: {
         root: {
-          backgroundColor: '#2a2a2a', // Spotify's input field style
+          backgroundColor: '#2a2a2a',
         },
       },
     },
     MuiDivider: {
       styleOverrides: {
         root: {
-          backgroundColor: '#282828', // Spotify's exact divider color
+          backgroundColor: '#282828',
         },
       },
+    },
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          color: '#b3b3b3',
+          fontWeight: 'bold',
+          textTransform: 'none',
+          minWidth: 100,
+          fontSize: '16px',
+          '&.Mui-selected': {
+            color: '#FFFFFF',
+          },
+        },
+      },
+    },
+    MuiTabs: {
+      styleOverrides: {
+        indicator: {
+          backgroundColor: '#50C5F9',
+        },
+      },
+    },
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          color: '#b3b3b3',
+          '&:hover': {
+            backgroundColor: 'transparent',
+            color: '#FFFFFF',
+          },
+        },
+      },
+    },
+    MuiCircularProgress: {
+      styleOverrides: {
+        root: {
+          color: '#50C5F9',
+        },
+      },
+    },
+  },
+  transitions: {
+    duration: {
+      shortest: 150,
+      shorter: 200,
+      short: 250,
+      standard: 300,
+      complex: 375,
+      enteringScreen: 225,
+      leavingScreen: 195,
     },
   },
 });

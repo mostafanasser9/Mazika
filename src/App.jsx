@@ -9,6 +9,7 @@ import HomePage from './pages/HomePage';
 import PlaylistPage from './pages/PlaylistPage'; // <- use this real one
 import Navbar from './components/layout/Navbar';
 import ArtistPage from './pages/ArtistPage';
+import AlbumPage from './pages/AlbumPage';
 
 function App() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -22,6 +23,7 @@ function App() {
           <Route path="/" element={<HomePage searchQuery={searchQuery} />} />
           <Route path="/playlist" element={<PlaylistPage />} />
           <Route path="/artist/:id" element={<ArtistPage />} />
+          <Route path="/album/:id" element={<AlbumPage />} />
           {/* Add more routes as needed */} 
         </Routes>
       </BrowserRouter>

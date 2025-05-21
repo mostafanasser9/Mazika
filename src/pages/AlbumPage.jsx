@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   Box,
   Typography,
@@ -32,188 +33,41 @@ import ShareIcon from '@mui/icons-material/Share';
 import Sidebar from '../components/layout/Sidebar';
 import Footer from '../components/layout/Footer';
 import MiniPlayer, { MINIPLAYER_HEIGHT } from '../components/layout/Miniplayer';
+import { getAlbumById } from '../data/albums';
 
 const sidebarWidth = 240;
 const NAVBAR_HEIGHT = 64;
 
-// Example album data - replace with actual data source
-const exampleAlbum = {
-  id: 1,
-  title: "After Hours",
-  artist: "The Weeknd",
-  artistId: 1,
-  releaseDate: "March 20, 2020",
-  albumType: "Album",
-  coverImage: "https://picsum.photos/500/500?random=11",
-  totalTracks: 14,
-  totalDuration: "56:12",
-  label: "XO / Republic Records",
-  popularity: 85,
-  tracks: [
-    { 
-      id: 1, 
-      number: 1,
-      title: "Alone Again", 
-      duration: "4:10",
-      playCount: "248,156,789",
-      explicit: true,
-    },
-    { 
-      id: 2, 
-      number: 2,
-      title: "Too Late", 
-      duration: "3:59",
-      playCount: "196,345,278",
-      explicit: true,
-    },
-    { 
-      id: 3, 
-      number: 3,
-      title: "Hardest To Love", 
-      duration: "3:31",
-      playCount: "215,675,432",
-      explicit: false,
-    },
-    { 
-      id: 4, 
-      number: 4,
-      title: "Scared To Live", 
-      duration: "3:11",
-      playCount: "187,562,342",
-      explicit: false,
-    },
-    { 
-      id: 5, 
-      number: 5,
-      title: "Snowchild", 
-      duration: "4:07",
-      playCount: "201,342,876",
-      explicit: true,
-    },
-    { 
-      id: 6, 
-      number: 6,
-      title: "Escape From LA", 
-      duration: "5:56",
-      playCount: "176,432,190",
-      explicit: true,
-    },
-    { 
-      id: 7, 
-      number: 7,
-      title: "Heartless", 
-      duration: "3:21",
-      playCount: "389,765,432",
-      explicit: true,
-    },
-    { 
-      id: 8, 
-      number: 8,
-      title: "Faith", 
-      duration: "4:43",
-      playCount: "234,567,123",
-      explicit: true,
-    },
-    { 
-      id: 9, 
-      number: 9,
-      title: "Blinding Lights", 
-      duration: "3:20",
-      playCount: "3,242,125,689",
-      explicit: false,
-    },
-    { 
-      id: 10, 
-      number: 10,
-      title: "In Your Eyes", 
-      duration: "3:57",
-      playCount: "786,543,210",
-      explicit: false,
-    },
-    { 
-      id: 11, 
-      number: 11,
-      title: "Save Your Tears", 
-      duration: "3:35",
-      playCount: "1,784,526,789",
-      explicit: false,
-    },
-    { 
-      id: 12, 
-      number: 12,
-      title: "Repeat After Me (Interlude)", 
-      duration: "3:15",
-      playCount: "156,432,876",
-      explicit: true,
-    },
-    { 
-      id: 13, 
-      number: 13,
-      title: "After Hours", 
-      duration: "6:01",
-      playCount: "742,156,789",
-      explicit: true,
-    },
-    { 
-      id: 14, 
-      number: 14,
-      title: "Until I Bleed Out", 
-      duration: "3:10",
-      playCount: "178,654,321",
-      explicit: true,
-    },
-  ],
-  credits: [
-    { role: "Producer", name: "The Weeknd, Max Martin, Oscar Holter" },
-    { role: "Songwriter", name: "The Weeknd, Ahmad Balshe, Jason Quenneville, Max Martin" },
-    { role: "Mixing Engineer", name: "Serban Ghenea" },
-    { role: "Mastering Engineer", name: "Dave Kutch" },
-  ],
-  copyright: "© 2020 The Weeknd XO, Inc., Marketed by Republic Records, a division of UMG Recordings, Inc.",
-  relatedAlbums: [
-    {
-      id: 2,
-      title: "Starboy",
-      artist: "The Weeknd",
-      coverImage: "https://picsum.photos/300/300?random=12",
-      releaseYear: "2016"
-    },
-    {
-      id: 3,
-      title: "Dawn FM",
-      artist: "The Weeknd",
-      coverImage: "https://picsum.photos/300/300?random=15",
-      releaseYear: "2022"
-    },
-    {
-      id: 4,
-      title: "Beauty Behind the Madness",
-      artist: "The Weeknd",
-      coverImage: "https://picsum.photos/300/300?random=13",
-      releaseYear: "2015"
-    },
-    {
-      id: 5,
-      title: "My Dear Melancholy,",
-      artist: "The Weeknd",
-      coverImage: "https://picsum.photos/300/300?random=14",
-      releaseYear: "2018"
-    }
-  ]
-};
-
-export default function AlbumPage({ album = exampleAlbum }) {
-  const [miniPlayerSong, setMiniPlayerSong] = useState(null);
-  const [loading, setLoading] = useState(false);
+export default function AlbumPage() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [album, setAlbum] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
+  const [miniPlayerSong, setMiniPlayerSong] = useState(null);
   const [currentlyPlayingTrackId, setCurrentlyPlayingTrackId] = useState(null);
 
-  // Calculate total duration in readable format (when real data is provided)
-  const formatDuration = (totalSeconds) => {
-    const minutes = Math.floor(totalSeconds / 60);
-    const seconds = totalSeconds % 60;
-    return `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+  useEffect(() => {
+    const fetchAlbum = () => {
+      setLoading(true);
+      const albumData = getAlbumById(id);
+      if (albumData) {
+        setAlbum(albumData);
+      } else {
+        // Handle album not found
+        navigate('/');
+      }
+      setLoading(false);
+    };
+
+    fetchAlbum();
+  }, [id, navigate]);
+
+  const handleArtistClick = () => {
+    if (album) {
+      navigate(`/artist/${album.artistId}`);
+    }
   };
 
   const handleLikeAlbum = () => {
@@ -278,6 +132,18 @@ export default function AlbumPage({ album = exampleAlbum }) {
     
     return `${totalMinutes} min ${totalSeconds} sec`;
   };
+
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (!album) {
+    return null;
+  }
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', bgcolor: 'background.default' }}>
@@ -383,6 +249,7 @@ export default function AlbumPage({ album = exampleAlbum }) {
                             cursor: 'pointer'
                           }
                         }}
+                        onClick={handleArtistClick}
                       >
                         {album.artist}
                       </Typography>

@@ -28,7 +28,7 @@ import { useNavigate } from 'react-router-dom';
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: 500,
-  backgroundColor: alpha(theme.palette.common.white, 0.1),
+  backgroundColor: theme.palette.background.input,
   '&:hover': {
     backgroundColor: alpha(theme.palette.common.white, 0.15),
   },
@@ -39,21 +39,27 @@ const Search = styled('div')(({ theme }) => ({
     marginLeft: theme.spacing(3),
     width: 'auto',
   },
-  transition: 'background-color 0.3s ease',
+  transition: theme.transitions.create('background-color'),
+  display: 'flex',
+  alignItems: 'center',
 }));
 
 const SearchIconWrapper = styled('div')(({ theme }) => ({
   padding: theme.spacing(0, 2),
   height: '100%',
   position: 'absolute',
-  pointerEvents: 'none',
+  left: 0,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
+  color: theme.palette.text.secondary,
+  pointerEvents: 'none',
+  zIndex: 1,
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
+  color: theme.palette.text.primary,
+  width: '100%',
   '& .MuiInputBase-input': {
     padding: theme.spacing(1, 1, 1, 0),
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
@@ -139,7 +145,7 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
         {/* Search Bar */}
         <Search sx={{ flexGrow: 1, maxWidth: { xs: '100%', md: '400px' }, mx: 'auto' }}>
           <SearchIconWrapper>
-            <SearchIcon />
+            <SearchIcon sx={{ fontSize: 20 }} />
           </SearchIconWrapper>
           <StyledInputBase
             placeholder="Search…"
@@ -150,25 +156,55 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
           />
         </Search>
 
-  {/* Auth Buttons */}
-<Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-  <Button
-    variant="contained"
-    sx={{
-      backgroundColor: 'inherit',
-      color: '#fff',
-      '&:hover': {
-        backgroundColor: '#222',
-      },
-    }}
-  >
-    Login
-  </Button>
-  <Button variant="contained" color="primary" sx={{ ml: 2 }}>
-    Sign Up
-  </Button>
-</Box>
-
+        {/* Auth Buttons */}
+        <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 2 }}>
+          <Button
+            variant="text"
+            sx={{
+              color: 'text.secondary',
+              fontSize: '0.9rem',
+              backgroundColor: 'transparent',
+              transition: 'color 0.2s ease-in-out',
+              '&:hover': {
+                color: 'text.primary',
+                backgroundColor: 'transparent',
+              },
+            }}
+          >
+            Become Premium
+          </Button>
+          <Button
+            variant="text"
+            sx={{
+              color: 'text.secondary',
+              fontSize: '0.9rem',
+              backgroundColor: 'transparent',
+              transition: 'color 0.2s ease-in-out',
+              '&:hover': {
+                color: 'text.primary',
+                backgroundColor: 'transparent',
+              },
+            }}
+          >
+            Login
+          </Button>
+          <Button 
+            variant="contained" 
+            color="primary" 
+            sx={{ 
+              px: 3,
+              py: 1,
+              fontSize: '1rem',
+              transition: 'transform 0.2s ease-in-out',
+              '&:hover': {
+                backgroundColor: 'primary.main',
+                transform: 'scale(1.1)',
+              },
+            }}
+          >
+            Sign Up
+          </Button>
+        </Box>
       </Toolbar>
 
       {/* Drawer for mobile */}
@@ -179,7 +215,11 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
         ModalProps={{ keepMounted: true }}
         sx={{
           display: { xs: 'block', md: 'none' },
-          '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 250 },
+          '& .MuiDrawer-paper': { 
+            boxSizing: 'border-box', 
+            width: 250,
+            bgcolor: 'background.paper',
+          },
         }}
       >
         {drawer}
