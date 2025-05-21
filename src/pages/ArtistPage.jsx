@@ -51,6 +51,8 @@ export default function ArtistPage() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
+  const [miniPlayerSong, setMiniPlayerSong] = useState(null);
+  const [currentlyPlayingSongId, setCurrentlyPlayingSongId] = useState(null);
 
   useEffect(() => {
     const fetchArtist = () => {
@@ -80,8 +82,58 @@ export default function ArtistPage() {
   };
 
   const handlePlayArtist = () => {
-    setIsPlaying(!isPlaying);
-    // Add your play logic here
+    if (artist.popularSongs.length > 0) {
+      // Set the first track if nothing is playing
+      if (!miniPlayerSong) {
+        const firstTrack = {
+          ...artist.popularSongs[0],
+          artist: artist.name,
+          img: artist.popularSongs[0].img.startsWith('/') ? artist.popularSongs[0].img : `/${artist.popularSongs[0].img}`
+        };
+        setMiniPlayerSong(firstTrack);
+        setCurrentlyPlayingSongId(firstTrack.id);
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
+  const handlePlaySong = (song) => {
+    const trackToPlay = {
+      ...song,
+      artist: artist.name,
+      img: song.img.startsWith('/') ? song.img : `/${song.img}`
+    };
+    setMiniPlayerSong(trackToPlay);
+    setCurrentlyPlayingSongId(song.id);
+    setIsPlaying(true);
+  };
+
+  const handlePlayPauseSong = (song) => {
+    if (currentlyPlayingSongId === song.id) {
+      // If the same song is clicked, toggle play/pause
+      setIsPlaying(!isPlaying);
+    } else {
+      // If a different song is clicked, play it
+      handlePlaySong(song);
+    }
+  };
+
+  const handleNextSong = () => {
+    if (!artist || !artist.popularSongs.length) return;
+    
+    const currentIndex = artist.popularSongs.findIndex(song => song.id === currentlyPlayingSongId);
+    const nextIndex = (currentIndex + 1) % artist.popularSongs.length;
+    const nextSong = artist.popularSongs[nextIndex];
+    handlePlaySong(nextSong);
+  };
+
+  const handlePreviousSong = () => {
+    if (!artist || !artist.popularSongs.length) return;
+    
+    const currentIndex = artist.popularSongs.findIndex(song => song.id === currentlyPlayingSongId);
+    const prevIndex = (currentIndex - 1 + artist.popularSongs.length) % artist.popularSongs.length;
+    const prevSong = artist.popularSongs[prevIndex];
+    handlePlaySong(prevSong);
   };
 
   const handleLikeArtist = () => {
@@ -372,20 +424,105 @@ export default function ArtistPage() {
                             {artist.popularSongs.map((song, index) => (
                               <TableRow 
                                 key={song.id}
-                                onClick={() => handleAlbumClick(song.albumId)}
+                                onClick={() => handlePlaySong(song)}
                                 sx={{ 
                                   cursor: 'pointer',
                                   '&:last-child td, &:last-child th': { border: 0 },
+                                  bgcolor: currentlyPlayingSongId === song.id ? 'rgba(80, 197, 249, 0.1)' : 'transparent',
                                 }}
                               >
                                 <TableCell 
                                   sx={{ 
-                                    color: 'text.secondary',
-                                    fontWeight: 'normal',
-                                    borderBottom: 'none'
+                                    color: currentlyPlayingSongId === song.id ? 'primary.light' : '#b3b3b3',
+                                    fontWeight: currentlyPlayingSongId === song.id ? 'bold' : 'normal',
+                                    borderBottom: 'none',
+                                    position: 'relative'
                                   }}
                                 >
-                                  {index + 1}
+                                  <Box 
+                                    sx={{ 
+                                      display: 'flex', 
+                                      justifyContent: 'center', 
+                                      alignItems: 'center', 
+                                      width: '16px', 
+                                      height: '16px',
+                                      '&:hover': {
+                                        '& .play-icon': {
+                                          display: 'flex'
+                                        },
+                                        '& .track-number': {
+                                          display: 'none'
+                                        }
+                                      }
+                                    }}
+                                  >
+                                    {currentlyPlayingSongId === song.id && isPlaying ? (
+                                      <Box 
+                                        sx={{ 
+                                          '&:hover': {
+                                            '& .equalizer': {
+                                              display: 'none'
+                                            },
+                                            '& .play-icon': {
+                                              display: 'flex'
+                                            }
+                                          }
+                                        }}
+                                      >
+                                        <img 
+                                          className="equalizer"
+                                          src="/images/equalizer.gif" 
+                                          alt="Playing"
+                                          style={{ width: '16px', height: '16px' }}
+                                        />
+                                        <Box 
+                                          className="play-icon"
+                                          sx={{ 
+                                            display: 'none',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            color: 'white',
+                                            cursor: 'pointer'
+                                          }}
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            handlePlayPauseSong(song);
+                                          }}
+                                        >
+                                          <PauseIcon sx={{ fontSize: 16 }} />
+                                        </Box>
+                                      </Box>
+                                    ) : (
+                                      <>
+                                        <Box 
+                                          className="track-number"
+                                          sx={{ 
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            alignItems: 'center'
+                                          }}
+                                        >
+                                          {index + 1}
+                                        </Box>
+                                        <Box 
+                                          className="play-icon"
+                                          sx={{ 
+                                            display: 'none',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            color: 'white',
+                                            cursor: 'pointer'
+                                          }}
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            handlePlayPauseSong(song);
+                                          }}
+                                        >
+                                          <PlayArrowIcon sx={{ fontSize: 16 }} />
+                                        </Box>
+                                      </>
+                                    )}
+                                  </Box>
                                 </TableCell>
                                 <TableCell sx={{ borderBottom: 'none' }}>
                                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
@@ -399,8 +536,8 @@ export default function ArtistPage() {
                                       <Typography 
                                         variant="body1"
                                         sx={{ 
-                                          color: 'text.primary',
-                                          fontWeight: 'normal',
+                                          color: currentlyPlayingSongId === song.id ? 'primary.light' : 'white',
+                                          fontWeight: currentlyPlayingSongId === song.id ? 'bold' : 'normal',
                                         }}
                                       >
                                         {song.title}
@@ -467,7 +604,13 @@ export default function ArtistPage() {
       </Box>
 
       {/* Mini Player */}
-      <MiniPlayer />
+      <MiniPlayer 
+        song={miniPlayerSong} 
+        isPlaying={isPlaying}
+        onPlayPause={setIsPlaying}
+        onNext={handleNextSong}
+        onPrevious={handlePreviousSong}
+      />
 
       {/* Footer */}
       <Footer />

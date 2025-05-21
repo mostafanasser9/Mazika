@@ -21,9 +21,11 @@ import {
   Home as HomeIcon,
   Menu as MenuIcon,
   MusicNote as MusicNoteIcon,
+  ArrowBack as ArrowBackIcon,
+  ArrowForward as ArrowForwardIcon,
 } from '@mui/icons-material';
 import { styled, alpha } from '@mui/material/styles';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -117,8 +119,8 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [mobileOpen, setMobileOpen] = React.useState(false);
-
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -130,6 +132,14 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
 
   const goToHome = () => {
     navigate('/');
+  };
+
+  const goBack = () => {
+    navigate(-1);
+  };
+
+  const goForward = () => {
+    navigate(1);
   };
 
   const drawer = (
@@ -169,9 +179,34 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
         </Box>
 
         {!isMobile && (
-          <IconButton color="inherit" sx={{ ml: 3 }} onClick={goToHome}>
-            <HomeIcon />
-          </IconButton>
+          <Box sx={{ display: 'flex', alignItems: 'center', ml: 3 }}>
+            <IconButton 
+              color="inherit" 
+              onClick={goBack}
+              sx={{
+                transition: theme.transitions.create(['transform', 'color']),
+                '&:hover': {
+                  transform: 'scale(1.1)',
+                  color: 'primary.light',
+                },
+              }}
+            >
+              <ArrowBackIcon />
+            </IconButton>
+            <IconButton 
+              color="inherit" 
+              onClick={goForward}
+              sx={{
+                transition: theme.transitions.create(['transform', 'color']),
+                '&:hover': {
+                  transform: 'scale(1.1)',
+                  color: 'primary.light',
+                },
+              }}
+            >
+              <ArrowForwardIcon />
+            </IconButton>
+          </Box>
         )}
 
         {/* Search Bar */}

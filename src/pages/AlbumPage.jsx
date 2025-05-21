@@ -88,7 +88,7 @@ export default function AlbumPage() {
           ...album.tracks[0],
           album: album.title,
           artist: album.artist,
-          coverImage: album.coverImage
+          img: album.coverImage.startsWith('/') ? album.coverImage : `/${album.coverImage}`
         };
         setMiniPlayerSong(firstTrack);
         setCurrentlyPlayingTrackId(firstTrack.id);
@@ -102,11 +102,39 @@ export default function AlbumPage() {
       ...track,
       album: album.title,
       artist: album.artist,
-      coverImage: album.coverImage
+      img: album.coverImage.startsWith('/') ? album.coverImage : `/${album.coverImage}`
     };
     setMiniPlayerSong(trackToPlay);
     setCurrentlyPlayingTrackId(track.id);
     setIsPlaying(true);
+  };
+
+  const handlePlayPauseTrack = (track) => {
+    if (currentlyPlayingTrackId === track.id) {
+      // If the same track is clicked, toggle play/pause
+      setIsPlaying(!isPlaying);
+    } else {
+      // If a different track is clicked, play it
+      handlePlayTrack(track);
+    }
+  };
+
+  const handleNextTrack = () => {
+    if (!album || !album.tracks.length) return;
+    
+    const currentIndex = album.tracks.findIndex(track => track.id === currentlyPlayingTrackId);
+    const nextIndex = (currentIndex + 1) % album.tracks.length;
+    const nextTrack = album.tracks[nextIndex];
+    handlePlayTrack(nextTrack);
+  };
+
+  const handlePreviousTrack = () => {
+    if (!album || !album.tracks.length) return;
+    
+    const currentIndex = album.tracks.findIndex(track => track.id === currentlyPlayingTrackId);
+    const prevIndex = (currentIndex - 1 + album.tracks.length) % album.tracks.length;
+    const prevTrack = album.tracks[prevIndex];
+    handlePlayTrack(prevTrack);
   };
 
   // Format play count to shorter format (e.g. 1.2M)
@@ -363,23 +391,97 @@ export default function AlbumPage() {
                           >
                             <TableCell 
                               sx={{ 
-                                color: currentlyPlayingTrackId === track.id ? '#50C5F9' : '#b3b3b3',
+                                color: currentlyPlayingTrackId === track.id ? 'primary.light' : '#b3b3b3',
                                 fontWeight: currentlyPlayingTrackId === track.id ? 'bold' : 'normal',
                                 borderBottom: 'none',
-                                width: '40px'
+                                width: '40px',
+                                position: 'relative'
                               }}
                             >
-                              {currentlyPlayingTrackId === track.id && isPlaying ? (
-                                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '16px', height: '16px' }}>
-                                  <img 
-                                    src="data:image/gif;base64,R0lGODlhFAAUALMIAPh2AP92AP+IAP+ZAP+zAJkAAMwAAP/MAP///wAAAAAAAAAAAAAAAAAAAAAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQFCgAIACwAAAAAFAAUAAAEUxDJSau9iBDMtebTMEjehgTqJwiZp5QWBRIM6w3b90E3YgEFq+FmVHBkhLBTkgQ5dEaxGqeKxNIS34rgYKDYlCTCINowhVlvyRC51IKy76GYqXWuJAgAIfkEBQoACAAsCAABAA0AEgAABDYQyEkrurXsxRj91FMVfF1yjoSZuVskKCQGQGw3XA9oVMsRBGVCLZVK+M8q1MhUOkGSxwpJ9sJJAgAh+QQFCgAIACwJAAIACwARAAAEMRDICQK9Cuu9xoBweuJIXDJJBXmZ6MdmEo4eqq5RmMwEe9MyUPNE0dUr0QiSkCHPiiQAIfkEBQoACAAsCQADAAoAEgAABC4QSAmLtSsAEXPb8v7bZnFVOJ3WlCnDOUgBrwbLd5O5yT6FLqFFCTSXocdKRQIAIfkEBQoACAAsCQAEAAoAEgAABC8QSAmLtSsAETt8svr/X1ZWeZ0UlcElnQWsKsF0j+YkpFBzb16FISg1n8ZnJQEYAgAh+QQFCgAIACwJAAMADQARAAAEPBDJSau9OOvNe1VhdkVpJoSbF5Jpa8JmBUVz3GE8K3xTT2hbMrLDmYAi1ME2NMkWyVEDyTBVOmKIInRkCQA7" 
-                                    alt="Playing"
-                                    style={{ width: '16px', height: '16px' }}
-                                  />
-                                </Box>
-                              ) : (
-                                track.number
-                              )}
+                              <Box 
+                                sx={{ 
+                                  display: 'flex', 
+                                  justifyContent: 'center', 
+                                  alignItems: 'center', 
+                                  width: '16px', 
+                                  height: '16px',
+                                  '&:hover': {
+                                    '& .play-icon': {
+                                      display: 'flex'
+                                    },
+                                    '& .track-number': {
+                                      display: 'none'
+                                    }
+                                  }
+                                }}
+                              >
+                                {currentlyPlayingTrackId === track.id && isPlaying ? (
+                                  <Box 
+                                    sx={{ 
+                                      '&:hover': {
+                                        '& .equalizer': {
+                                          display: 'none'
+                                        },
+                                        '& .play-icon': {
+                                          display: 'flex'
+                                        }
+                                      }
+                                    }}
+                                  >
+                                    <img 
+                                      className="equalizer"
+                                      src="/images/equalizer.gif" 
+                                      alt="Playing"
+                                      style={{ width: '16px', height: '16px' }}
+                                    />
+                                    <Box 
+                                      className="play-icon"
+                                      sx={{ 
+                                        display: 'none',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        color: 'white',
+                                        cursor: 'pointer'
+                                      }}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handlePlayPauseTrack(track);
+                                      }}
+                                    >
+                                      <PauseIcon sx={{ fontSize: 16 }} />
+                                    </Box>
+                                  </Box>
+                                ) : (
+                                  <>
+                                    <Box 
+                                      className="track-number"
+                                      sx={{ 
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center'
+                                      }}
+                                    >
+                                      {track.number}
+                                    </Box>
+                                    <Box 
+                                      className="play-icon"
+                                      sx={{ 
+                                        display: 'none',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        color: 'white',
+                                        cursor: 'pointer'
+                                      }}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handlePlayPauseTrack(track);
+                                      }}
+                                    >
+                                      <PlayArrowIcon sx={{ fontSize: 16 }} />
+                                    </Box>
+                                  </>
+                                )}
+                              </Box>
                             </TableCell>
                             <TableCell sx={{ borderBottom: 'none' }}>
                               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
@@ -393,7 +495,7 @@ export default function AlbumPage() {
                                   <Typography 
                                     variant="body1"
                                     sx={{ 
-                                      color: currentlyPlayingTrackId === track.id ? '#50C5F9' : 'white',
+                                      color: currentlyPlayingTrackId === track.id ? 'primary.light' : 'white',
                                       fontWeight: currentlyPlayingTrackId === track.id ? 'bold' : 'normal',
                                     }}
                                   >
@@ -487,6 +589,8 @@ export default function AlbumPage() {
         song={miniPlayerSong} 
         isPlaying={isPlaying}
         onPlayPause={setIsPlaying}
+        onNext={handleNextTrack}
+        onPrevious={handlePreviousTrack}
       />
 
       {/* Footer */}
