@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
   useTheme,
   IconButton,
   Slider,
+  Tooltip,
 } from '@mui/material';
 
 import ShuffleIcon from '@mui/icons-material/Shuffle';
@@ -17,7 +18,7 @@ import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 
 const sidebarWidth = 240;
-const MINIPLAYER_HEIGHT = 70;
+export const MINIPLAYER_HEIGHT = 70;
 
 // Play Button toggles between PlayArrowIcon and PauseIcon
 export const PlayButton = ({ onClick, isPlaying, size = 40, ariaLabel }) => {
@@ -27,19 +28,39 @@ export const PlayButton = ({ onClick, isPlaying, size = 40, ariaLabel }) => {
       onClick={onClick}
       aria-label={ariaLabel}
       sx={{
-        bgcolor: theme.palette.primary.light,
+        bgcolor: 'white',
         width: size,
         height: size,
+        transition: theme.transitions.create(['background-color', 'transform', 'box-shadow'], {
+          duration: theme.transitions.duration.shorter,
+          easing: theme.transitions.easing.easeInOut,
+        }),
         '&:hover': {
-          bgcolor: theme.palette.primary.main,
+          bgcolor: 'white',
+          transform: 'scale(1.1)',
+          boxShadow: theme.shadows[8],
         },
-        boxShadow: '0 4px 8px rgb(0 0 0 / 0.3)',
+        boxShadow: theme.shadows[4],
       }}
     >
       {isPlaying ? (
-        <PauseIcon sx={{ color: 'white', fontSize: size * 0.6 }} />
+        <PauseIcon sx={{ 
+          color: 'black', 
+          fontSize: size * 0.6,
+          transition: theme.transitions.create('transform', {
+            duration: theme.transitions.duration.shorter,
+            easing: theme.transitions.easing.easeInOut,
+          }),
+        }} />
       ) : (
-        <PlayArrowIcon sx={{ color: 'white', fontSize: size * 0.6 }} />
+        <PlayArrowIcon sx={{ 
+          color: 'black', 
+          fontSize: size * 0.6,
+          transition: theme.transitions.create('transform', {
+            duration: theme.transitions.duration.shorter,
+            easing: theme.transitions.easing.easeInOut,
+          }),
+        }} />
       )}
     </IconButton>
   );
@@ -56,11 +77,27 @@ const MiniPlayer = ({ song, onClose }) => {
   const theme = useTheme();
   const [shuffleActive, setShuffleActive] = useState(false);
   const [repeatActive, setRepeatActive] = useState(false);
-  const [progress, setProgress] = useState(30);
-  const duration = 240;
+  const [progress, setProgress] = useState(0);
+  const [duration, setDuration] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(50);
   const [muted, setMuted] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+
+  useEffect(() => {
+    if (isPlaying) {
+      const timer = setInterval(() => {
+        setCurrentTime((prev) => {
+          if (prev >= duration) {
+            setIsPlaying(false);
+            return 0;
+          }
+          return prev + 1;
+        });
+      }, 1000);
+      return () => clearInterval(timer);
+    }
+  }, [isPlaying, duration]);
 
   if (!song) return null;
 
@@ -80,6 +117,11 @@ const MiniPlayer = ({ song, onClose }) => {
     setMuted(!muted);
   };
 
+  const handleProgressChange = (e, val) => {
+    setProgress(val);
+    setCurrentTime((val / 100) * duration);
+  };
+
   return (
     <Box
       sx={{
@@ -88,235 +130,270 @@ const MiniPlayer = ({ song, onClose }) => {
         left: 0,
         right: 0,
         height: `${MINIPLAYER_HEIGHT}px`,
-        bgcolor: '#121212',
+        bgcolor: 'background.paper',
         display: 'flex',
         alignItems: 'center',
         padding: '0 16px',
         zIndex: 1500,
-        boxShadow: '0 -2px 8px rgba(0,0,0,0.7)',
+        boxShadow: theme.shadows[8],
+        borderTop: `1px solid ${theme.palette.divider}`,
+        transition: theme.transitions.create(['transform', 'opacity'], {
+          duration: theme.transitions.duration.shorter,
+          easing: theme.transitions.easing.easeInOut,
+        }),
       }}
     >
-      {/* Song Image */}
-      <Box sx={{ display: 'flex', alignItems: 'center', minWidth: 160, mr: 2 }}>
-        <Box
-          component="img"
-          src={song.img}
-          alt={title}
-          sx={{ width: 48, height: 48, borderRadius: 1, mr: 1.5 }}
-        />
-        <Box sx={{ overflow: 'hidden', minWidth: 0 }}>
-          <Typography
-            variant="subtitle1"
-            sx={{
-              color: 'white',
-              fontWeight: 'bold',
-              fontSize: '0.9rem',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              width: '100%',
-              display: 'block',
-            }}
-          >
-            {title}
-          </Typography>
-          <Typography
-            variant="subtitle2"
-            sx={{
-              color: 'grey.500',
-              fontSize: '0.75rem',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              width: '100%',
-              display: 'block',
-            }}
-          >
-            {subtitle}
-          </Typography>
-        </Box>
-      </Box>
-
-      {/* Controls */}
       <Box
         sx={{
-          flexGrow: 1,
           display: 'flex',
-          flexDirection: 'column',
           alignItems: 'center',
-          justifyContent: 'center',
-          mx: 2,
-          color: 'grey.400',
-          userSelect: 'none',
-          minWidth: 0,
+          justifyContent: 'space-between',
+          width: '100%',
+          height: '100%',
+          px: 2,
         }}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
-          {/* Shuffle */}
-          <IconButton
-            onClick={() => setShuffleActive(!shuffleActive)}
-            aria-label="Shuffle"
+        {/* Left section - Song info */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '30%' }}>
+          <Box
+            component="img"
+            src={song?.img || 'images/default-cover.jpeg'}
+            alt={song?.title || 'No song playing'}
             sx={{
-              color: shuffleActive ? theme.palette.primary.light : 'inherit',
-              transition: 'color 0.3s',
+              width: 56,
+              height: 56,
+              borderRadius: 1,
+              objectFit: 'cover',
+              transition: theme.transitions.create('transform', {
+                duration: theme.transitions.duration.shorter,
+                easing: theme.transitions.easing.easeInOut,
+              }),
               '&:hover': {
-                color: theme.palette.primary.light,
-                transform: 'scale(1.1)',
+                transform: 'scale(1.05)',
               },
-              padding: '4px',
             }}
-            size="small"
-          >
-            <ShuffleIcon fontSize="small" />
-          </IconButton>
-
-          {/* Previous */}
-          <IconButton
-            aria-label="Previous"
-            sx={{
-              '&:hover': {
-                color: theme.palette.primary.light,
-                transform: 'scale(1.1)',
-              },
-              transition: 'color 0.3s, transform 0.3s',
-              padding: '4px',
-            }}
-            size="small"
-          >
-            <SkipPreviousIcon fontSize="small" />
-          </IconButton>
-
-          {/* Play/Pause */}
-          <PlayButton
-            size={40}
-            ariaLabel={isPlaying ? 'Pause' : 'Play'}
-            isPlaying={isPlaying}
-            onClick={handlePlayPause}
           />
-
-          {/* Next */}
-          <IconButton
-            aria-label="Next"
-            sx={{
-              '&:hover': {
-                color: theme.palette.primary.light,
-                transform: 'scale(1.1)',
-              },
-              transition: 'color 0.3s, transform 0.3s',
-              padding: '4px',
-            }}
-            size="small"
-          >
-            <SkipNextIcon fontSize="small" />
-          </IconButton>
-
-          {/* Repeat */}
-          <IconButton
-            onClick={() => setRepeatActive(!repeatActive)}
-            aria-label="Repeat"
-            sx={{
-              color: repeatActive ? theme.palette.primary.light : 'inherit',
-              transition: 'color 0.3s',
-              '&:hover': {
-                color: theme.palette.primary.light,
-                transform: 'scale(1.1)',
-              },
-              padding: '4px',
-            }}
-            size="small"
-          >
-            <RepeatIcon fontSize="small" />
-          </IconButton>
+          <Box sx={{ minWidth: 0 }}>
+            <Typography
+              variant="subtitle1"
+              sx={{
+                fontWeight: 'normal',
+                fontSize: '0.9rem',
+                color: 'text.primary',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                transition: theme.transitions.create('opacity'),
+                '&:hover': {
+                  opacity: 0.8,
+                },
+              }}
+            >
+              {song?.title || 'No song playing'}
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{
+                color: 'text.secondary',
+                fontSize: '0.8rem',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                transition: theme.transitions.create('opacity'),
+                '&:hover': {
+                  opacity: 0.8,
+                },
+              }}
+            >
+              {song?.artist || 'Unknown artist'}
+            </Typography>
+          </Box>
         </Box>
 
-        {/* Progress bar */}
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            width: '100%',
-            gap: 1,
-            userSelect: 'none',
-          }}
-        >
-          <Typography sx={{ fontSize: '0.65rem', color: 'grey.500', width: 30, textAlign: 'right', flexShrink: 0 }}>
-            {formatTime(progress)}
-          </Typography>
+        {/* Center section - Playback controls */}
+        <Box sx={{ 
+          display: 'flex', 
+          flexDirection: 'column', 
+          alignItems: 'center', 
+          gap: 1,
+          width: '40%',
+          position: 'absolute',
+          left: '50%',
+          transform: 'translateX(-50%)',
+        }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <IconButton
+              size="small"
+              sx={{
+                color: 'text.secondary',
+                transition: theme.transitions.create(['color', 'transform'], {
+                  duration: theme.transitions.duration.shorter,
+                  easing: theme.transitions.easing.easeInOut,
+                }),
+                '&:hover': {
+                  color: 'text.primary',
+                  transform: 'scale(1.1)',
+                },
+              }}
+            >
+              <ShuffleIcon />
+            </IconButton>
+            <IconButton
+              size="small"
+              sx={{
+                color: 'text.secondary',
+                transition: theme.transitions.create(['color', 'transform'], {
+                  duration: theme.transitions.duration.shorter,
+                  easing: theme.transitions.easing.easeInOut,
+                }),
+                '&:hover': {
+                  color: 'text.primary',
+                  transform: 'scale(1.1)',
+                },
+              }}
+            >
+              <SkipPreviousIcon />
+            </IconButton>
+            <PlayButton
+              isPlaying={isPlaying}
+              onClick={handlePlayPause}
+              sx={{
+                bgcolor: 'common.white',
+                color: 'common.black',
+                '&:hover': {
+                  bgcolor: 'common.white',
+                  transform: 'scale(1.1)',
+                },
+              }}
+            />
+            <IconButton
+              size="small"
+              sx={{
+                color: 'text.secondary',
+                transition: theme.transitions.create(['color', 'transform'], {
+                  duration: theme.transitions.duration.shorter,
+                  easing: theme.transitions.easing.easeInOut,
+                }),
+                '&:hover': {
+                  color: 'text.primary',
+                  transform: 'scale(1.1)',
+                },
+              }}
+            >
+              <SkipNextIcon />
+            </IconButton>
+            <IconButton
+              size="small"
+              sx={{
+                color: 'text.secondary',
+                transition: theme.transitions.create(['color', 'transform'], {
+                  duration: theme.transitions.duration.shorter,
+                  easing: theme.transitions.easing.easeInOut,
+                }),
+                '&:hover': {
+                  color: 'text.primary',
+                  transform: 'scale(1.1)',
+                },
+              }}
+            >
+              <RepeatIcon />
+            </IconButton>
+          </Box>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, width: '100%' }}>
+            <Typography variant="caption" sx={{ color: 'text.secondary', minWidth: 40 }}>
+              {formatTime(currentTime)}
+            </Typography>
+            <Slider
+              size="small"
+              value={currentTime}
+              max={duration}
+              onChange={handleProgressChange}
+              sx={{
+                color: 'text.primary',
+                '& .MuiSlider-thumb': {
+                  width: 12,
+                  height: 12,
+                  transition: '0.3s cubic-bezier(.47,1.64,.41,.8)',
+                  '&:before': {
+                    boxShadow: '0 2px 12px 0 rgba(0,0,0,0.4)',
+                  },
+                  '&:hover, &.Mui-focusVisible': {
+                    boxShadow: '0px 0px 0px 8px rgb(255 255 255 / 16%)',
+                  },
+                  '&.Mui-active': {
+                    width: 20,
+                    height: 20,
+                  },
+                },
+                '& .MuiSlider-rail': {
+                  opacity: 0.28,
+                },
+              }}
+            />
+            <Typography variant="caption" sx={{ color: 'text.secondary', minWidth: 40 }}>
+              {formatTime(duration)}
+            </Typography>
+          </Box>
+        </Box>
 
-          <Slider
-            aria-label="progress"
+        {/* Right section - Volume control */}
+        <Box sx={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          gap: 1,
+          width: '30%',
+          justifyContent: 'flex-end',
+          ml: 'auto',
+        }}>
+          <IconButton
             size="small"
-            value={progress}
-            max={duration}
-            onChange={(e, val) => setProgress(val)}
+            onClick={toggleMute}
             sx={{
-              color: 'white',
+              color: 'text.secondary',
+              transition: theme.transitions.create(['color', 'transform'], {
+                duration: theme.transitions.duration.shorter,
+                easing: theme.transitions.easing.easeInOut,
+              }),
+              '&:hover': {
+                color: 'text.primary',
+                transform: 'scale(1.1)',
+              },
+            }}
+          >
+            {muted ? <VolumeOffIcon /> : <VolumeUpIcon />}
+          </IconButton>
+          <Slider
+            size="small"
+            value={muted ? 0 : volume}
+            max={100}
+            onChange={handleVolumeChange}
+            sx={{
+              color: 'text.primary',
+              width: 100,
               '& .MuiSlider-thumb': {
-                width: 10,
-                height: 10,
+                width: 12,
+                height: 12,
+                transition: '0.3s cubic-bezier(.47,1.64,.41,.8)',
+                '&:before': {
+                  boxShadow: '0 2px 12px 0 rgba(0,0,0,0.4)',
+                },
+                '&:hover, &.Mui-focusVisible': {
+                  boxShadow: '0px 0px 0px 8px rgb(255 255 255 / 16%)',
+                },
+                '&.Mui-active': {
+                  width: 20,
+                  height: 20,
+                },
               },
               '& .MuiSlider-rail': {
-                opacity: 0.3,
+                opacity: 0.28,
               },
-              flexGrow: 1,
             }}
           />
-
-          <Typography sx={{ fontSize: '0.65rem', color: 'grey.500', width: 30, flexShrink: 0 }}>
-            {formatTime(duration)}
-          </Typography>
         </Box>
-      </Box>
-
-      {/* Volume controls */}
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 0.5,
-          minWidth: 120,
-          color: 'grey.400',
-          ml: 2,
-          flexShrink: 0,
-        }}
-      >
-        <IconButton
-          aria-label={muted ? 'Unmute' : 'Mute'}
-          onClick={toggleMute}
-          size="small"
-          sx={{
-            color: muted ? theme.palette.primary.light : 'inherit',
-            transition: 'color 0.3s',
-            '&:hover': {
-              color: theme.palette.primary.light,
-            },
-          }}
-        >
-          {muted ? <VolumeOffIcon fontSize="small" /> : <VolumeUpIcon fontSize="small" />}
-        </IconButton>
-        <Slider
-          aria-label="volume"
-          size="small"
-          value={muted ? 0 : volume}
-          min={0}
-          max={100}
-          onChange={handleVolumeChange}
-          sx={{
-            width: 80,
-            color: 'white',
-            '& .MuiSlider-thumb': {
-              width: 12,
-              height: 12,
-            },
-            '& .MuiSlider-rail': {
-              opacity: 0.3,
-            },
-          }}
-        />
       </Box>
     </Box>
   );
 };
 
-export { MINIPLAYER_HEIGHT };
 export default MiniPlayer;

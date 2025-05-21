@@ -27,10 +27,14 @@ import { useNavigate } from 'react-router-dom';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
-  borderRadius: 500,
-  backgroundColor: theme.palette.background.input,
+  borderRadius: '24px',
+  backgroundColor: alpha(theme.palette.common.white, 0.08),
+  border: `1px solid ${alpha(theme.palette.common.white, 0.1)}`,
+  overflow: 'hidden',
   '&:hover': {
     backgroundColor: alpha(theme.palette.common.white, 0.15),
+    boxShadow: `0 0 0 1px ${alpha(theme.palette.common.white, 0.3)}`,
+    transform: 'scale(1.01)',
   },
   marginRight: theme.spacing(2),
   marginLeft: 0,
@@ -39,9 +43,18 @@ const Search = styled('div')(({ theme }) => ({
     marginLeft: theme.spacing(3),
     width: 'auto',
   },
-  transition: theme.transitions.create('background-color'),
+  transition: theme.transitions.create(['background-color', 'box-shadow', 'transform', 'border'], {
+    duration: theme.transitions.duration.shorter,
+    easing: theme.transitions.easing.easeInOut,
+  }),
   display: 'flex',
   alignItems: 'center',
+  '&:focus-within': {
+    backgroundColor: alpha(theme.palette.common.white, 0.2),
+    boxShadow: `0 0 0 2px ${alpha(theme.palette.common.white, 0.5)}`,
+    transform: 'scale(1.02)',
+    border: `1px solid ${alpha(theme.palette.common.white, 0.5)}`,
+  },
 }));
 
 const SearchIconWrapper = styled('div')(({ theme }) => ({
@@ -52,21 +65,40 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  color: theme.palette.text.secondary,
+  color: alpha(theme.palette.common.white, 0.5),
   pointerEvents: 'none',
   zIndex: 1,
+  transition: theme.transitions.create(['color', 'transform'], {
+    duration: theme.transitions.duration.shorter,
+    easing: theme.transitions.easing.easeInOut,
+  }),
+  '.MuiInputBase-root:focus-within &': {
+    color: theme.palette.common.white,
+    transform: 'scale(1.1)',
+  },
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: theme.palette.text.primary,
+  color: alpha(theme.palette.common.white, 0.7),
   width: '100%',
   '& .MuiInputBase-input': {
     padding: theme.spacing(1, 1, 1, 0),
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
+    transition: theme.transitions.create(['width', 'color'], {
+      duration: theme.transitions.duration.shorter,
+      easing: theme.transitions.easing.easeInOut,
+    }),
     width: '100%',
     [theme.breakpoints.up('md')]: {
       width: '20ch',
+    },
+    '&:focus': {
+      width: '30ch',
+      color: theme.palette.common.white,
+    },
+    '&::placeholder': {
+      color: alpha(theme.palette.common.white, 0.5),
+      opacity: 1,
     },
   },
 }));
@@ -143,7 +175,16 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
         )}
 
         {/* Search Bar */}
-        <Search sx={{ flexGrow: 1, maxWidth: { xs: '100%', md: '400px' }, mx: 'auto' }}>
+        <Search sx={{ 
+          flexGrow: 1, 
+          maxWidth: { xs: '100%', md: '400px' }, 
+          mx: 'auto',
+          height: '40px',
+          '& .MuiInputBase-root': {
+            height: '100%',
+            borderRadius: '24px',
+          },
+        }}>
           <SearchIconWrapper>
             <SearchIcon sx={{ fontSize: 20 }} />
           </SearchIconWrapper>

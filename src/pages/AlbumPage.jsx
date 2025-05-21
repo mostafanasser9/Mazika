@@ -65,7 +65,8 @@ export default function AlbumPage() {
   }, [id, navigate]);
 
   const handleArtistClick = () => {
-    if (album) {
+    if (album && album.artistId) {
+      console.log('Navigating to artist:', album.artistId);
       navigate(`/artist/${album.artistId}`);
     }
   };
@@ -275,14 +276,17 @@ export default function AlbumPage() {
                   <IconButton 
                     onClick={handlePlayAlbum}
                     sx={{
-                      bgcolor: '#50C5F9',
-                      color: 'white',
+                      bgcolor: 'primary.light',
+                      color: 'common.white',
                       p: 1.5,
                       '&:hover': {
-                        bgcolor: '#31a44f',
+                        bgcolor: 'primary.dark',
                         transform: 'scale(1.04)'
                       },
-                      transition: 'all 0.3s ease'
+                      transition: theme => theme.transitions.create(['background-color', 'transform'], {
+                        duration: theme.transitions.duration.shorter,
+                        easing: theme.transitions.easing.easeInOut,
+                      }),
                     }}
                     aria-label={isPlaying ? "Pause" : "Play"}
                   >
@@ -404,10 +408,23 @@ export default function AlbumPage() {
                                 </Box>
                               </Box>
                             </TableCell>
-                            <TableCell sx={{ color: '#b3b3b3', borderBottom: 'none', display: { xs: 'none', md: 'table-cell' } }}>
+                            <TableCell 
+                              sx={{ 
+                                color: '#b3b3b3', 
+                                borderBottom: 'none',
+                                display: { xs: 'none', md: 'table-cell' }
+                              }}
+                            >
                               {formatPlayCount(track.playCount)}
                             </TableCell>
-                            <TableCell align="right" sx={{ color: '#b3b3b3', borderBottom: 'none' }}>
+                            <TableCell 
+                              align="right" 
+                              sx={{ 
+                                color: '#b3b3b3', 
+                                borderBottom: 'none',
+                                width: '100px'
+                              }}
+                            >
                               {track.duration}
                             </TableCell>
                           </TableRow>
@@ -460,8 +477,10 @@ export default function AlbumPage() {
                               },
                               height: '100%',
                               display: 'flex',
-                              flexDirection: 'column'
+                              flexDirection: 'column',
+                              cursor: 'pointer'
                             }}
+                            onClick={() => navigate(`/album/${relatedAlbum.id}`)}
                           >
                             <CardMedia
                               component="img"

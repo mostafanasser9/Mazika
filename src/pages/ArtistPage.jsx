@@ -53,11 +53,14 @@ export default function ArtistPage() {
   useEffect(() => {
     const fetchArtist = () => {
       setLoading(true);
+      console.log('ArtistPage - Fetching artist with ID:', id);
       const artistData = getArtistById(id);
+      console.log('ArtistPage - Artist data:', artistData);
+      
       if (artistData) {
         setArtist(artistData);
       } else {
-        // Handle artist not found
+        console.log('ArtistPage - Artist not found, redirecting to home');
         navigate('/');
       }
       setLoading(false);
@@ -150,7 +153,7 @@ export default function ArtistPage() {
                   {album.title}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  {album.year} • {album.songCount} songs
+                  {album.releaseYear} • {album.songCount} songs
                 </Typography>
               </CardContent>
             </Card>
@@ -259,10 +262,13 @@ export default function ArtistPage() {
                       color: 'common.white',
                       p: 1.5,
                       '&:hover': {
-                        bgcolor: 'primary.main',
+                        bgcolor: 'primary.dark',
                         transform: 'scale(1.04)'
                       },
-                      transition: theme => theme.transitions.create('all')
+                      transition: theme => theme.transitions.create(['background-color', 'transform'], {
+                        duration: theme.transitions.duration.shorter,
+                        easing: theme.transitions.easing.easeInOut,
+                      }),
                     }}
                     aria-label={isPlaying ? "Pause" : "Play"}
                   >
@@ -289,7 +295,6 @@ export default function ArtistPage() {
                   >
                     <Tab label="Overview" />
                     <Tab label="Discography" />
-                    <Tab label="Related Artists" />
                     <Tab label="About" />
                   </Tabs>
 
@@ -386,7 +391,7 @@ export default function ArtistPage() {
                         </Typography>
                         
                         <Grid container spacing={4}>
-                          <Grid item xs={12} md={8}>
+                          <Grid item xs={12}>
                             <Box 
                               sx={{ 
                                 backgroundImage: `url(${artist.profileImage})`,
@@ -404,45 +409,6 @@ export default function ArtistPage() {
                               {artist.monthlyListeners} monthly listeners
                             </Typography>
                           </Grid>
-                          
-                          <Grid item xs={12} md={4}>
-                            <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 2 }}>
-                              Fans also like
-                            </Typography>
-                            <Grid container spacing={2}>
-                              {artist.relatedArtists.map((relatedArtist) => (
-                                <Grid item xs={6} key={relatedArtist.id}>
-                                  <Card 
-                                    sx={{ 
-                                      bgcolor: '#181818', 
-                                      borderRadius: 1,
-                                      transition: 'all 0.3s ease',
-                                      '&:hover': {
-                                        bgcolor: '#282828',
-                                        transform: 'translateY(-4px)'
-                                      }
-                                    }}
-                                  >
-                                    <CardMedia
-                                      component="img"
-                                      image={relatedArtist.image}
-                                      alt={relatedArtist.name}
-                                      sx={{ 
-                                        borderRadius: '50%',
-                                        aspectRatio: '1/1',
-                                        p: 2
-                                      }}
-                                    />
-                                    <CardContent sx={{ textAlign: 'center', pt: 0 }}>
-                                      <Typography variant="body2" sx={{ fontWeight: 'bold', color: 'white' }}>
-                                        {relatedArtist.name}
-                                      </Typography>
-                                    </CardContent>
-                                  </Card>
-                                </Grid>
-                              ))}
-                            </Grid>
-                          </Grid>
                         </Grid>
                       </Box>
                     </Box>
@@ -455,57 +421,18 @@ export default function ArtistPage() {
                     </Box>
                   )}
 
-                  {/* Related Artists Tab Content */}
+                  {/* About Tab Content */}
                   {activeTab === 2 && (
                     <Box>
-                      <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 3 }}>
-                        Fans also like
+                      <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 2 }}>
+                        About
                       </Typography>
-                      
-                      <Grid container spacing={3}>
-                        {/* Showing extended list of related artists */}
-                        {[...artist.relatedArtists, ...artist.relatedArtists].map((relatedArtist, index) => (
-                          <Grid item xs={6} sm={4} md={3} lg={2} key={`${relatedArtist.id}-${index}`}>
-                            <Card 
-                              sx={{ 
-                                bgcolor: '#181818', 
-                                borderRadius: 1,
-                                transition: 'all 0.3s ease',
-                                '&:hover': {
-                                  bgcolor: '#282828',
-                                  transform: 'translateY(-4px)'
-                                }
-                              }}
-                            >
-                              <CardMedia
-                                component="img"
-                                image={relatedArtist.image}
-                                alt={relatedArtist.name}
-                                sx={{ 
-                                  borderRadius: '50%',
-                                  aspectRatio: '1/1',
-                                  p: 2
-                                }}
-                              />
-                              <CardContent sx={{ textAlign: 'center' }}>
-                                <Typography variant="body1" sx={{ fontWeight: 'bold', color: 'white' }}>
-                                  {relatedArtist.name}
-                                </Typography>
-                                <Typography variant="body2" color="#b3b3b3">
-                                  Artist
-                                </Typography>
-                              </CardContent>
-                            </Card>
-                          </Grid>
-                        ))}
-                      </Grid>
-                    </Box>
-                  )}
-
-                  {/* About Tab Content */}
-                  {activeTab === 3 && (
-                    <Box>
-                      {/* ... existing about content ... */}
+                      <Typography variant="body1" sx={{ mb: 2 }}>
+                        {artist.biography}
+                      </Typography>
+                      <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>
+                        {artist.monthlyListeners} monthly listeners
+                      </Typography>
                     </Box>
                   )}
                 </Box>

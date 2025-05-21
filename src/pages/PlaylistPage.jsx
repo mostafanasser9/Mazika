@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import {
   Box,
   Typography,
@@ -34,68 +35,330 @@ const sidebarWidth = 240;
 const NAVBAR_HEIGHT = 64;
 
 // Example playlist data - replace with actual data source
-const examplePlaylist = {
-  id: 1,
-  title: "Today's Top Hits",
-  description: "The most popular tracks right now",
-  coverImage: "https://picsum.photos/300/300?random=42",
-  songs: [
-    { 
-      id: 1, 
-      title: "Is It A Crime", 
-      artist: "Sade", 
-      album: "The Best of Sade", 
-      duration: "6:22",
-      img: "https://picsum.photos/200/200?random=1",
-      dateAdded: "2025-03-15" 
-    },
-    { 
-      id: 2, 
-      title: "Running Up That Hill", 
-      artist: "Kate Bush", 
-      album: "Hounds of Love", 
-      duration: "4:58",
-      img: "https://picsum.photos/200/200?random=2",
-      dateAdded: "2025-03-10" 
-    },
-    { 
-      id: 3, 
-      title: "Under Pressure", 
-      artist: "Queen & David Bowie", 
-      album: "Hot Space", 
-      duration: "4:04",
-      img: "https://picsum.photos/200/200?random=3",
-      dateAdded: "2025-04-05" 
-    },
-    { 
-      id: 4, 
-      title: "Dreams", 
-      artist: "Fleetwood Mac", 
-      album: "Rumours", 
-      duration: "4:17",
-      img: "https://picsum.photos/200/200?random=4",
-      dateAdded: "2025-02-18" 
-    },
-    { 
-      id: 5, 
-      title: "Billie Jean", 
-      artist: "Michael Jackson", 
-      album: "Thriller", 
-      duration: "4:54",
-      img: "https://picsum.photos/200/200?random=5",
-      dateAdded: "2025-05-01" 
-    },
-  ]
+const playlists = {
+  'top-hits': {
+    id: 'top-hits',
+    title: "Today's Top Hits",
+    description: "The most popular tracks right now",
+    coverImage: "https://picsum.photos/300/300?random=42",
+    songs: [
+      { 
+        id: 1, 
+        title: "Is It A Crime", 
+        artist: "Sade", 
+        album: "The Best of Sade", 
+        duration: "6:22",
+        img: "https://picsum.photos/200/200?random=1",
+        dateAdded: "2025-03-15" 
+      },
+      { 
+        id: 2, 
+        title: "Running Up That Hill", 
+        artist: "Kate Bush", 
+        album: "Hounds of Love", 
+        duration: "4:58",
+        img: "https://picsum.photos/200/200?random=2",
+        dateAdded: "2025-03-10" 
+      },
+      { 
+        id: 3, 
+        title: "Under Pressure", 
+        artist: "Queen & David Bowie", 
+        album: "Hot Space", 
+        duration: "4:04",
+        img: "https://picsum.photos/200/200?random=3",
+        dateAdded: "2025-04-05" 
+      },
+      { 
+        id: 4, 
+        title: "Dreams", 
+        artist: "Fleetwood Mac", 
+        album: "Rumours", 
+        duration: "4:17",
+        img: "https://picsum.photos/200/200?random=4",
+        dateAdded: "2025-02-18" 
+      },
+      { 
+        id: 5, 
+        title: "Billie Jean", 
+        artist: "Michael Jackson", 
+        album: "Thriller", 
+        duration: "4:54",
+        img: "https://picsum.photos/200/200?random=5",
+        dateAdded: "2025-05-01" 
+      },
+    ]
+  },
+  'jazz': {
+    id: 'jazz',
+    title: "Jazz Collection",
+    description: "The best jazz tracks",
+    coverImage: "https://picsum.photos/300/300?random=43",
+    songs: [
+      {
+        id: 1,
+        title: "Take Five",
+        artist: "Dave Brubeck Quartet",
+        album: "Time Out",
+        duration: "5:24",
+        img: "https://picsum.photos/200/200?random=11",
+        dateAdded: "2025-03-01"
+      },
+      {
+        id: 2,
+        title: "So What",
+        artist: "Miles Davis",
+        album: "Kind of Blue",
+        duration: "9:22",
+        img: "https://picsum.photos/200/200?random=12",
+        dateAdded: "2025-03-02"
+      },
+      {
+        id: 3,
+        title: "What a Wonderful World",
+        artist: "Louis Armstrong",
+        album: "What a Wonderful World",
+        duration: "2:19",
+        img: "https://picsum.photos/200/200?random=13",
+        dateAdded: "2025-03-03"
+      }
+    ]
+  },
+  'rap': {
+    id: 'rap',
+    title: "Rap Essentials",
+    description: "The best rap tracks of all time",
+    coverImage: "https://picsum.photos/300/300?random=44",
+    songs: [
+      {
+        id: 1,
+        title: "Lose Yourself",
+        artist: "Eminem",
+        album: "8 Mile",
+        duration: "5:26",
+        img: "https://picsum.photos/200/200?random=21",
+        dateAdded: "2025-03-04"
+      },
+      {
+        id: 2,
+        title: "Juicy",
+        artist: "The Notorious B.I.G.",
+        album: "Ready to Die",
+        duration: "5:02",
+        img: "https://picsum.photos/200/200?random=22",
+        dateAdded: "2025-03-05"
+      },
+      {
+        id: 3,
+        title: "Nuthin' But a 'G' Thang",
+        artist: "Dr. Dre ft. Snoop Dogg",
+        album: "The Chronic",
+        duration: "3:58",
+        img: "https://picsum.photos/200/200?random=23",
+        dateAdded: "2025-03-06"
+      }
+    ]
+  },
+  'rock': {
+    id: 'rock',
+    title: "Rock Classics",
+    description: "The greatest rock songs ever",
+    coverImage: "https://picsum.photos/300/300?random=45",
+    songs: [
+      {
+        id: 1,
+        title: "Stairway to Heaven",
+        artist: "Led Zeppelin",
+        album: "Led Zeppelin IV",
+        duration: "8:02",
+        img: "https://picsum.photos/200/200?random=31",
+        dateAdded: "2025-03-07"
+      },
+      {
+        id: 2,
+        title: "Bohemian Rhapsody",
+        artist: "Queen",
+        album: "A Night at the Opera",
+        duration: "5:55",
+        img: "https://picsum.photos/200/200?random=32",
+        dateAdded: "2025-03-08"
+      },
+      {
+        id: 3,
+        title: "Sweet Child O' Mine",
+        artist: "Guns N' Roses",
+        album: "Appetite for Destruction",
+        duration: "5:56",
+        img: "https://picsum.photos/200/200?random=33",
+        dateAdded: "2025-03-09"
+      }
+    ]
+  },
+  'metal': {
+    id: 'metal',
+    title: "Metal Masters",
+    description: "The heaviest metal tracks",
+    coverImage: "https://picsum.photos/300/300?random=46",
+    songs: [
+      {
+        id: 1,
+        title: "Master of Puppets",
+        artist: "Metallica",
+        album: "Master of Puppets",
+        duration: "8:35",
+        img: "https://picsum.photos/200/200?random=41",
+        dateAdded: "2025-03-10"
+      },
+      {
+        id: 2,
+        title: "Iron Man",
+        artist: "Black Sabbath",
+        album: "Paranoid",
+        duration: "5:55",
+        img: "https://picsum.photos/200/200?random=42",
+        dateAdded: "2025-03-11"
+      },
+      {
+        id: 3,
+        title: "Ace of Spades",
+        artist: "Motörhead",
+        album: "Ace of Spades",
+        duration: "2:46",
+        img: "https://picsum.photos/200/200?random=43",
+        dateAdded: "2025-03-12"
+      }
+    ]
+  },
+  'pop': {
+    id: 'pop',
+    title: "Pop Hits",
+    description: "The biggest pop songs",
+    coverImage: "https://picsum.photos/300/300?random=47",
+    songs: [
+      {
+        id: 1,
+        title: "Shape of You",
+        artist: "Ed Sheeran",
+        album: "÷ (Divide)",
+        duration: "3:53",
+        img: "https://picsum.photos/200/200?random=51",
+        dateAdded: "2025-03-13"
+      },
+      {
+        id: 2,
+        title: "Blinding Lights",
+        artist: "The Weeknd",
+        album: "After Hours",
+        duration: "3:20",
+        img: "https://picsum.photos/200/200?random=52",
+        dateAdded: "2025-03-14"
+      },
+      {
+        id: 3,
+        title: "Bad Guy",
+        artist: "Billie Eilish",
+        album: "When We All Fall Asleep, Where Do We Go?",
+        duration: "3:14",
+        img: "https://picsum.photos/200/200?random=53",
+        dateAdded: "2025-03-15"
+      }
+    ]
+  },
+  'country': {
+    id: 'country',
+    title: "Country Roads",
+    description: "The best country music",
+    coverImage: "https://picsum.photos/300/300?random=48",
+    songs: [
+      {
+        id: 1,
+        title: "Take Me Home, Country Roads",
+        artist: "John Denver",
+        album: "Poems, Prayers & Promises",
+        duration: "3:10",
+        img: "https://picsum.photos/200/200?random=61",
+        dateAdded: "2025-03-16"
+      },
+      {
+        id: 2,
+        title: "Ring of Fire",
+        artist: "Johnny Cash",
+        album: "Ring of Fire: The Best of Johnny Cash",
+        duration: "2:38",
+        img: "https://picsum.photos/200/200?random=62",
+        dateAdded: "2025-03-17"
+      },
+      {
+        id: 3,
+        title: "Jolene",
+        artist: "Dolly Parton",
+        album: "Jolene",
+        duration: "2:41",
+        img: "https://picsum.photos/200/200?random=63",
+        dateAdded: "2025-03-18"
+      }
+    ]
+  },
+  'reggae': {
+    id: 'reggae',
+    title: "Reggae Vibes",
+    description: "The best reggae tracks",
+    coverImage: "https://picsum.photos/300/300?random=49",
+    songs: [
+      {
+        id: 1,
+        title: "No Woman, No Cry",
+        artist: "Bob Marley & The Wailers",
+        album: "Live!",
+        duration: "7:08",
+        img: "https://picsum.photos/200/200?random=71",
+        dateAdded: "2025-03-19"
+      },
+      {
+        id: 2,
+        title: "Three Little Birds",
+        artist: "Bob Marley & The Wailers",
+        album: "Exodus",
+        duration: "3:00",
+        img: "https://picsum.photos/200/200?random=72",
+        dateAdded: "2025-03-20"
+      },
+      {
+        id: 3,
+        title: "Buffalo Soldier",
+        artist: "Bob Marley & The Wailers",
+        album: "Confrontation",
+        duration: "4:15",
+        img: "https://picsum.photos/200/200?random=73",
+        dateAdded: "2025-03-21"
+      }
+    ]
+  }
 };
 
-export default function PlaylistPage({ playlist = examplePlaylist }) {
+export default function PlaylistPage() {
+  const { id } = useParams();
+  const [playlist, setPlaylist] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [miniPlayerSong, setMiniPlayerSong] = useState(null);
-  const [loading, setLoading] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortMethod, setSortMethod] = useState('title');
   const [sortAnchorEl, setSortAnchorEl] = useState(null);
   const openSortMenu = Boolean(sortAnchorEl);
+
+  useEffect(() => {
+    // Simulate loading data
+    setLoading(true);
+    const playlistData = playlists[id];
+    if (playlistData) {
+      setPlaylist(playlistData);
+    } else {
+      // Handle playlist not found
+      setPlaylist(playlists['top-hits']); // Fallback to top hits
+    }
+    setLoading(false);
+  }, [id]);
 
   const handleSortClick = (event) => {
     setSortAnchorEl(event.currentTarget);

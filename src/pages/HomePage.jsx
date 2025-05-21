@@ -5,6 +5,7 @@ import {
   Grid,
   CircularProgress,
   Fade,
+  useTheme,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
@@ -17,36 +18,36 @@ const sidebarWidth = 240;
 const NAVBAR_HEIGHT = 64;
 
 const trendingSongs = [
-  { id: 1, title: 'Emshy', artist: 'Tommy Gun, Rally', img: '/images/emshy.jpeg', type: 'song' },
-  { id: 2, title: 'Kadaba', artist: 'Karim Osama', img: '/images/kadaba.webp', type: 'song' },
-  { id: 3, title: 'FAWATER EL 3ETAB', artist: 'Marwan Moussa', img: '/images/fawater.webp', type: 'song' },
+  { id: 1, title: 'Emshy', artist: 'Tommy Gun, Rally', img: 'images/emshy.jpeg', type: 'song' },
+  { id: 2, title: 'Kadaba', artist: 'Karim Osama', img: 'images/kadaba.webp', type: 'song' },
+  { id: 3, title: 'FAWATER EL 3ETAB', artist: 'Marwan Moussa', img: 'images/fawater.webp', type: 'song' },
 ];
 
 const allSongs = [
   ...trendingSongs,
-  { id: 4, title: 'Heart Shaped Box', artist: 'Nirvana', img: '/images/heartshapedbox.webp', type: 'song' },
-  { id: 5, title: 'عالعموم', artist: 'Shehab', img: '/images/3al3mom.webp', type: 'song' },
-  { id: 6, title: 'Strangers In The Night', artist: 'Frank Sinatra', img: '/images/strangers.webp', type: 'song' },
-  { id: 7, title: 'Wicked Game', artist: 'Chris Isaak', img: '/images/wickedgame.webp', type: 'song' },
+  { id: 4, title: 'Heart Shaped Box', artist: 'Nirvana', img: 'images/heartshapedbox.webp', type: 'song' },
+  { id: 5, title: 'عالعموم', artist: 'Shehab', img: 'images/3al3mom.webp', type: 'song' },
+  { id: 6, title: 'Strangers In The Night', artist: 'Frank Sinatra', img: 'images/strangers.webp', type: 'song' },
+  { id: 7, title: 'Wicked Game', artist: 'Chris Isaak', img: 'images/wickedgame.webp', type: 'song' },
 ];
 
 const artists = [
-  { id: 1, name: 'Nirvana', img: 'images/nirvana.jpeg', type: 'artist' },
-  { id: 2, name: 'Fayrouz', img: 'images/fairouz.jpeg', type: 'artist' },
-  { id: 3, name: 'Amr Diab', img: 'images/amrdiab.jpeg', type: 'artist' },
-  { id: 4, name: 'Bahaa Sultan', img: 'images/bahaasultan.webp', type: 'artist' },
-  { id: 5, name: 'Lege-cy', img: '/images/legecy.jpeg', type: 'artist' },
-  { id: 6, name: 'The Beatles', img: '/images/beatles.webp', type: 'artist' },
-  { id: 7, name: 'Marwan Pablo', img: '/images/pablo.jpeg', type: 'artist' },
-  { id: 8, name: 'The Weeknd', img: '/images/theweeknd.jpeg', type: 'artist' },
+  { id: "nirvana", name: 'Nirvana', img: 'images/nirvana.jpeg', type: 'artist' },
+  { id: "fayrouz", name: 'Fayrouz', img: 'images/fairouz.jpeg', type: 'artist' },
+  { id: "amr-diab", name: 'Amr Diab', img: 'images/amrdiab.jpeg', type: 'artist' },
+  { id: "bahaa-sultan", name: 'Bahaa Sultan', img: 'images/bahaasultan.webp', type: 'artist' },
+  { id: "lege-cy", name: 'Lege-cy', img: 'images/legecy.jpeg', type: 'artist' },
+  { id: "the-beatles", name: 'The Beatles', img: 'images/beatles.webp', type: 'artist' },
+  { id: "marwan-pablo", name: 'Marwan Pablo', img: 'images/pablo.jpeg', type: 'artist' },
+  { id: "the-weeknd", name: 'The Weeknd', img: 'images/theweeknd.jpeg', type: 'artist' },
 ];
 
 const podcasts = [
-  { id: 1, title: 'Ma3 Kamel A7teramy - مع كامل احترامي', host: 'Mohamed Abdelaty', img: '/images/ab67656300005f1f150c92eb6cc313adc54f050f.jpeg', type: 'podcast' },
-  { id: 2, title: 'الدحيح', host: 'Daheeh', img: '/images/ab67656300005f1f3b0df41c54f6b1a1f6cc8e52.jpeg', type: 'podcast' },
-  { id: 3, title: 'The Joe Rogan Experience', host: 'Joe Rogan', img: '/images/joe.webp', type: 'podcast' },
-  { id: 4, title: 'TED Daily Talks', host: 'TED', img: '/images/ted.webp', type: 'podcast' },
-  { id: 5, title: 'The Daily', host: 'New York Times', img: '/images/daily.webp', type: 'podcast' },
+  { id: 1, title: 'Ma3 Kamel A7teramy - مع كامل احترامي', host: 'Mohamed Abdelaty', img: 'images/ab67656300005f1f150c92eb6cc313adc54f050f.jpeg', type: 'podcast' },
+  { id: 2, title: 'الدحيح', host: 'Daheeh', img: 'images/ab67656300005f1f3b0df41c54f6b1a1f6cc8e52.jpeg', type: 'podcast' },
+  { id: 3, title: 'The Joe Rogan Experience', host: 'Joe Rogan', img: 'images/joe.webp', type: 'podcast' },
+  { id: 4, title: 'TED Daily Talks', host: 'TED', img: 'images/ted.webp', type: 'podcast' },
+  { id: 5, title: 'The Daily', host: 'New York Times', img: 'images/daily.webp', type: 'podcast' },
 ];
 
 const filterBySearch = (items, fields, searchQuery) => {
@@ -62,6 +63,7 @@ const filterBySearch = (items, fields, searchQuery) => {
 };
 
 export default function Home({ searchQuery }) {
+  const theme = useTheme();
   const [miniPlayerSong, setMiniPlayerSong] = useState(null);
   const [filter, setFilter] = useState('all');
   const [loading, setLoading] = useState(false);
@@ -112,10 +114,11 @@ export default function Home({ searchQuery }) {
             ml: `${sidebarWidth}px`,
             mt: `${NAVBAR_HEIGHT}px`,
             p: 3,
-            color: 'white',
-            background: 'linear-gradient(180deg, rgba(3,26,68,1) 0%, rgba(18,18,18,1) 100%)',
+            color: 'text.primary',
+            background: `linear-gradient(to bottom, ${theme.palette.background.default} 0%, ${theme.palette.background.paper} 100%)`,
             flexGrow: 1,
             paddingBottom: `${MINIPLAYER_HEIGHT + 16}px`,
+            minHeight: `calc(100vh - ${NAVBAR_HEIGHT}px)`,
           }}
         >
           <Box sx={{ display: 'flex', justifyContent: 'flex-start', gap: 2, mb: 4 }}>
@@ -136,13 +139,18 @@ export default function Home({ searchQuery }) {
                   fontWeight: 500,
                   textTransform: 'capitalize',
                   backgroundColor: (theme) =>
-                    filter === option ? theme.palette.primary.light : theme.palette.grey[800],
+                    filter === option ? theme.palette.primary.light : theme.palette.background.card,
                   color: (theme) =>
-                    filter === option ? theme.palette.common.white : theme.palette.grey[400],
-                  transition: 'all 0.3s ease',
+                    filter === option ? theme.palette.common.white : theme.palette.text.secondary,
+                  transition: theme.transitions.create(['background-color', 'color', 'transform'], {
+                    duration: theme.transitions.duration.shorter,
+                    easing: theme.transitions.easing.easeInOut,
+                  }),
                   '&:hover': {
                     backgroundColor: (theme) =>
-                      filter === option ? theme.palette.primary.main : theme.palette.grey[700],
+                      filter === option ? theme.palette.primary.main : theme.palette.background.cardHover,
+                    color: theme.palette.common.white,
+                    transform: 'scale(1.05)',
                   },
                   userSelect: 'none',
                 }}
@@ -156,14 +164,23 @@ export default function Home({ searchQuery }) {
 
           {loading ? (
             <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
-              <CircularProgress color="secondary" size={60} thickness={4.5} />
+              <CircularProgress color="primary" size={60} thickness={4.5} />
             </Box>
           ) : (
             <Fade in timeout={400}>
               <Box>
                 {filter === 'all' && !searchQuery && (
                   <>
-                    <Typography variant="h4" gutterBottom>
+                    <Typography 
+                      variant="h4" 
+                      gutterBottom
+                      sx={{
+                        transition: theme.transitions.create('opacity'),
+                        '&:hover': {
+                          opacity: 0.8,
+                        },
+                      }}
+                    >
                       Trending Songs
                     </Typography>
                     <Grid container spacing={2} sx={{ mb: 3 }}>
@@ -178,7 +195,16 @@ export default function Home({ searchQuery }) {
 
                 {filteredSongs.length > 0 && (
                   <>
-                    <Typography variant="h4" gutterBottom>
+                    <Typography 
+                      variant="h4" 
+                      gutterBottom
+                      sx={{
+                        transition: theme.transitions.create('opacity'),
+                        '&:hover': {
+                          opacity: 0.8,
+                        },
+                      }}
+                    >
                       All Songs
                     </Typography>
                     <Grid container spacing={2} sx={{ mb: 3 }}>
@@ -193,7 +219,16 @@ export default function Home({ searchQuery }) {
 
                 {filter === 'all' && filteredArtists.length > 0 && (
                   <>
-                    <Typography variant="h4" gutterBottom>
+                    <Typography 
+                      variant="h4" 
+                      gutterBottom
+                      sx={{
+                        transition: theme.transitions.create('opacity'),
+                        '&:hover': {
+                          opacity: 0.8,
+                        },
+                      }}
+                    >
                       Artists
                     </Typography>
                     <Grid container spacing={2} sx={{ mb: 3 }}>
@@ -210,7 +245,16 @@ export default function Home({ searchQuery }) {
 
                 {filteredPodcasts.length > 0 && (
                   <>
-                    <Typography variant="h4" gutterBottom>
+                    <Typography 
+                      variant="h4" 
+                      gutterBottom
+                      sx={{
+                        transition: theme.transitions.create('opacity'),
+                        '&:hover': {
+                          opacity: 0.8,
+                        },
+                      }}
+                    >
                       Podcasts
                     </Typography>
                     <Grid container spacing={2} sx={{ mb: 3 }}>

@@ -11,21 +11,66 @@ import {
   Popper,
   Paper,
   Fade,
+  Avatar,
+  useTheme,
 } from '@mui/material';
 
-import { useNavigate } from 'react-router-dom'; // <--- Import this
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import AddIcon from '@mui/icons-material/Add';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import LibraryMusicIcon from '@mui/icons-material/LibraryMusic';
 import HistoryIcon from '@mui/icons-material/History';
 import DownloadIcon from '@mui/icons-material/Download';
 
+const playlists = [
+  {
+    id: 'top-hits',
+    name: "Today's Top Hits",
+    image: 'https://picsum.photos/200/200?random=1',
+  },
+  {
+    id: 'jazz',
+    name: "Jazz Collection",
+    image: 'https://picsum.photos/200/200?random=2',
+  },
+  {
+    id: 'rap',
+    name: "Rap Essentials",
+    image: 'https://picsum.photos/200/200?random=3',
+  },
+  {
+    id: 'rock',
+    name: "Rock Classics",
+    image: 'https://picsum.photos/200/200?random=4',
+  },
+  {
+    id: 'metal',
+    name: "Metal Masters",
+    image: 'https://picsum.photos/200/200?random=5',
+  },
+  {
+    id: 'pop',
+    name: "Pop Hits",
+    image: 'https://picsum.photos/200/200?random=6',
+  },
+  {
+    id: 'country',
+    name: "Country Roads",
+    image: 'https://picsum.photos/200/200?random=7',
+  },
+  {
+    id: 'reggae',
+    name: "Reggae Vibes",
+    image: 'https://picsum.photos/200/200?random=8',
+  },
+];
+
 const Sidebar = () => {
+  const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState(null);
   const addBtnRef = useRef(null);
-
-  const navigate = useNavigate(); // <--- Initialize navigate
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const handleToggleMenu = (event) => {
     setAnchorEl((prev) => (prev ? null : event.currentTarget));
@@ -33,13 +78,11 @@ const Sidebar = () => {
 
   const open = Boolean(anchorEl);
 
-  // Handler for playlist clicks
   const handlePlaylistClick = (playlist) => {
-    // You can pass playlist name as state or query param if needed
-    // Example with state: navigate('/playlist', { state: { playlist } });
-    // For now, just navigate to /playlist
-    navigate('/playlist');
+    navigate(`/playlist/${playlist.id}`);
   };
+
+  const isActive = (path) => location.pathname === path;
 
   return (
     <Box
@@ -54,11 +97,26 @@ const Sidebar = () => {
         display: 'flex',
         flexDirection: 'column',
         zIndex: 1200,
+        borderRight: `1px solid ${theme.palette.divider}`,
+        transition: theme.transitions.create(['width', 'margin'], {
+          easing: theme.transitions.easing.sharp,
+          duration: theme.transitions.duration.leavingScreen,
+        }),
       }}
     >
-      {/* Top section */}
+      {/* Library Section */}
       <Box sx={{ px: 3, pt: 3 }}>
-        <Typography variant="h6" fontWeight="bold" sx={{ fontSize: '1.3rem' }}>
+        <Typography 
+          variant="h6" 
+          fontWeight="bold" 
+          sx={{ 
+            fontSize: '1.3rem',
+            transition: theme.transitions.create('opacity'),
+            '&:hover': {
+              opacity: 0.8,
+            },
+          }}
+        >
           Your Library
         </Typography>
       </Box>
@@ -73,7 +131,17 @@ const Sidebar = () => {
           justifyContent: 'space-between',
         }}
       >
-        <Typography variant="subtitle1" fontWeight="medium" sx={{ fontSize: '1.1rem' }}>
+        <Typography 
+          variant="subtitle1" 
+          fontWeight="medium" 
+          sx={{ 
+            fontSize: '1.1rem',
+            transition: theme.transitions.create('opacity'),
+            '&:hover': {
+              opacity: 0.8,
+            },
+          }}
+        >
           Create Playlist
         </Typography>
         <IconButton
@@ -84,13 +152,26 @@ const Sidebar = () => {
           aria-haspopup="true"
           aria-expanded={open ? 'true' : undefined}
           aria-label="Create new playlist menu"
+          sx={{
+            transition: theme.transitions.create(['background-color', 'transform']),
+            '&:hover': {
+              bgcolor: 'action.hover',
+              transform: 'scale(1.1)',
+            },
+          }}
         >
           <AddIcon fontSize="medium" />
         </IconButton>
       </Box>
 
       {/* Popper Menu for Create Playlist */}
-      <Popper open={open} anchorEl={anchorEl} placement="bottom-end" transition sx={{ zIndex: 1300 }}>
+      <Popper 
+        open={open} 
+        anchorEl={anchorEl} 
+        placement="bottom-end" 
+        transition 
+        sx={{ zIndex: 1300 }}
+      >
         {({ TransitionProps }) => (
           <Fade {...TransitionProps} timeout={200}>
             <Paper
@@ -101,7 +182,11 @@ const Sidebar = () => {
                 bgcolor: 'background.paper',
                 color: 'text.primary',
                 borderRadius: 1,
-                boxShadow: 3,
+                boxShadow: theme.shadows[3],
+                transition: theme.transitions.create(['transform', 'opacity']),
+                '&:hover': {
+                  transform: 'scale(1.02)',
+                },
               }}
             >
               <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
@@ -121,52 +206,160 @@ const Sidebar = () => {
       <Box sx={{ overflowY: 'auto', flexGrow: 1, mt: 3 }}>
         <List dense>
           {/* Liked Songs */}
-          <ListItem button sx={{ py: 1.2 }} onClick={() => navigate('/liked')}>
+          <ListItem 
+            button 
+            sx={{ 
+              py: 1.2,
+              borderRadius: 1,
+              bgcolor: isActive('/liked') ? 'action.selected' : 'transparent',
+              transition: theme.transitions.create(['background-color', 'transform']),
+              '&:hover': {
+                bgcolor: 'action.hover',
+                transform: 'translateX(4px)',
+              },
+            }} 
+            onClick={() => navigate('/liked')}
+          >
             <ListItemIcon sx={{ minWidth: 40 }}>
-              <FavoriteIcon color="secondary" fontSize="medium" />
+              <FavoriteIcon 
+                color={isActive('/liked') ? 'primary' : 'secondary'} 
+                fontSize="medium"
+                sx={{
+                  transition: theme.transitions.create('transform'),
+                  '&:hover': {
+                    transform: 'scale(1.1)',
+                  },
+                }}
+              />
             </ListItemIcon>
             <ListItemText
               primary="Liked Songs"
-              slotProps={{ primary: { fontSize: '1rem', fontWeight: 'medium' } }}
+              primaryTypographyProps={{
+                fontWeight: isActive('/liked') ? 'bold' : 'medium',
+                color: isActive('/liked') ? 'primary' : 'inherit',
+                transition: theme.transitions.create(['color', 'font-weight']),
+              }}
             />
           </ListItem>
 
-          {/* Playlists */}
-          {['Jazz', 'Rap', 'Rock', 'Metal', 'Pop', 'Country', 'Reggae'].map((playlist, index) => (
+          {/* Playlists with Images */}
+          {playlists.map((playlist) => (
             <ListItem
               button
-              key={index}
+              key={playlist.id}
               sx={{
                 py: 1.2,
+                borderRadius: 1,
+                bgcolor: isActive(`/playlist/${playlist.id}`) ? 'action.selected' : 'transparent',
+                transition: theme.transitions.create(['background-color', 'transform']),
                 '&:hover': {
                   bgcolor: 'action.hover',
+                  transform: 'translateX(4px)',
                 },
               }}
-              onClick={() => handlePlaylistClick(playlist)} // <--- Navigate on click
+              onClick={() => handlePlaylistClick(playlist)}
             >
               <ListItemIcon sx={{ minWidth: 40 }}>
-                <LibraryMusicIcon fontSize="medium" />
+                <Avatar
+                  src={playlist.image}
+                  alt={playlist.name}
+                  variant="square"
+                  sx={{ 
+                    width: 32, 
+                    height: 32, 
+                    borderRadius: 1,
+                    boxShadow: theme.shadows[1],
+                    transition: theme.transitions.create(['transform', 'box-shadow']),
+                    '&:hover': {
+                      transform: 'scale(1.1)',
+                      boxShadow: theme.shadows[2],
+                    },
+                  }}
+                />
               </ListItemIcon>
-              <ListItemText primary={playlist} slotProps={{ fontSize: '1rem' }} />
+              <ListItemText 
+                primary={playlist.name}
+                primaryTypographyProps={{
+                  fontWeight: isActive(`/playlist/${playlist.id}`) ? 'bold' : 'medium',
+                  color: isActive(`/playlist/${playlist.id}`) ? 'primary' : 'inherit',
+                  transition: theme.transitions.create(['color', 'font-weight']),
+                }}
+              />
             </ListItem>
           ))}
 
           <Divider sx={{ my: 2 }} />
 
-          {/* Recently Played */}
-          <ListItem button sx={{ py: 1.2 }} onClick={() => navigate('/recent')}>
+          {/* Downloads */}
+          <ListItem 
+            button 
+            sx={{ 
+              py: 1.2,
+              borderRadius: 1,
+              bgcolor: isActive('/downloads') ? 'action.selected' : 'transparent',
+              transition: theme.transitions.create(['background-color', 'transform']),
+              '&:hover': {
+                bgcolor: 'action.hover',
+                transform: 'translateX(4px)',
+              },
+            }}
+            onClick={() => navigate('/downloads')}
+          >
             <ListItemIcon sx={{ minWidth: 40 }}>
-              <HistoryIcon fontSize="medium" />
+              <DownloadIcon 
+                color={isActive('/downloads') ? 'primary' : 'inherit'}
+                sx={{
+                  transition: theme.transitions.create('transform'),
+                  '&:hover': {
+                    transform: 'scale(1.1)',
+                  },
+                }}
+              />
             </ListItemIcon>
-            <ListItemText primary="Recently Played" slotProps={{ fontSize: '1rem' }} />
+            <ListItemText 
+              primary="Downloads"
+              primaryTypographyProps={{
+                fontWeight: isActive('/downloads') ? 'bold' : 'medium',
+                color: isActive('/downloads') ? 'primary' : 'inherit',
+                transition: theme.transitions.create(['color', 'font-weight']),
+              }}
+            />
           </ListItem>
 
-          {/* Downloads */}
-          <ListItem button sx={{ py: 1.2 }} onClick={() => navigate('/downloads')}>
+          {/* History */}
+          <ListItem 
+            button 
+            sx={{ 
+              py: 1.2,
+              borderRadius: 1,
+              bgcolor: isActive('/history') ? 'action.selected' : 'transparent',
+              transition: theme.transitions.create(['background-color', 'transform']),
+              '&:hover': {
+                bgcolor: 'action.hover',
+                transform: 'translateX(4px)',
+              },
+            }}
+            onClick={() => navigate('/history')}
+          >
             <ListItemIcon sx={{ minWidth: 40 }}>
-              <DownloadIcon fontSize="medium" />
+              <HistoryIcon 
+                color={isActive('/history') ? 'primary' : 'inherit'}
+                sx={{
+                  transition: theme.transitions.create('transform'),
+                  '&:hover': {
+                    transform: 'scale(1.1)',
+                  },
+                }}
+              />
             </ListItemIcon>
-            <ListItemText primary="Downloads" slotProps={{ fontSize: '1rem' }} />
+            <ListItemText 
+              primary="History"
+              primaryTypographyProps={{
+                fontWeight: isActive('/history') ? 'bold' : 'medium',
+                color: isActive('/history') ? 'primary' : 'inherit',
+                transition: theme.transitions.create(['color', 'font-weight']),
+              }}
+            />
           </ListItem>
         </List>
       </Box>

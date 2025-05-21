@@ -7,49 +7,59 @@ import {
   CardContent,
   useTheme,
 } from '@mui/material';
-import { PlayButton } from '../layout/Miniplayer'; // Adjust the import path if needed
+import { useNavigate } from 'react-router-dom';
+import { PlayButton } from '../layout/Miniplayer';
 
 // Reusable Card for Song/Artist/Podcast
 const MediaCard = ({ item, type = 'song', layout = 'vertical', onPlay }) => {
   const theme = useTheme();
+  const navigate = useNavigate();
   const title = type === 'artist' ? item.name : item.title;
   const subtitle =
     type === 'song' ? item.artist : type === 'podcast' ? item.host : null;
 
-  const cardHeightHorizontal = 135;
-  const cardWidthHorizontal = 380;
-  const verticalImageHeight = 210;
-  const cardHeightVertical = 300; // Fixed height for vertical cards (adjust as needed)
+  const handleClick = () => {
+    if (type === 'artist') {
+      navigate(`/artist/${item.id}`);
+    }
+  };
 
   return (
     <Card
+      onClick={handleClick}
       sx={{
-        bgcolor: '#222',
-        color: 'white',
+        bgcolor: 'background.card',
+        color: 'text.primary',
         position: 'relative',
-        display: 'flex', // Use flex for vertical layout
-        flexDirection: layout === 'horizontal' ? 'row' : 'column', // Column for vertical
+        display: 'flex',
+        flexDirection: layout === 'horizontal' ? 'row' : 'column',
         cursor: 'pointer',
-        borderRadius: 1,
-        transition: 'transform 0.3s, box-shadow 0.3s',
+        borderRadius: '12px',
+        transition: theme.transitions.create(['transform', 'box-shadow', 'background-color'], {
+          duration: theme.transitions.duration.shorter,
+          easing: theme.transitions.easing.easeInOut,
+        }),
         '&:hover': {
           transform: 'scale(1.04)',
-          boxShadow: `0 8px 20px ${theme.palette.primary.main}80`,
+          boxShadow: `0 8px 20px ${theme.palette.primary.main}40`,
+          bgcolor: 'background.cardHover',
         },
         '&:hover .playButton': {
           opacity: 1,
+          transform: 'translate(-50%, -50%) scale(1.1)',
         },
-        height: layout === 'horizontal' ? cardHeightHorizontal : cardHeightVertical, // Fixed height for vertical
-        width: layout === 'horizontal' ? cardWidthHorizontal : 210,
-        maxWidth: layout === 'horizontal' ? cardWidthHorizontal : 'none',
+        height: layout === 'horizontal' ? 135 : 280,
+        width: layout === 'horizontal' ? 380 : 200,
+        maxWidth: layout === 'horizontal' ? 380 : 200,
       }}
     >
       <Box
         sx={{
           position: 'relative',
-          width: layout === 'horizontal' ? cardHeightHorizontal : '100%',
-          height: layout === 'horizontal' ? cardHeightHorizontal : verticalImageHeight, // Set desired image height for vertical
+          width: layout === 'horizontal' ? 135 : '100%',
+          height: layout === 'horizontal' ? 135 : 200,
           overflow: 'hidden',
+          borderRadius: layout === 'horizontal' ? '12px 0 0 12px' : '12px 12px 0 0',
         }}
       >
         <CardMedia
@@ -58,6 +68,13 @@ const MediaCard = ({ item, type = 'song', layout = 'vertical', onPlay }) => {
             width: '100%',
             height: '100%',
             objectFit: 'cover',
+            transition: theme.transitions.create('transform', {
+              duration: theme.transitions.duration.shorter,
+              easing: theme.transitions.easing.easeInOut,
+            }),
+            '&:hover': {
+              transform: 'scale(1.1)',
+            },
           }}
           image={item.img}
           alt={title}
@@ -72,9 +89,18 @@ const MediaCard = ({ item, type = 'song', layout = 'vertical', onPlay }) => {
               left: '50%',
               transform: 'translate(-50%, -50%)',
               opacity: 0,
-              transition: 'opacity 0.3s',
+              transition: theme.transitions.create(['opacity', 'transform'], {
+                duration: theme.transitions.duration.shorter,
+                easing: theme.transitions.easing.easeInOut,
+              }),
               cursor: 'pointer',
               zIndex: 10,
+              '& .MuiIconButton-root': {
+                bgcolor: theme.palette.primary.light,
+                '&:hover': {
+                  bgcolor: theme.palette.primary.dark,
+                },
+              },
             }}
             onClick={(e) => {
               e.stopPropagation();
@@ -87,15 +113,33 @@ const MediaCard = ({ item, type = 'song', layout = 'vertical', onPlay }) => {
         )}
       </Box>
 
-      <CardContent sx={layout === 'horizontal' ? { p: 1, flexGrow: 1 } : { p: '1.5', flexGrow: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}>
+      <CardContent 
+        sx={{ 
+          p: layout === 'horizontal' ? 1 : 1.5, 
+          flexGrow: 1, 
+          overflow: 'hidden', 
+          display: 'flex', 
+          flexDirection: 'column', 
+          justifyContent: 'flex-start',
+          transition: theme.transitions.create('background-color', {
+            duration: theme.transitions.duration.shorter,
+            easing: theme.transitions.easing.easeInOut,
+          }),
+        }}
+      >
         <Typography
           variant="h6"
           sx={{
-            whiteSpace: 'nowrap', // Prevent title from wrapping to maintain consistent height
+            whiteSpace: 'nowrap',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
             fontSize: layout === 'horizontal' ? '1rem' : '0.9rem',
             marginBottom: 0.3,
+            color: 'text.primary',
+            transition: theme.transitions.create('color', {
+              duration: theme.transitions.duration.shorter,
+              easing: theme.transitions.easing.easeInOut,
+            }),
           }}
         >
           {title}
@@ -103,12 +147,16 @@ const MediaCard = ({ item, type = 'song', layout = 'vertical', onPlay }) => {
         {subtitle && (
           <Typography
             variant="body2"
-            color="grey.400"
             sx={{
-              whiteSpace: 'nowrap', // Prevent subtitle from wrapping
+              whiteSpace: 'nowrap',
               overflow: 'hidden',
               textOverflow: 'ellipsis',
               fontSize: '0.8rem',
+              color: 'text.secondary',
+              transition: theme.transitions.create('color', {
+                duration: theme.transitions.duration.shorter,
+                easing: theme.transitions.easing.easeInOut,
+              }),
             }}
           >
             {subtitle}

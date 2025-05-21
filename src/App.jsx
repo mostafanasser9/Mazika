@@ -21,7 +21,7 @@ function App() {
         <Navbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
         <Routes>
           <Route path="/" element={<HomePage searchQuery={searchQuery} />} />
-          <Route path="/playlist" element={<PlaylistPage />} />
+          <Route path="/playlist/:id" element={<PlaylistPage />} />
           <Route path="/artist/:id" element={<ArtistPage />} />
           <Route path="/album/:id" element={<AlbumPage />} />
           {/* Add more routes as needed */} 
