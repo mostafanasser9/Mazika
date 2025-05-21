@@ -20,6 +20,7 @@ import {
   CardContent,
   CardMedia,
   Divider,
+  useTheme,
 } from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
@@ -39,6 +40,7 @@ const sidebarWidth = 240;
 const NAVBAR_HEIGHT = 64;
 
 export default function AlbumPage() {
+  const theme = useTheme();
   const { id } = useParams();
   const navigate = useNavigate();
   const [album, setAlbum] = useState(null);
@@ -277,29 +279,32 @@ export default function AlbumPage() {
                     onClick={handlePlayAlbum}
                     sx={{
                       bgcolor: 'primary.light',
-                      color: 'common.white',
+                      color: 'black',
                       p: 1.5,
                       '&:hover': {
-                        bgcolor: 'primary.dark',
-                        transform: 'scale(1.04)'
+                        bgcolor: 'primary.hover',
+                        transform: 'scale(1.1)',
+                        boxShadow: theme.shadows[8],
+                        color: 'black',
                       },
-                      transition: theme => theme.transitions.create(['background-color', 'transform'], {
+                      transition: theme.transitions.create(['transform', 'box-shadow'], {
                         duration: theme.transitions.duration.shorter,
                         easing: theme.transitions.easing.easeInOut,
                       }),
+                      boxShadow: theme.shadows[4],
                     }}
                     aria-label={isPlaying ? "Pause" : "Play"}
                   >
-                    {isPlaying ? <PauseIcon sx={{ fontSize: 38 }} /> : <PlayArrowIcon sx={{ fontSize: 38 }} />}
+                    {isPlaying ? <PauseIcon sx={{ fontSize: 38, color: 'black' }} /> : <PlayArrowIcon sx={{ fontSize: 38, color: 'black' }} />}
                   </IconButton>
 
                   {/* Like Button */}
                   <IconButton 
                     onClick={handleLikeAlbum}
                     sx={{ 
-                      color: isLiked ? '#50C5F9' : '#b3b3b3',
+                      color: isLiked ? '#e91e63' : '#b3b3b3',
                       '&:hover': {
-                        color: isLiked ? '#50C5F9' : 'white'
+                        color: isLiked ? '#e91e63' : 'white'
                       }
                     }}
                   >

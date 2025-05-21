@@ -67,11 +67,26 @@ export default function Home({ searchQuery }) {
   const [miniPlayerSong, setMiniPlayerSong] = useState(null);
   const [filter, setFilter] = useState('all');
   const [loading, setLoading] = useState(false);
+  const [currentSong, setCurrentSong] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
   const navigate = useNavigate();
 
   const handlePlaySong = (item) => {
+    if (currentSong?.id === item.id) {
+      // If clicking the same song, toggle play/pause
+      setIsPlaying(!isPlaying);
+    } else {
+      // If clicking a different song, play it
+      setCurrentSong(item);
+      setIsPlaying(true);
+    }
     setMiniPlayerSong(item);
     console.log(`Playing ${item.type}:`, item);
+  };
+
+  // Add handler for miniplayer play/pause
+  const handleMiniPlayerPlayPause = (isPlaying) => {
+    setIsPlaying(isPlaying);
   };
 
   const handleArtistClick = (artistId) => {
@@ -114,8 +129,8 @@ export default function Home({ searchQuery }) {
             ml: `${sidebarWidth}px`,
             mt: `${NAVBAR_HEIGHT}px`,
             p: 3,
-            color: 'text.primary',
-            background: `linear-gradient(to bottom, ${theme.palette.background.default} 0%, ${theme.palette.background.paper} 100%)`,
+            color: 'white',
+            background: 'linear-gradient(180deg, rgba(3,26,68,1) 0%, rgba(18,18,18,1) 100%)',
             flexGrow: 1,
             paddingBottom: `${MINIPLAYER_HEIGHT + 16}px`,
             minHeight: `calc(100vh - ${NAVBAR_HEIGHT}px)`,
@@ -147,9 +162,6 @@ export default function Home({ searchQuery }) {
                     easing: theme.transitions.easing.easeInOut,
                   }),
                   '&:hover': {
-                    backgroundColor: (theme) =>
-                      filter === option ? theme.palette.primary.main : theme.palette.background.cardHover,
-                    color: theme.palette.common.white,
                     transform: 'scale(1.05)',
                   },
                   userSelect: 'none',
@@ -186,7 +198,7 @@ export default function Home({ searchQuery }) {
                     <Grid container spacing={2} sx={{ mb: 3 }}>
                       {trendingSongs.map((song) => (
                         <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={song.id}>
-                          <MediaCard item={song} type="song" onPlay={handlePlaySong} />
+                          <MediaCard item={song} type="song" onPlay={handlePlaySong} isPlaying={isPlaying} isCurrentSong={currentSong?.id === song.id} />
                         </Grid>
                       ))}
                     </Grid>
@@ -210,7 +222,7 @@ export default function Home({ searchQuery }) {
                     <Grid container spacing={2} sx={{ mb: 3 }}>
                       {filteredSongs.map((song) => (
                         <Grid item xs={12} sm={6} md={3} lg={2} xl={1.5} key={song.id}>
-                          <MediaCard item={song} type="song" onPlay={handlePlaySong} />
+                          <MediaCard item={song} type="song" onPlay={handlePlaySong} isPlaying={isPlaying} isCurrentSong={currentSong?.id === song.id} />
                         </Grid>
                       ))}
                     </Grid>
@@ -235,7 +247,7 @@ export default function Home({ searchQuery }) {
                       {filteredArtists.map((artist) => (
                         <Grid item xs={6} sm={4} md={3} lg={2} xl={1.5} key={artist.id}>
                           <Box onClick={() => handleArtistClick(artist.id)} sx={{ cursor: 'pointer' }}>
-                            <MediaCard item={artist} type="artist" />
+                            <MediaCard item={artist} type="artist" isPlaying={isPlaying} isCurrentSong={currentSong?.id === artist.id} />
                           </Box>
                         </Grid>
                       ))}
@@ -260,7 +272,7 @@ export default function Home({ searchQuery }) {
                     <Grid container spacing={2} sx={{ mb: 3 }}>
                       {filteredPodcasts.map((podcast) => (
                         <Grid item xs={12} sm={6} md={3} lg={2} xl={1.5} key={podcast.id}>
-                          <MediaCard item={podcast} type="podcast" onPlay={handlePlaySong} />
+                          <MediaCard item={podcast} type="podcast" onPlay={handlePlaySong} isPlaying={isPlaying} isCurrentSong={currentSong?.id === podcast.id} />
                         </Grid>
                       ))}
                     </Grid>
@@ -272,7 +284,11 @@ export default function Home({ searchQuery }) {
         </Box>
       </Box>
 
-      <MiniPlayer song={miniPlayerSong} />
+      <MiniPlayer 
+        song={miniPlayerSong} 
+        isPlaying={isPlaying}
+        onPlayPause={handleMiniPlayerPlayPause}
+      />
       <Footer />
     </Box>
   );

@@ -236,7 +236,7 @@ const Sidebar = () => {
               primary="Liked Songs"
               primaryTypographyProps={{
                 fontWeight: isActive('/liked') ? 'bold' : 'medium',
-                color: isActive('/liked') ? 'primary' : 'inherit',
+                color: isActive('/liked') ? 'primary.light' : 'inherit',
                 transition: theme.transitions.create(['color', 'font-weight']),
               }}
             />
@@ -281,7 +281,7 @@ const Sidebar = () => {
                 primary={playlist.name}
                 primaryTypographyProps={{
                   fontWeight: isActive(`/playlist/${playlist.id}`) ? 'bold' : 'medium',
-                  color: isActive(`/playlist/${playlist.id}`) ? 'primary' : 'inherit',
+                  color: isActive(`/playlist/${playlist.id}`) ? 'primary.light' : 'inherit',
                   transition: theme.transitions.create(['color', 'font-weight']),
                 }}
               />
@@ -320,7 +320,7 @@ const Sidebar = () => {
               primary="Downloads"
               primaryTypographyProps={{
                 fontWeight: isActive('/downloads') ? 'bold' : 'medium',
-                color: isActive('/downloads') ? 'primary' : 'inherit',
+                color: isActive('/downloads') ? 'primary.light' : 'inherit',
                 transition: theme.transitions.create(['color', 'font-weight']),
               }}
             />
@@ -356,7 +356,7 @@ const Sidebar = () => {
               primary="History"
               primaryTypographyProps={{
                 fontWeight: isActive('/history') ? 'bold' : 'medium',
-                color: isActive('/history') ? 'primary' : 'inherit',
+                color: isActive('/history') ? 'primary.light' : 'inherit',
                 transition: theme.transitions.create(['color', 'font-weight']),
               }}
             />

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Box,
   Typography,
@@ -18,7 +18,7 @@ import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 
 const sidebarWidth = 240;
-export const MINIPLAYER_HEIGHT = 70;
+export const MINIPLAYER_HEIGHT = 80;
 
 // Play Button toggles between PlayArrowIcon and PauseIcon
 export const PlayButton = ({ onClick, isPlaying, size = 40, ariaLabel }) => {
@@ -73,31 +73,61 @@ const formatTime = (seconds) => {
   return `${m}:${s < 10 ? '0' : ''}${s}`;
 };
 
-const MiniPlayer = ({ song, onClose }) => {
+const MiniPlayer = ({ song, isPlaying, onPlayPause }) => {
   const theme = useTheme();
   const [shuffleActive, setShuffleActive] = useState(false);
   const [repeatActive, setRepeatActive] = useState(false);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [volume, setVolume] = useState(50);
-  const [muted, setMuted] = useState(false);
+  const [volume, setVolume] = useState(1);
+  const [isMuted, setIsMuted] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const audioRef = useRef(null);
+
+  useEffect(() => {
+    if (song) {
+      // Reset states when a new song is loaded
+      setCurrentTime(0);
+      setProgress(0);
+      // Set duration from song if available, otherwise use default
+      setDuration(song.duration ? parseDuration(song.duration) : 180);
+    }
+  }, [song]);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.play();
+      } else {
+        audioRef.current.pause();
+      }
+    }
+  }, [isPlaying]);
 
   useEffect(() => {
     if (isPlaying) {
       const timer = setInterval(() => {
         setCurrentTime((prev) => {
           if (prev >= duration) {
-            setIsPlaying(false);
+            onPlayPause(false);
             return 0;
           }
-          return prev + 1;
+          const newTime = prev + 1;
+          setProgress((newTime / duration) * 100);
+          return newTime;
         });
       }, 1000);
       return () => clearInterval(timer);
     }
-  }, [isPlaying, duration]);
+  }, [isPlaying, duration, onPlayPause]);
+
+  // Parse duration string (e.g. "3:45") to seconds
+  const parseDuration = (durationStr) => {
+    if (!durationStr) return 180;
+    const [minutes, seconds] = durationStr.split(':').map(Number);
+    return minutes * 60 + seconds;
+  };
 
   if (!song) return null;
 
@@ -105,21 +135,35 @@ const MiniPlayer = ({ song, onClose }) => {
   const subtitle = song.artist || song.host || '';
 
   const handlePlayPause = () => {
-    setIsPlaying(!isPlaying);
+    if (onPlayPause) {
+      onPlayPause(!isPlaying);
+    }
   };
 
   const handleVolumeChange = (e, val) => {
     setVolume(val);
-    setMuted(val === 0);
+    setIsMuted(val === 0);
   };
 
   const toggleMute = () => {
-    setMuted(!muted);
+    setIsMuted(!isMuted);
   };
 
-  const handleProgressChange = (e, val) => {
-    setProgress(val);
-    setCurrentTime((val / 100) * duration);
+  const handleProgressChange = (e, newValue) => {
+    const newTime = (newValue / 100) * duration;
+    setCurrentTime(newTime);
+    setProgress(newValue);
+  };
+
+  const handleProgressChangeCommitted = (e, newValue) => {
+    const newTime = (newValue / 100) * duration;
+    setCurrentTime(newTime);
+    setProgress(newValue);
+    // Resume playback if it was playing
+    if (isPlaying) {
+      onPlayPause(false);
+      setTimeout(() => onPlayPause(true), 0);
+    }
   };
 
   return (
@@ -129,7 +173,7 @@ const MiniPlayer = ({ song, onClose }) => {
         bottom: 0,
         left: 0,
         right: 0,
-        height: `${MINIPLAYER_HEIGHT}px`,
+        height: isExpanded ? '100vh' : MINIPLAYER_HEIGHT,
         bgcolor: 'background.paper',
         display: 'flex',
         alignItems: 'center',
@@ -137,8 +181,8 @@ const MiniPlayer = ({ song, onClose }) => {
         zIndex: 1500,
         boxShadow: theme.shadows[8],
         borderTop: `1px solid ${theme.palette.divider}`,
-        transition: theme.transitions.create(['transform', 'opacity'], {
-          duration: theme.transitions.duration.shorter,
+        transition: theme.transitions.create(['height', 'transform'], {
+          duration: theme.transitions.duration.standard,
           easing: theme.transitions.easing.easeInOut,
         }),
       }}
@@ -305,9 +349,9 @@ const MiniPlayer = ({ song, onClose }) => {
             </Typography>
             <Slider
               size="small"
-              value={currentTime}
-              max={duration}
+              value={progress}
               onChange={handleProgressChange}
+              onChangeCommitted={handleProgressChangeCommitted}
               sx={{
                 color: 'text.primary',
                 '& .MuiSlider-thumb': {
@@ -360,11 +404,11 @@ const MiniPlayer = ({ song, onClose }) => {
               },
             }}
           >
-            {muted ? <VolumeOffIcon /> : <VolumeUpIcon />}
+            {isMuted ? <VolumeOffIcon /> : <VolumeUpIcon />}
           </IconButton>
           <Slider
             size="small"
-            value={muted ? 0 : volume}
+            value={isMuted ? 0 : volume}
             max={100}
             onChange={handleVolumeChange}
             sx={{

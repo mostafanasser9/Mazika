@@ -22,6 +22,7 @@ import {
   Divider,
   Tabs,
   Tab,
+  useTheme,
 } from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
@@ -42,6 +43,7 @@ const sidebarWidth = 240;
 const NAVBAR_HEIGHT = 64;
 
 export default function ArtistPage() {
+  const theme = useTheme();
   const { id } = useParams();
   const navigate = useNavigate();
   const [artist, setArtist] = useState(null);
@@ -208,9 +210,34 @@ export default function ArtistPage() {
                     display: 'flex',
                     alignItems: 'flex-end',
                     p: { xs: 2, md: 4 },
+                    gap: { xs: 3, md: 6 },
+                    flexDirection: { xs: 'column', sm: 'row' },
+                    alignItems: { xs: 'center', sm: 'flex-end' },
                   }}
                 >
-                  <Box>
+                  {/* Artist Image */}
+                  <Box 
+                    sx={{
+                      width: { xs: '200px', sm: '232px' },
+                      height: { xs: '200px', sm: '232px' },
+                      boxShadow: '0 4px 60px rgba(0,0,0,.5)',
+                      flexShrink: 0,
+                    }}
+                  >
+                    <img 
+                      src={artist.profileImage} 
+                      alt={artist.name}
+                      style={{ 
+                        width: '100%', 
+                        height: '100%', 
+                        objectFit: 'cover',
+                        display: 'block'
+                      }}
+                    />
+                  </Box>
+
+                  {/* Artist Info */}
+                  <Box sx={{ flex: 1, pb: { xs: 0, sm: 2 } }}>
                     {/* Verified Badge */}
                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                       {artist.verified && (
@@ -225,13 +252,13 @@ export default function ArtistPage() {
 
                     {/* Artist Name */}
                     <Typography 
-                      variant="h1" 
+                      variant="h2" 
                       sx={{ 
                         fontWeight: 'bold',
-                        fontSize: { xs: '3rem', sm: '5rem', md: '6rem' },
+                        fontSize: { xs: '2rem', sm: '3rem', md: '4rem' },
                         letterSpacing: '-0.02em',
-                        textShadow: '0 2px 4px rgba(0,0,0,0.5)',
-                        mb: 2
+                        textShadow: '0 2px 4px rgba(0,0,0,0.3)',
+                        mb: 1
                       }}
                     >
                       {artist.name}
@@ -251,7 +278,8 @@ export default function ArtistPage() {
                     alignItems: 'center',
                     gap: 2,
                     p: { xs: 2, md: 4 },
-                    backgroundImage: theme => theme.palette.background.gradient.content,
+                    pt: 2,
+                    backgroundImage: 'linear-gradient(180deg, rgba(18,18,18,0.8) 0%, rgba(18,18,18,1) 100%)',
                   }}
                 >
                   {/* Play Button */}
@@ -259,25 +287,36 @@ export default function ArtistPage() {
                     onClick={handlePlayArtist}
                     sx={{
                       bgcolor: 'primary.light',
-                      color: 'common.white',
+                      color: 'black',
                       p: 1.5,
                       '&:hover': {
-                        bgcolor: 'primary.dark',
-                        transform: 'scale(1.04)'
+                        bgcolor: 'primary.hover',
+                        transform: 'scale(1.1)',
+                        boxShadow: theme.shadows[8],
+                        color: 'black',
                       },
-                      transition: theme => theme.transitions.create(['background-color', 'transform'], {
+                      transition: theme.transitions.create(['transform', 'box-shadow'], {
                         duration: theme.transitions.duration.shorter,
                         easing: theme.transitions.easing.easeInOut,
                       }),
+                      boxShadow: theme.shadows[4],
                     }}
                     aria-label={isPlaying ? "Pause" : "Play"}
                   >
-                    {isPlaying ? <PauseIcon sx={{ fontSize: 38 }} /> : <PlayArrowIcon sx={{ fontSize: 38 }} />}
+                    {isPlaying ? <PauseIcon sx={{ fontSize: 38, color: 'black' }} /> : <PlayArrowIcon sx={{ fontSize: 38, color: 'black' }} />}
                   </IconButton>
 
                   {/* Like Button */}
-                  <IconButton onClick={handleLikeArtist}>
-                    {isLiked ? <FavoriteIcon color="primary" /> : <FavoriteBorderIcon />}
+                  <IconButton 
+                    onClick={handleLikeArtist}
+                    sx={{ 
+                      color: isLiked ? '#e91e63' : '#b3b3b3',
+                      '&:hover': {
+                        color: isLiked ? '#e91e63' : 'white'
+                      }
+                    }}
+                  >
+                    {isLiked ? <FavoriteIcon sx={{ fontSize: 30 }} /> : <FavoriteBorderIcon sx={{ fontSize: 30 }} />}
                   </IconButton>
 
                   {/* More Options Button */}

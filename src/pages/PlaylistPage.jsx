@@ -26,6 +26,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import SortIcon from '@mui/icons-material/Sort';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import CheckIcon from '@mui/icons-material/Check';
+import { useTheme } from '@mui/material/styles';
 
 import Sidebar from '../components/layout/Sidebar';
 import Footer from '../components/layout/Footer';
@@ -346,6 +347,7 @@ export default function PlaylistPage() {
   const [sortMethod, setSortMethod] = useState('title');
   const [sortAnchorEl, setSortAnchorEl] = useState(null);
   const openSortMenu = Boolean(sortAnchorEl);
+  const theme = useTheme();
 
   useEffect(() => {
     // Simulate loading data
@@ -516,18 +518,24 @@ export default function PlaylistPage() {
                   <IconButton 
                     onClick={handlePlayPausePlaylist}
                     sx={{
-                      bgcolor: '#50C5F9',  // Changed from green to dark blue
-                      color: 'white',
+                      bgcolor: 'primary.light',
+                      color: 'black',
                       p: 1.5,
                       '&:hover': {
-                        bgcolor: '#31a44f', // Changed hover from light green to light blue
-                        transform: 'scale(1.04)'
+                        bgcolor: 'primary.hover',
+                        transform: 'scale(1.1)',
+                        boxShadow: theme.shadows[8],
+                        color: 'black',
                       },
-                      transition: 'all 0.3s ease'
+                      transition: theme.transitions.create(['transform', 'box-shadow'], {
+                        duration: theme.transitions.duration.shorter,
+                        easing: theme.transitions.easing.easeInOut,
+                      }),
+                      boxShadow: theme.shadows[4],
                     }}
                     aria-label={isPlaying ? "Pause" : "Play"}
                   >
-                    {isPlaying ? <PauseIcon sx={{ fontSize: 38 }} /> : <PlayArrowIcon sx={{ fontSize: 38 }} />}
+                    {isPlaying ? <PauseIcon sx={{ fontSize: 38, color: 'black' }} /> : <PlayArrowIcon sx={{ fontSize: 38, color: 'black' }} />}
                   </IconButton>
 
                   {/* Search and Sort */}

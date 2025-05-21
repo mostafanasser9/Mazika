@@ -187,7 +187,7 @@ export const albums = {
     artistId: "drake",
     releaseDate: "September 3, 2021",
     albumType: "Album",
-    coverImage: "https://picsum.photos/500/500?random=21",
+    coverImage: "/images/pablo.jpeg",
     totalTracks: 21,
     totalDuration: "86:02",
     label: "OVO Sound / Republic Records",
@@ -229,13 +229,13 @@ export const albums = {
       {
         id: "scorpion",
         title: "Scorpion",
-        coverImage: "https://picsum.photos/500/500?random=22",
+        coverImage: "/images/pablo.jpeg",
         releaseYear: "2018"
       },
       {
         id: "views",
         title: "Views",
-        coverImage: "https://picsum.photos/500/500?random=23",
+        coverImage: "/images/pablo.jpeg",
         releaseYear: "2016"
       }
     ]
@@ -247,7 +247,7 @@ export const albums = {
     artistId: "drake",
     releaseDate: "June 29, 2018",
     albumType: "Album",
-    coverImage: "https://picsum.photos/500/500?random=22",
+    coverImage: "/images/pablo.jpeg",
     totalTracks: 25,
     totalDuration: "89:47",
     label: "OVO Sound / Republic Records",
@@ -289,13 +289,13 @@ export const albums = {
       {
         id: "certified-lover-boy",
         title: "Certified Lover Boy",
-        coverImage: "https://picsum.photos/500/500?random=21",
+        coverImage: "/images/pablo.jpeg",
         releaseYear: "2021"
       },
       {
         id: "views",
         title: "Views",
-        coverImage: "https://picsum.photos/500/500?random=23",
+        coverImage: "/images/pablo.jpeg",
         releaseYear: "2016"
       }
     ]
@@ -367,7 +367,7 @@ export const albums = {
     artistId: "nirvana",
     releaseDate: "September 24, 1991",
     albumType: "Album",
-    coverImage: "images/nirvana.jpeg",
+    coverImage: "images/nevermind.jpeg",
     totalTracks: 12,
     totalDuration: "49:15",
     label: "DGC Records",
@@ -436,7 +436,7 @@ export const albums = {
     artistId: "the-beatles",
     releaseDate: "September 26, 1969",
     albumType: "Album",
-    coverImage: "images/beatles.webp",
+    coverImage: "/images/beatles.webp",
     totalTracks: 17,
     totalDuration: "47:23",
     label: "Apple Records",
@@ -477,7 +477,7 @@ export const albums = {
       {
         id: "let-it-be",
         title: "Let It Be",
-        coverImage: "images/beatles.webp",
+        coverImage: "/images/beatles.webp",
         releaseYear: "1970"
       }
     ]

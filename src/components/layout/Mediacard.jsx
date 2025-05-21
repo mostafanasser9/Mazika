@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { PlayButton } from '../layout/Miniplayer';
 
 // Reusable Card for Song/Artist/Podcast
-const MediaCard = ({ item, type = 'song', layout = 'vertical', onPlay }) => {
+const MediaCard = ({ item, type = 'song', layout = 'vertical', onPlay, isPlaying, isCurrentSong }) => {
   const theme = useTheme();
   const navigate = useNavigate();
   const title = type === 'artist' ? item.name : item.title;
@@ -43,10 +43,9 @@ const MediaCard = ({ item, type = 'song', layout = 'vertical', onPlay }) => {
           transform: 'scale(1.04)',
           boxShadow: `0 8px 20px ${theme.palette.primary.main}40`,
           bgcolor: 'background.cardHover',
-        },
-        '&:hover .playButton': {
-          opacity: 1,
-          transform: 'translate(-50%, -50%) scale(1.1)',
+          '& .playButton': {
+            opacity: 1,
+          },
         },
         height: layout === 'horizontal' ? 135 : 280,
         width: layout === 'horizontal' ? 380 : 200,
@@ -85,20 +84,25 @@ const MediaCard = ({ item, type = 'song', layout = 'vertical', onPlay }) => {
             className="playButton"
             sx={{
               position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              opacity: 0,
-              transition: theme.transitions.create(['opacity', 'transform'], {
+              bottom: '8px',
+              right: '8px',
+              opacity: isCurrentSong ? 1 : 0,
+              transition: theme.transitions.create('opacity', {
                 duration: theme.transitions.duration.shorter,
                 easing: theme.transitions.easing.easeInOut,
               }),
               cursor: 'pointer',
               zIndex: 10,
               '& .MuiIconButton-root': {
-                bgcolor: theme.palette.primary.light,
+                bgcolor: 'primary.light',
+                width: '56px',
+                height: '56px',
                 '&:hover': {
-                  bgcolor: theme.palette.primary.dark,
+                  bgcolor: 'primary.hover',
+                  transform: 'scale(1.1)',
+                },
+                '& .MuiSvgIcon-root': {
+                  color: 'black',
                 },
               },
             }}
@@ -108,7 +112,11 @@ const MediaCard = ({ item, type = 'song', layout = 'vertical', onPlay }) => {
             }}
             aria-label={`Play ${title}`}
           >
-            <PlayButton size={40} ariaLabel={`Play ${title}`} />
+            <PlayButton 
+              size={56} 
+              ariaLabel={`Play ${title}`} 
+              isPlaying={isCurrentSong && isPlaying}
+            />
           </Box>
         )}
       </Box>
