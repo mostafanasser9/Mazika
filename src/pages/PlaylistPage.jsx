@@ -49,7 +49,7 @@ const playlists = {
         artist: "Sade", 
         album: "The Best of Sade", 
         duration: "6:22",
-        img: "https://picsum.photos/200/200?random=1",
+        img: "/images/isitacrime.jpeg",
         dateAdded: "2025-03-15" 
       },
       { 
@@ -58,7 +58,7 @@ const playlists = {
         artist: "Kate Bush", 
         album: "Hounds of Love", 
         duration: "4:58",
-        img: "https://picsum.photos/200/200?random=2",
+        img: "/images/runningupthathill.jpeg",
         dateAdded: "2025-03-10" 
       },
       { 
@@ -67,7 +67,7 @@ const playlists = {
         artist: "Queen & David Bowie", 
         album: "Hot Space", 
         duration: "4:04",
-        img: "https://picsum.photos/200/200?random=3",
+        img: "/images/underpressure.jpeg",
         dateAdded: "2025-04-05" 
       },
       { 
@@ -76,7 +76,7 @@ const playlists = {
         artist: "Fleetwood Mac", 
         album: "Rumours", 
         duration: "4:17",
-        img: "https://picsum.photos/200/200?random=4",
+        img: "/images/dreams.jpeg",
         dateAdded: "2025-02-18" 
       },
       { 
@@ -85,7 +85,7 @@ const playlists = {
         artist: "Michael Jackson", 
         album: "Thriller", 
         duration: "4:54",
-        img: "https://picsum.photos/200/200?random=5",
+        img: "/images/billiejean.jpeg",
         dateAdded: "2025-05-01" 
       },
     ]
@@ -102,7 +102,7 @@ const playlists = {
         artist: "Dave Brubeck Quartet",
         album: "Time Out",
         duration: "5:24",
-        img: "https://picsum.photos/200/200?random=11",
+        img: "/images/takefive.jpeg",
         dateAdded: "2025-03-01"
       },
       {
@@ -111,7 +111,7 @@ const playlists = {
         artist: "Miles Davis",
         album: "Kind of Blue",
         duration: "9:22",
-        img: "https://picsum.photos/200/200?random=12",
+        img: "/images/sowhat.jpeg",
         dateAdded: "2025-03-02"
       },
       {
@@ -120,7 +120,7 @@ const playlists = {
         artist: "Louis Armstrong",
         album: "What a Wonderful World",
         duration: "2:19",
-        img: "https://picsum.photos/200/200?random=13",
+        img: "/images/whatawonderful.jpeg",
         dateAdded: "2025-03-03"
       }
     ]
@@ -137,7 +137,7 @@ const playlists = {
         artist: "Eminem",
         album: "8 Mile",
         duration: "5:26",
-        img: "https://picsum.photos/200/200?random=21",
+        img: "/images/loseurself.jpeg",
         dateAdded: "2025-03-04"
       },
       {
@@ -146,7 +146,7 @@ const playlists = {
         artist: "The Notorious B.I.G.",
         album: "Ready to Die",
         duration: "5:02",
-        img: "https://picsum.photos/200/200?random=22",
+        img: "/images/juicy.jpeg",
         dateAdded: "2025-03-05"
       },
       {
@@ -155,7 +155,7 @@ const playlists = {
         artist: "Dr. Dre ft. Snoop Dogg",
         album: "The Chronic",
         duration: "3:58",
-        img: "https://picsum.photos/200/200?random=23",
+        img: "/images/nuthing.jpeg",
         dateAdded: "2025-03-06"
       }
     ]
@@ -172,7 +172,7 @@ const playlists = {
         artist: "Led Zeppelin",
         album: "Led Zeppelin IV",
         duration: "8:02",
-        img: "https://picsum.photos/200/200?random=31",
+        img: "/images/stairway.jpeg",
         dateAdded: "2025-03-07"
       },
       {
@@ -181,7 +181,7 @@ const playlists = {
         artist: "Queen",
         album: "A Night at the Opera",
         duration: "5:55",
-        img: "https://picsum.photos/200/200?random=32",
+        img: "/images/bohemian.jpeg",
         dateAdded: "2025-03-08"
       },
       {
@@ -190,7 +190,7 @@ const playlists = {
         artist: "Guns N' Roses",
         album: "Appetite for Destruction",
         duration: "5:56",
-        img: "https://picsum.photos/200/200?random=33",
+        img: "/images/sweet.jpeg",
         dateAdded: "2025-03-09"
       }
     ]
@@ -207,7 +207,7 @@ const playlists = {
         artist: "Metallica",
         album: "Master of Puppets",
         duration: "8:35",
-        img: "https://picsum.photos/200/200?random=41",
+        img: "/images/masterofpuppets.jpeg",
         dateAdded: "2025-03-10"
       },
       {
@@ -216,7 +216,7 @@ const playlists = {
         artist: "Black Sabbath",
         album: "Paranoid",
         duration: "5:55",
-        img: "https://picsum.photos/200/200?random=42",
+        img: "/images/iron.jpeg",
         dateAdded: "2025-03-11"
       },
       {
@@ -225,7 +225,7 @@ const playlists = {
         artist: "Motörhead",
         album: "Ace of Spades",
         duration: "2:46",
-        img: "https://picsum.photos/200/200?random=43",
+        img: "/images/ace.jpeg",
         dateAdded: "2025-03-12"
       }
     ]
@@ -242,7 +242,7 @@ const playlists = {
         artist: "Ed Sheeran",
         album: "÷ (Divide)",
         duration: "3:53",
-        img: "https://picsum.photos/200/200?random=51",
+        img: "/images/shapeofyou.jpeg",
         dateAdded: "2025-03-13"
       },
       {
@@ -251,7 +251,7 @@ const playlists = {
         artist: "The Weeknd",
         album: "After Hours",
         duration: "3:20",
-        img: "https://picsum.photos/200/200?random=52",
+        img: "/images/blindinglights.jpeg",
         dateAdded: "2025-03-14"
       },
       {
@@ -260,7 +260,7 @@ const playlists = {
         artist: "Billie Eilish",
         album: "When We All Fall Asleep, Where Do We Go?",
         duration: "3:14",
-        img: "https://picsum.photos/200/200?random=53",
+        img: "/images/badguy.jpeg",
         dateAdded: "2025-03-15"
       }
     ]
@@ -277,7 +277,7 @@ const playlists = {
         artist: "John Denver",
         album: "Poems, Prayers & Promises",
         duration: "3:10",
-        img: "https://picsum.photos/200/200?random=61",
+        img: "/images/takemehome.jpeg",
         dateAdded: "2025-03-16"
       },
       {
@@ -286,7 +286,7 @@ const playlists = {
         artist: "Johnny Cash",
         album: "Ring of Fire: The Best of Johnny Cash",
         duration: "2:38",
-        img: "https://picsum.photos/200/200?random=62",
+        img: "/images/ringoffire.jpeg",
         dateAdded: "2025-03-17"
       },
       {
@@ -295,7 +295,7 @@ const playlists = {
         artist: "Dolly Parton",
         album: "Jolene",
         duration: "2:41",
-        img: "https://picsum.photos/200/200?random=63",
+        img: "/images/jolene.jpeg",
         dateAdded: "2025-03-18"
       }
     ]
@@ -312,7 +312,7 @@ const playlists = {
         artist: "Bob Marley & The Wailers",
         album: "Live!",
         duration: "7:08",
-        img: "https://picsum.photos/200/200?random=71",
+        img: "/images/nowoman.jpeg",
         dateAdded: "2025-03-19"
       },
       {
@@ -321,7 +321,7 @@ const playlists = {
         artist: "Bob Marley & The Wailers",
         album: "Exodus",
         duration: "3:00",
-        img: "https://picsum.photos/200/200?random=72",
+        img: "/images/buffalosoldier.jpeg",
         dateAdded: "2025-03-20"
       },
       {
@@ -330,7 +330,7 @@ const playlists = {
         artist: "Bob Marley & The Wailers",
         album: "Confrontation",
         duration: "4:15",
-        img: "https://picsum.photos/200/200?random=73",
+        img: "/images/buffalosoldier.jpeg",
         dateAdded: "2025-03-21"
       }
     ]

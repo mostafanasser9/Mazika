@@ -79,7 +79,7 @@ const MiniPlayer = ({ song, isPlaying, onPlayPause }) => {
   const [repeatActive, setRepeatActive] = useState(false);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [volume, setVolume] = useState(1);
+  const [volume, setVolume] = useState(100);
   const [isMuted, setIsMuted] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -268,14 +268,15 @@ const MiniPlayer = ({ song, isPlaying, onPlayPause }) => {
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <IconButton
               size="small"
+              onClick={() => setShuffleActive(!shuffleActive)}
               sx={{
-                color: 'text.secondary',
+                color: shuffleActive ? 'primary.light' : 'text.secondary',
                 transition: theme.transitions.create(['color', 'transform'], {
                   duration: theme.transitions.duration.shorter,
                   easing: theme.transitions.easing.easeInOut,
                 }),
                 '&:hover': {
-                  color: 'text.primary',
+                  color: shuffleActive ? 'primary.light' : 'text.primary',
                   transform: 'scale(1.1)',
                 },
               }}
@@ -328,14 +329,15 @@ const MiniPlayer = ({ song, isPlaying, onPlayPause }) => {
             </IconButton>
             <IconButton
               size="small"
+              onClick={() => setRepeatActive(!repeatActive)}
               sx={{
-                color: 'text.secondary',
+                color: repeatActive ? 'primary.light' : 'text.secondary',
                 transition: theme.transitions.create(['color', 'transform'], {
                   duration: theme.transitions.duration.shorter,
                   easing: theme.transitions.easing.easeInOut,
                 }),
                 '&:hover': {
-                  color: 'text.primary',
+                  color: repeatActive ? 'primary.light' : 'text.primary',
                   transform: 'scale(1.1)',
                 },
               }}

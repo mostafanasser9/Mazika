@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -19,35 +19,35 @@ const NAVBAR_HEIGHT = 64;
 
 const trendingSongs = [
   { id: 1, title: 'Emshy', artist: 'Tommy Gun, Rally', img: 'images/emshy.jpeg', type: 'song' },
-  { id: 2, title: 'Kadaba', artist: 'Karim Osama', img: 'images/kadaba.webp', type: 'song' },
-  { id: 3, title: 'FAWATER EL 3ETAB', artist: 'Marwan Moussa', img: 'images/fawater.webp', type: 'song' },
+  { id: 2, title: 'Kadaba', artist: 'Karim Osama', img: 'images/kadaba.jpeg', type: 'song' },
+  { id: 3, title: 'FAWATER EL 3ETAB', artist: 'Marwan Moussa', img: 'images/fawater.jpeg', type: 'song' },
 ];
 
 const allSongs = [
   ...trendingSongs,
-  { id: 4, title: 'Heart Shaped Box', artist: 'Nirvana', img: 'images/heartshapedbox.webp', type: 'song' },
-  { id: 5, title: 'عالعموم', artist: 'Shehab', img: 'images/3al3mom.webp', type: 'song' },
-  { id: 6, title: 'Strangers In The Night', artist: 'Frank Sinatra', img: 'images/strangers.webp', type: 'song' },
-  { id: 7, title: 'Wicked Game', artist: 'Chris Isaak', img: 'images/wickedgame.webp', type: 'song' },
+  { id: 4, title: 'Heart Shaped Box', artist: 'Nirvana', img: 'images/inutero.jpeg', type: 'song' },
+  { id: 5, title: 'عالعموم', artist: 'Shehab', img: 'images/3al3mom.jpeg', type: 'song' },
+  { id: 6, title: 'Strangers In The Night', artist: 'Frank Sinatra', img: 'images/strangers.jpeg', type: 'song' },
+  { id: 7, title: 'Wicked Game', artist: 'Chris Isaak', img: 'images/wickedgame.jpeg', type: 'song' },
 ];
 
 const artists = [
   { id: "nirvana", name: 'Nirvana', img: 'images/nirvana.jpeg', type: 'artist' },
   { id: "fayrouz", name: 'Fayrouz', img: 'images/fairouz.jpeg', type: 'artist' },
   { id: "amr-diab", name: 'Amr Diab', img: 'images/amrdiab.jpeg', type: 'artist' },
-  { id: "bahaa-sultan", name: 'Bahaa Sultan', img: 'images/bahaasultan.webp', type: 'artist' },
+  { id: "bahaa-sultan", name: 'Bahaa Sultan', img: 'images/bahaasultan.jpeg', type: 'artist' },
   { id: "lege-cy", name: 'Lege-cy', img: 'images/legecy.jpeg', type: 'artist' },
-  { id: "the-beatles", name: 'The Beatles', img: 'images/beatles.webp', type: 'artist' },
+  { id: "the-beatles", name: 'The Beatles', img: 'images/beatles.jpeg', type: 'artist' },
   { id: "marwan-pablo", name: 'Marwan Pablo', img: 'images/pablo.jpeg', type: 'artist' },
   { id: "the-weeknd", name: 'The Weeknd', img: 'images/theweeknd.jpeg', type: 'artist' },
 ];
 
 const podcasts = [
-  { id: 1, title: 'Ma3 Kamel A7teramy - مع كامل احترامي', host: 'Mohamed Abdelaty', img: 'images/ab67656300005f1f150c92eb6cc313adc54f050f.jpeg', type: 'podcast' },
-  { id: 2, title: 'الدحيح', host: 'Daheeh', img: 'images/ab67656300005f1f3b0df41c54f6b1a1f6cc8e52.jpeg', type: 'podcast' },
-  { id: 3, title: 'The Joe Rogan Experience', host: 'Joe Rogan', img: 'images/joe.webp', type: 'podcast' },
-  { id: 4, title: 'TED Daily Talks', host: 'TED', img: 'images/ted.webp', type: 'podcast' },
-  { id: 5, title: 'The Daily', host: 'New York Times', img: 'images/daily.webp', type: 'podcast' },
+  { id: 1, title: 'Ma3 Kamel A7teramy - مع كامل احترامي', host: 'Mohamed Abdelaty', img: 'images/abdelaty.jpeg', type: 'podcast' },
+  { id: 2, title: 'الدحيح', host: 'Daheeh', img: 'images/daheeh.jpeg', type: 'podcast' },
+  { id: 3, title: 'The Joe Rogan Experience', host: 'Joe Rogan', img: 'images/joe.jpeg', type: 'podcast' },
+  { id: 4, title: 'TED Daily Talks', host: 'TED', img: 'images/ted.jpeg', type: 'podcast' },
+  { id: 5, title: 'The Daily', host: 'New York Times', img: 'images/daily.jpeg', type: 'podcast' },
 ];
 
 const filterBySearch = (items, fields, searchQuery) => {
@@ -57,7 +57,7 @@ const filterBySearch = (items, fields, searchQuery) => {
   return items.filter(item =>
     fields.some(field => {
       const value = item[field];
-      return value && value.toLowerCase().includes(query);
+      return value && value.toLowerCase().startsWith(query);
     })
   );
 };
@@ -69,7 +69,17 @@ export default function Home({ searchQuery }) {
   const [loading, setLoading] = useState(false);
   const [currentSong, setCurrentSong] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [showSplash, setShowSplash] = useState(true);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Hide splash screen after 1 second
+    const timer = setTimeout(() => {
+      setShowSplash(false);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const handlePlaySong = (item) => {
     if (currentSong?.id === item.id) {
@@ -120,6 +130,50 @@ export default function Home({ searchQuery }) {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', bgcolor: 'background.default' }}>
+      <Fade in={showSplash} timeout={1000}>
+        <Box
+          sx={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            bgcolor: 'background.default',
+            zIndex: 9999,
+            background: 'linear-gradient(180deg, rgba(3,26,68,1) 0%, rgba(18,18,18,1) 100%)',
+          }}
+        >
+          <Typography
+            variant="h1"
+            sx={{
+              color: 'primary.light',
+              fontWeight: 'bold',
+              letterSpacing: 4,
+              animation: 'pulse 2s infinite',
+              '@keyframes pulse': {
+                '0%': {
+                  transform: 'scale(1)',
+                  opacity: 1,
+                },
+                '50%': {
+                  transform: 'scale(1.1)',
+                  opacity: 0.8,
+                },
+                '100%': {
+                  transform: 'scale(1)',
+                  opacity: 1,
+                },
+              },
+            }}
+          >
+            MAZIKA
+          </Typography>
+        </Box>
+      </Fade>
+
       <Box sx={{ display: 'flex', flexGrow: 1 }}>
         <Sidebar width={sidebarWidth} topOffset={NAVBAR_HEIGHT} />
 

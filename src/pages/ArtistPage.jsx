@@ -428,27 +428,12 @@ export default function ArtistPage() {
                         <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 2 }}>
                           About
                         </Typography>
-                        
-                        <Grid container spacing={4}>
-                          <Grid item xs={12}>
-                            <Box 
-                              sx={{ 
-                                backgroundImage: `url(${artist.profileImage})`,
-                                backgroundSize: 'cover',
-                                backgroundPosition: 'center',
-                                borderRadius: 2,
-                                height: { xs: 200, sm: 300, md: 400 },
-                                mb: 3
-                              }}
-                            />
-                            <Typography variant="body1" sx={{ mb: 2 }}>
-                              {artist.biography}
-                            </Typography>
-                            <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>
-                              {artist.monthlyListeners} monthly listeners
-                            </Typography>
-                          </Grid>
-                        </Grid>
+                        <Typography variant="body1" sx={{ mb: 2 }}>
+                          {artist.biography}
+                        </Typography>
+                        <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>
+                          {artist.monthlyListeners} monthly listeners
+                        </Typography>
                       </Box>
                     </Box>
                   )}

@@ -35,6 +35,7 @@ import Sidebar from '../components/layout/Sidebar';
 import Footer from '../components/layout/Footer';
 import MiniPlayer, { MINIPLAYER_HEIGHT } from '../components/layout/Miniplayer';
 import { getAlbumById } from '../data/albums';
+import { getArtistById } from '../data/artists';
 
 const sidebarWidth = 240;
 const NAVBAR_HEIGHT = 64;
@@ -44,6 +45,7 @@ export default function AlbumPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [album, setAlbum] = useState(null);
+  const [artist, setArtist] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
@@ -51,19 +53,20 @@ export default function AlbumPage() {
   const [currentlyPlayingTrackId, setCurrentlyPlayingTrackId] = useState(null);
 
   useEffect(() => {
-    const fetchAlbum = () => {
+    const fetchData = () => {
       setLoading(true);
       const albumData = getAlbumById(id);
       if (albumData) {
         setAlbum(albumData);
+        const artistData = getArtistById(albumData.artistId);
+        setArtist(artistData);
       } else {
-        // Handle album not found
         navigate('/');
       }
       setLoading(false);
     };
 
-    fetchAlbum();
+    fetchData();
   }, [id, navigate]);
 
   const handleArtistClick = () => {
@@ -234,7 +237,7 @@ export default function AlbumPage() {
                     <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: { xs: 0.5, md: 1 }, mb: 1 }}>
                       <Box
                         component="img"
-                        src="https://picsum.photos/40/40?random=42"
+                        src={artist?.profileImage}
                         alt={album.artist}
                         sx={{
                           width: 24,
@@ -379,7 +382,13 @@ export default function AlbumPage() {
                               )}
                             </TableCell>
                             <TableCell sx={{ borderBottom: 'none' }}>
-                              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                                <Avatar 
+                                  src={album.coverImage} 
+                                  alt={track.title}
+                                  variant="square"
+                                  sx={{ width: 40, height: 40 }}
+                                />
                                 <Box>
                                   <Typography 
                                     variant="body1"
@@ -448,86 +457,23 @@ export default function AlbumPage() {
                     </Typography>
                   </Box>
 
-                  {/* More by This Artist Section */}
+                  {/* Album Credits */}
                   <Box sx={{ mb: 5 }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                      <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
-                        More by {album.artist}
-                      </Typography>
-                      <Button 
-                        sx={{ 
-                          color: '#b3b3b3', 
-                          textTransform: 'none',
-                          '&:hover': {
-                            color: 'white',
-                            bgcolor: 'transparent'
-                          }
-                        }}
-                      >
-                        See discography
-                      </Button>
-                    </Box>
-
+                    <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 2 }}>
+                      Credits
+                    </Typography>
                     <Grid container spacing={2}>
-                      {album.relatedAlbums.map((relatedAlbum) => (
-                        <Grid item xs={6} sm={4} md={3} lg={2.4} key={relatedAlbum.id}>
-                          <Card 
-                            sx={{ 
-                              bgcolor: '#181818', 
-                              borderRadius: 1,
-                              transition: 'all 0.3s ease',
-                              '&:hover': {
-                                bgcolor: '#282828',
-                                transform: 'translateY(-4px)'
-                              },
-                              height: '100%',
-                              display: 'flex',
-                              flexDirection: 'column',
-                              cursor: 'pointer'
-                            }}
-                            onClick={() => navigate(`/album/${relatedAlbum.id}`)}
-                          >
-                            <CardMedia
-                              component="img"
-                              image={relatedAlbum.coverImage}
-                              alt={relatedAlbum.title}
-                              sx={{ 
-                                aspectRatio: '1/1',
-                                width: '100%'
-                              }}
-                            />
-                            <CardContent sx={{ flexGrow: 1 }}>
-                              <Typography gutterBottom variant="body1" component="div" sx={{ fontWeight: 'bold', color: 'white' }}>
-                                {relatedAlbum.title}
-                              </Typography>
-                              <Typography variant="body2" color="#b3b3b3">
-                                {relatedAlbum.releaseYear} • Album
-                              </Typography>
-                            </CardContent>
-                          </Card>
+                      {album.credits.map((credit, index) => (
+                        <Grid item xs={12} sm={6} md={4} key={index}>
+                          <Typography variant="body2" sx={{ color: '#b3b3b3' }}>
+                            {credit.role}
+                          </Typography>
+                          <Typography variant="body1">
+                            {credit.name}
+                          </Typography>
                         </Grid>
                       ))}
                     </Grid>
-                  </Box>
-
-                  {/* Album Credits */}
-                  <Box sx={{ mb: 5 }}>
-                    <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
-                      Credits
-                    </Typography>
-                    
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-                      {album.credits.map((credit, index) => (
-                        <Box key={index}>
-                          <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                            {credit.role}
-                          </Typography>
-                          <Typography variant="body2" sx={{ color: '#b3b3b3' }}>
-                            {credit.name}
-                          </Typography>
-                        </Box>
-                      ))}
-                    </Box>
                   </Box>
                 </Box>
               </Box>
@@ -537,7 +483,11 @@ export default function AlbumPage() {
       </Box>
 
       {/* Mini Player */}
-      <MiniPlayer song={miniPlayerSong} isPlaying={isPlaying} onPlayPause={() => setIsPlaying(!isPlaying)} />
+      <MiniPlayer 
+        song={miniPlayerSong} 
+        isPlaying={isPlaying}
+        onPlayPause={setIsPlaying}
+      />
 
       {/* Footer */}
       <Footer />
