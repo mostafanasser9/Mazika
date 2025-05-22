@@ -37,6 +37,41 @@ const NAVBAR_HEIGHT = 64;
 
 // Example playlist data - replace with actual data source
 const playlists = {
+  'liked': {
+    id: 'liked',
+    title: "Liked Songs",
+    description: "Your favorite tracks",
+    coverImage: "https://picsum.photos/300/300?random=41",
+    songs: [
+      { 
+        id: 1, 
+        title: "Is It A Crime", 
+        artist: "Sade", 
+        album: "The Best of Sade", 
+        duration: "6:22",
+        img: "/images/isitacrime.jpeg",
+        dateAdded: "2025-03-15" 
+      },
+      { 
+        id: 2, 
+        title: "Running Up That Hill", 
+        artist: "Kate Bush", 
+        album: "Hounds of Love", 
+        duration: "4:58",
+        img: "/images/runningupthathill.jpeg",
+        dateAdded: "2025-03-10" 
+      },
+      { 
+        id: 3, 
+        title: "Under Pressure", 
+        artist: "Queen & David Bowie", 
+        album: "Hot Space", 
+        duration: "4:04",
+        img: "/images/underpressure.jpeg",
+        dateAdded: "2025-04-05" 
+      }
+    ]
+  },
   'top-hits': {
     id: 'top-hits',
     title: "Today's Top Hits",

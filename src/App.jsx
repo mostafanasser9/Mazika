@@ -5,8 +5,9 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import theme from './styles/theme';
+import LandingPage from './pages/LandingPage';
 import HomePage from './pages/HomePage';
-import PlaylistPage from './pages/PlaylistPage'; // <- use this real one
+import PlaylistPage from './pages/PlaylistPage';
 import Navbar from './components/layout/Navbar';
 import ArtistPage from './pages/ArtistPage';
 import AlbumPage from './pages/AlbumPage';
@@ -18,13 +19,44 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <BrowserRouter>
-        <Navbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
         <Routes>
-          <Route path="/" element={<HomePage searchQuery={searchQuery} />} />
-          <Route path="/playlist/:id" element={<PlaylistPage />} />
-          <Route path="/artist/:id" element={<ArtistPage />} />
-          <Route path="/album/:id" element={<AlbumPage />} />
-          {/* Add more routes as needed */} 
+          <Route path="/" element={<LandingPage />} />
+          <Route
+            path="/home"
+            element={
+              <>
+                <Navbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+                <HomePage searchQuery={searchQuery} />
+              </>
+            }
+          />
+          <Route
+            path="/playlist/:id"
+            element={
+              <>
+                <Navbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+                <PlaylistPage />
+              </>
+            }
+          />
+          <Route
+            path="/artist/:id"
+            element={
+              <>
+                <Navbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+                <ArtistPage />
+              </>
+            }
+          />
+          <Route
+            path="/album/:id"
+            element={
+              <>
+                <Navbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+                <AlbumPage />
+              </>
+            }
+          />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

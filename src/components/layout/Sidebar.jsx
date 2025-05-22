@@ -211,18 +211,18 @@ const Sidebar = () => {
             sx={{ 
               py: 1.2,
               borderRadius: 1,
-              bgcolor: isActive('/liked') ? 'action.selected' : 'transparent',
+              bgcolor: isActive('/playlist/liked') ? 'action.selected' : 'transparent',
               transition: theme.transitions.create(['background-color', 'transform']),
               '&:hover': {
                 bgcolor: 'action.hover',
                 transform: 'translateX(4px)',
               },
             }} 
-            onClick={() => navigate('/liked')}
+            onClick={() => navigate('/playlist/liked')}
           >
             <ListItemIcon sx={{ minWidth: 40 }}>
               <FavoriteIcon 
-                color={isActive('/liked') ? 'primary' : 'secondary'} 
+                color="secondary"
                 fontSize="medium"
                 sx={{
                   transition: theme.transitions.create('transform'),
@@ -235,8 +235,8 @@ const Sidebar = () => {
             <ListItemText
               primary="Liked Songs"
               primaryTypographyProps={{
-                fontWeight: isActive('/liked') ? 'bold' : 'medium',
-                color: isActive('/liked') ? 'primary.light' : 'inherit',
+                fontWeight: isActive('/playlist/liked') ? 'bold' : 'medium',
+                color: isActive('/playlist/liked') ? 'primary.light' : 'inherit',
                 transition: theme.transitions.create(['color', 'font-weight']),
               }}
             />

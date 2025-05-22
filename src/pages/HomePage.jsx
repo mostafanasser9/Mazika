@@ -69,17 +69,7 @@ export default function Home({ searchQuery }) {
   const [loading, setLoading] = useState(false);
   const [currentSong, setCurrentSong] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [showSplash, setShowSplash] = useState(true);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    // Hide splash screen after 1 second
-    const timer = setTimeout(() => {
-      setShowSplash(false);
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, []);
 
   const handlePlaySong = (item) => {
     if (currentSong?.id === item.id) {
@@ -130,50 +120,6 @@ export default function Home({ searchQuery }) {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', bgcolor: 'background.default' }}>
-      <Fade in={showSplash} timeout={1000}>
-        <Box
-          sx={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            bgcolor: 'background.default',
-            zIndex: 9999,
-            background: 'linear-gradient(180deg, rgba(3,26,68,1) 0%, rgba(18,18,18,1) 100%)',
-          }}
-        >
-          <Typography
-            variant="h1"
-            sx={{
-              color: 'primary.light',
-              fontWeight: 'bold',
-              letterSpacing: 4,
-              animation: 'pulse 2s infinite',
-              '@keyframes pulse': {
-                '0%': {
-                  transform: 'scale(1)',
-                  opacity: 1,
-                },
-                '50%': {
-                  transform: 'scale(1.1)',
-                  opacity: 0.8,
-                },
-                '100%': {
-                  transform: 'scale(1)',
-                  opacity: 1,
-                },
-              },
-            }}
-          >
-            MAZIKA
-          </Typography>
-        </Box>
-      </Fade>
-
       <Box sx={{ display: 'flex', flexGrow: 1 }}>
         <Sidebar width={sidebarWidth} topOffset={NAVBAR_HEIGHT} />
 

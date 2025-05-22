@@ -131,7 +131,7 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
   };
 
   const goToHome = () => {
-    navigate('/');
+    navigate('/home');
   };
 
   const goBack = () => {
@@ -262,44 +262,39 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
               },
             }}
           >
-            Login
+            Log In
           </Button>
-          <Button 
-            variant="contained" 
-            color="primary" 
-            sx={{ 
-              px: 3,
-              py: 1,
-              fontSize: '1rem',
-              transition: 'transform 0.2s ease-in-out',
+          <Button
+            variant="contained"
+            sx={{
+              backgroundColor: 'primary.main',
+              color: 'white',
               '&:hover': {
-                backgroundColor: 'primary.main',
-                transform: 'scale(1.1)',
+                backgroundColor: 'primary.dark',
               },
             }}
           >
             Sign Up
           </Button>
         </Box>
-      </Toolbar>
 
-      {/* Drawer for mobile */}
-      <Drawer
-        variant="temporary"
-        open={mobileOpen}
-        onClose={handleDrawerToggle}
-        ModalProps={{ keepMounted: true }}
-        sx={{
-          display: { xs: 'block', md: 'none' },
-          '& .MuiDrawer-paper': { 
-            boxSizing: 'border-box', 
-            width: 250,
-            bgcolor: 'background.paper',
-          },
-        }}
-      >
-        {drawer}
-      </Drawer>
+        {/* Mobile Menu */}
+        <Drawer
+          variant="temporary"
+          anchor="left"
+          open={mobileOpen}
+          onClose={handleDrawerToggle}
+          ModalProps={{
+            keepMounted: true, // Better open performance on mobile.
+          }}
+          sx={{
+            display: { xs: 'block', md: 'none' },
+            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 240 },
+          }}
+        >
+          {drawer}
+        </Drawer>
+      </Toolbar>
     </AppBar>
   );
 };
