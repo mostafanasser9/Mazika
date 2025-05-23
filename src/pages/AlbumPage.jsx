@@ -36,6 +36,7 @@ import Footer from '../components/layout/Footer';
 import MiniPlayer, { MINIPLAYER_HEIGHT } from '../components/layout/Miniplayer';
 import { getAlbumById } from '../data/albums';
 import { getArtistById } from '../data/artists';
+import { usePlayer } from '../context/PlayerContext';
 
 const sidebarWidth = 240;
 const NAVBAR_HEIGHT = 64;
@@ -47,23 +48,32 @@ export default function AlbumPage() {
   const [album, setAlbum] = useState(null);
   const [artist, setArtist] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
-  const [miniPlayerSong, setMiniPlayerSong] = useState(null);
-  const [currentlyPlayingTrackId, setCurrentlyPlayingTrackId] = useState(null);
+  const { currentSong, isPlaying, handlePlaySong, handlePlayPause } = usePlayer();
 
   useEffect(() => {
-    const fetchData = () => {
-      setLoading(true);
-      const albumData = getAlbumById(id);
-      if (albumData) {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const albumData = getAlbumById(id);
+        if (!albumData) {
+          console.error('Album not found:', id);
+          navigate('/');
+          return;
+        }
+
         setAlbum(albumData);
         const artistData = getArtistById(albumData.artistId);
+        if (!artistData) {
+          console.error('Artist not found:', albumData.artistId);
+        }
         setArtist(artistData);
-      } else {
+      } catch (error) {
+        console.error('Error fetching album data:', error);
         navigate('/');
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     fetchData();
@@ -71,29 +81,28 @@ export default function AlbumPage() {
 
   const handleArtistClick = () => {
     if (album && album.artistId) {
-      console.log('Navigating to artist:', album.artistId);
       navigate(`/artist/${album.artistId}`);
     }
   };
 
   const handleLikeAlbum = () => {
     setIsLiked(!isLiked);
+    // Add your like logic here
   };
 
   const handlePlayAlbum = () => {
-    if (album.tracks.length > 0) {
+    if (album?.tracks?.length > 0) {
       // Set the first track if nothing is playing
-      if (!miniPlayerSong) {
+      if (!currentSong) {
         const firstTrack = {
           ...album.tracks[0],
           album: album.title,
           artist: album.artist,
           img: album.coverImage.startsWith('/') ? album.coverImage : `/${album.coverImage}`
         };
-        setMiniPlayerSong(firstTrack);
-        setCurrentlyPlayingTrackId(firstTrack.id);
+        handlePlaySong(firstTrack);
       }
-      setIsPlaying(!isPlaying);
+      handlePlayPause(!isPlaying);
     }
   };
 
@@ -104,37 +113,7 @@ export default function AlbumPage() {
       artist: album.artist,
       img: album.coverImage.startsWith('/') ? album.coverImage : `/${album.coverImage}`
     };
-    setMiniPlayerSong(trackToPlay);
-    setCurrentlyPlayingTrackId(track.id);
-    setIsPlaying(true);
-  };
-
-  const handlePlayPauseTrack = (track) => {
-    if (currentlyPlayingTrackId === track.id) {
-      // If the same track is clicked, toggle play/pause
-      setIsPlaying(!isPlaying);
-    } else {
-      // If a different track is clicked, play it
-      handlePlayTrack(track);
-    }
-  };
-
-  const handleNextTrack = () => {
-    if (!album || !album.tracks.length) return;
-    
-    const currentIndex = album.tracks.findIndex(track => track.id === currentlyPlayingTrackId);
-    const nextIndex = (currentIndex + 1) % album.tracks.length;
-    const nextTrack = album.tracks[nextIndex];
-    handlePlayTrack(nextTrack);
-  };
-
-  const handlePreviousTrack = () => {
-    if (!album || !album.tracks.length) return;
-    
-    const currentIndex = album.tracks.findIndex(track => track.id === currentlyPlayingTrackId);
-    const prevIndex = (currentIndex - 1 + album.tracks.length) % album.tracks.length;
-    const prevTrack = album.tracks[prevIndex];
-    handlePlayTrack(prevTrack);
+    handlePlaySong(trackToPlay);
   };
 
   // Format play count to shorter format (e.g. 1.2M)
@@ -152,6 +131,8 @@ export default function AlbumPage() {
 
   // Calculate total duration from tracks
   const calculateTotalDuration = () => {
+    if (!album?.tracks) return '0 min 0 sec';
+    
     let totalMinutes = 0;
     let totalSeconds = 0;
     
@@ -225,7 +206,7 @@ export default function AlbumPage() {
                     }}
                   >
                     <img 
-                      src={album.coverImage} 
+                      src={album.coverImage.startsWith('/') ? album.coverImage : `/${album.coverImage}`} 
                       alt={album.title}
                       style={{ 
                         width: '100%', 
@@ -265,7 +246,7 @@ export default function AlbumPage() {
                     <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: { xs: 0.5, md: 1 }, mb: 1 }}>
                       <Box
                         component="img"
-                        src={artist?.profileImage}
+                        src={artist?.profileImage?.startsWith('/') ? artist.profileImage : `/${artist?.profileImage}`}
                         alt={album.artist}
                         sx={{
                           width: 24,
@@ -386,13 +367,13 @@ export default function AlbumPage() {
                             sx={{ 
                               cursor: 'pointer',
                               '&:last-child td, &:last-child th': { border: 0 },
-                              bgcolor: currentlyPlayingTrackId === track.id ? 'rgba(80, 197, 249, 0.1)' : 'transparent',
+                              bgcolor: currentSong && currentSong.id === track.id ? 'rgba(80, 197, 249, 0.1)' : 'transparent',
                             }}
                           >
                             <TableCell 
                               sx={{ 
-                                color: currentlyPlayingTrackId === track.id ? 'primary.light' : '#b3b3b3',
-                                fontWeight: currentlyPlayingTrackId === track.id ? 'bold' : 'normal',
+                                color: currentSong && currentSong.id === track.id ? 'primary.light' : '#b3b3b3',
+                                fontWeight: currentSong && currentSong.id === track.id ? 'bold' : 'normal',
                                 borderBottom: 'none',
                                 width: '40px',
                                 position: 'relative'
@@ -415,7 +396,7 @@ export default function AlbumPage() {
                                   }
                                 }}
                               >
-                                {currentlyPlayingTrackId === track.id && isPlaying ? (
+                                {currentSong && currentSong.id === track.id ? (
                                   <Box 
                                     sx={{ 
                                       '&:hover': {
@@ -445,7 +426,7 @@ export default function AlbumPage() {
                                       }}
                                       onClick={(e) => {
                                         e.stopPropagation();
-                                        handlePlayPauseTrack(track);
+                                        handlePlayPause();
                                       }}
                                     >
                                       <PauseIcon sx={{ fontSize: 16 }} />
@@ -474,7 +455,7 @@ export default function AlbumPage() {
                                       }}
                                       onClick={(e) => {
                                         e.stopPropagation();
-                                        handlePlayPauseTrack(track);
+                                        handlePlayPause();
                                       }}
                                     >
                                       <PlayArrowIcon sx={{ fontSize: 16 }} />
@@ -486,7 +467,7 @@ export default function AlbumPage() {
                             <TableCell sx={{ borderBottom: 'none' }}>
                               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                                 <Avatar 
-                                  src={album.coverImage} 
+                                  src={album.coverImage.startsWith('/') ? album.coverImage : `/${album.coverImage}`} 
                                   alt={track.title}
                                   variant="square"
                                   sx={{ width: 40, height: 40 }}
@@ -495,8 +476,8 @@ export default function AlbumPage() {
                                   <Typography 
                                     variant="body1"
                                     sx={{ 
-                                      color: currentlyPlayingTrackId === track.id ? 'primary.light' : 'white',
-                                      fontWeight: currentlyPlayingTrackId === track.id ? 'bold' : 'normal',
+                                      color: currentSong && currentSong.id === track.id ? 'primary.light' : 'white',
+                                      fontWeight: currentSong && currentSong.id === track.id ? 'bold' : 'normal',
                                     }}
                                   >
                                     {track.title}
@@ -586,11 +567,9 @@ export default function AlbumPage() {
 
       {/* Mini Player */}
       <MiniPlayer 
-        song={miniPlayerSong} 
+        song={currentSong} 
         isPlaying={isPlaying}
-        onPlayPause={setIsPlaying}
-        onNext={handleNextTrack}
-        onPrevious={handlePreviousTrack}
+        onPlayPause={handlePlayPause}
       />
 
       {/* Footer */}

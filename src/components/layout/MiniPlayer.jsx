@@ -201,7 +201,7 @@ const MiniPlayer = ({ song, isPlaying, onPlayPause }) => {
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '30%' }}>
           <Box
             component="img"
-            src={song?.img || 'images/default-cover.jpeg'}
+            src={song?.img ? (song.img.startsWith('/') ? song.img : `/${song.img}`) : 'images/default-cover.jpeg'}
             alt={song?.title || 'No song playing'}
             sx={{
               width: 56,

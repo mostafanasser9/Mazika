@@ -13,6 +13,7 @@ import Sidebar from '../components/layout/Sidebar';
 import Footer from '../components/layout/Footer';
 import MiniPlayer, { MINIPLAYER_HEIGHT } from '../components/layout/Miniplayer';
 import MediaCard from '../components/layout/Mediacard';
+import { usePlayer } from '../context/PlayerContext';
 
 const sidebarWidth = 240;
 const NAVBAR_HEIGHT = 64;
@@ -64,30 +65,10 @@ const filterBySearch = (items, fields, searchQuery) => {
 
 export default function Home({ searchQuery }) {
   const theme = useTheme();
-  const [miniPlayerSong, setMiniPlayerSong] = useState(null);
   const [filter, setFilter] = useState('all');
   const [loading, setLoading] = useState(false);
-  const [currentSong, setCurrentSong] = useState(null);
-  const [isPlaying, setIsPlaying] = useState(false);
   const navigate = useNavigate();
-
-  const handlePlaySong = (item) => {
-    if (currentSong?.id === item.id) {
-      // If clicking the same song, toggle play/pause
-      setIsPlaying(!isPlaying);
-    } else {
-      // If clicking a different song, play it
-      setCurrentSong(item);
-      setIsPlaying(true);
-    }
-    setMiniPlayerSong(item);
-    console.log(`Playing ${item.type}:`, item);
-  };
-
-  // Add handler for miniplayer play/pause
-  const handleMiniPlayerPlayPause = (isPlaying) => {
-    setIsPlaying(isPlaying);
-  };
+  const { currentSong, isPlaying, handlePlaySong, handlePlayPause } = usePlayer();
 
   const handleArtistClick = (artistId) => {
     navigate(`/artist/${artistId}`);
@@ -285,9 +266,9 @@ export default function Home({ searchQuery }) {
       </Box>
 
       <MiniPlayer 
-        song={miniPlayerSong} 
+        song={currentSong} 
         isPlaying={isPlaying}
-        onPlayPause={handleMiniPlayerPlayPause}
+        onPlayPause={handlePlayPause}
       />
       <Footer />
     </Box>

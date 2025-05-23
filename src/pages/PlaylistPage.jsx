@@ -31,6 +31,7 @@ import { useTheme } from '@mui/material/styles';
 import Sidebar from '../components/layout/Sidebar';
 import Footer from '../components/layout/Footer';
 import MiniPlayer, { MINIPLAYER_HEIGHT } from '../components/layout/Miniplayer';
+import { usePlayer } from '../context/PlayerContext';
 
 const sidebarWidth = 240;
 const NAVBAR_HEIGHT = 64;
@@ -376,14 +377,12 @@ export default function PlaylistPage() {
   const { id } = useParams();
   const [playlist, setPlaylist] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [miniPlayerSong, setMiniPlayerSong] = useState(null);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortMethod, setSortMethod] = useState('title');
   const [sortAnchorEl, setSortAnchorEl] = useState(null);
   const openSortMenu = Boolean(sortAnchorEl);
   const theme = useTheme();
-  const [currentlyPlayingSongId, setCurrentlyPlayingSongId] = useState(null);
+  const { currentSong, isPlaying, handlePlaySong, handlePlayPause } = usePlayer();
 
   useEffect(() => {
     // Simulate loading data
@@ -453,45 +452,6 @@ export default function PlaylistPage() {
     }
   });
 
-  const handlePlaySong = (song) => {
-    const trackToPlay = {
-      ...song,
-      artist: song.artist,
-      img: song.img.startsWith('/') ? song.img : `/${song.img}`
-    };
-    setMiniPlayerSong(trackToPlay);
-    setCurrentlyPlayingSongId(song.id);
-    setIsPlaying(true);
-  };
-
-  const handlePlayPauseSong = (song) => {
-    if (currentlyPlayingSongId === song.id) {
-      // If the same song is clicked, toggle play/pause
-      setIsPlaying(!isPlaying);
-    } else {
-      // If a different song is clicked, play it
-      handlePlaySong(song);
-    }
-  };
-
-  const handleNextSong = () => {
-    if (!sortedSongs.length) return;
-    
-    const currentIndex = sortedSongs.findIndex(song => song.id === currentlyPlayingSongId);
-    const nextIndex = (currentIndex + 1) % sortedSongs.length;
-    const nextSong = sortedSongs[nextIndex];
-    handlePlaySong(nextSong);
-  };
-
-  const handlePreviousSong = () => {
-    if (!sortedSongs.length) return;
-    
-    const currentIndex = sortedSongs.findIndex(song => song.id === currentlyPlayingSongId);
-    const prevIndex = (currentIndex - 1 + sortedSongs.length) % sortedSongs.length;
-    const prevSong = sortedSongs[prevIndex];
-    handlePlaySong(prevSong);
-  };
-
   const handlePlayPausePlaylist = () => {
     if (!isPlaying && sortedSongs.length > 0) {
       // If not playing and we have songs, start playing the first visible song
@@ -500,12 +460,10 @@ export default function PlaylistPage() {
         artist: sortedSongs[0].artist,
         img: sortedSongs[0].img.startsWith('/') ? sortedSongs[0].img : `/${sortedSongs[0].img}`
       };
-      setMiniPlayerSong(firstSong);
-      setCurrentlyPlayingSongId(firstSong.id);
-      setIsPlaying(true);
+      handlePlaySong(firstSong);
     } else {
       // If already playing, just toggle play/pause
-      setIsPlaying(!isPlaying);
+      handlePlayPause(!isPlaying);
     }
   };
 
@@ -771,13 +729,13 @@ export default function PlaylistPage() {
                           sx={{ 
                             cursor: 'pointer',
                             '&:last-child td, &:last-child th': { border: 0 },
-                            bgcolor: currentlyPlayingSongId === song.id ? 'rgba(80, 197, 249, 0.1)' : 'transparent',
+                            bgcolor: currentSong.id === song.id ? 'rgba(80, 197, 249, 0.1)' : 'transparent',
                           }}
                         >
                           <TableCell 
                             sx={{ 
-                              color: currentlyPlayingSongId === song.id ? 'primary.light' : '#b3b3b3',
-                              fontWeight: currentlyPlayingSongId === song.id ? 'bold' : 'normal',
+                              color: currentSong.id === song.id ? 'primary.light' : '#b3b3b3',
+                              fontWeight: currentSong.id === song.id ? 'bold' : 'normal',
                               borderBottom: 'none',
                               position: 'relative'
                             }}
@@ -799,7 +757,7 @@ export default function PlaylistPage() {
                                 }
                               }}
                             >
-                              {currentlyPlayingSongId === song.id && isPlaying ? (
+                              {currentSong.id === song.id && isPlaying ? (
                                 <Box 
                                   sx={{ 
                                     '&:hover': {
@@ -829,7 +787,7 @@ export default function PlaylistPage() {
                                     }}
                                     onClick={(e) => {
                                       e.stopPropagation();
-                                      handlePlayPauseSong(song);
+                                      handlePlayPause(song);
                                     }}
                                   >
                                     <PauseIcon sx={{ fontSize: 16 }} />
@@ -858,7 +816,7 @@ export default function PlaylistPage() {
                                     }}
                                     onClick={(e) => {
                                       e.stopPropagation();
-                                      handlePlayPauseSong(song);
+                                      handlePlaySong(song);
                                     }}
                                   >
                                     <PlayArrowIcon sx={{ fontSize: 16 }} />
@@ -879,8 +837,8 @@ export default function PlaylistPage() {
                                 <Typography 
                                   variant="body1"
                                   sx={{ 
-                                    color: currentlyPlayingSongId === song.id ? 'primary.light' : 'white',
-                                    fontWeight: currentlyPlayingSongId === song.id ? 'bold' : 'normal',
+                                    color: currentSong.id === song.id ? 'primary.light' : 'white',
+                                    fontWeight: currentSong.id === song.id ? 'bold' : 'normal',
                                   }}
                                 >
                                   {song.title}
@@ -905,11 +863,9 @@ export default function PlaylistPage() {
       </Box>
 
       <MiniPlayer 
-        song={miniPlayerSong} 
-        isPlaying={isPlaying} 
-        onPlayPause={handlePlayPausePlaylist}
-        onNext={handleNextSong}
-        onPrevious={handlePreviousSong}
+        song={currentSong} 
+        isPlaying={isPlaying}
+        onPlayPause={handlePlayPause}
       />
       <Footer />
     </Box>
