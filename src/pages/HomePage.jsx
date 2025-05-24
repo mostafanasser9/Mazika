@@ -44,11 +44,11 @@ const artists = [
 ];
 
 const podcasts = [
-  { id: 1, title: 'Ma3 Kamel A7teramy - مع كامل احترامي', host: 'Mohamed Abdelaty', img: 'images/abdelaty.jpeg', type: 'podcast' },
-  { id: 2, title: 'الدحيح', host: 'Daheeh', img: 'images/daheeh.jpeg', type: 'podcast' },
-  { id: 3, title: 'The Joe Rogan Experience', host: 'Joe Rogan', img: 'images/joe.jpeg', type: 'podcast' },
-  { id: 4, title: 'TED Daily Talks', host: 'TED', img: 'images/ted.jpeg', type: 'podcast' },
-  { id: 5, title: 'The Daily', host: 'New York Times', img: 'images/daily.jpeg', type: 'podcast' },
+  { id: "Ma3 Kamel A7teramy - مع كامل احترامي", title: 'Ma3 Kamel A7teramy - مع كامل احترامي', host: 'Mohamed Abdelaty', img: 'images/abdelaty.jpeg', type: 'podcast' },
+  { id:"Daheeh", title: 'الدحيح', host: 'Daheeh', img: 'images/daheeh.jpeg', type: 'podcast' },
+  { id: "The Joe Rogan Experience", title: 'The Joe Rogan Experience', host: 'Joe Rogan', img: 'images/joe.jpeg', type: 'podcast' },
+  { id: "TED Daily Talks", title: 'TED Daily Talks', host: 'TED', img: 'images/ted.jpeg', type: 'podcast' },
+  { id: "The Daily", title: 'The Daily', host: 'New York Times', img: 'images/daily.jpeg', type: 'podcast' },
 ];
 
 const filterBySearch = (items, fields, searchQuery) => {
@@ -72,7 +72,13 @@ export default function Home({ searchQuery }) {
 
   const handleArtistClick = (artistId) => {
     navigate(`/artist/${artistId}`);
+
   };
+  const handlePodcastClick = (PodcastId) => {
+    console.log(PodcastId)
+    navigate(`/podcast/${PodcastId}`);
+  };
+  
 
   const handleFilterChange = (newFilter) => {
     if (newFilter !== filter) {
@@ -253,7 +259,9 @@ export default function Home({ searchQuery }) {
                     <Grid container spacing={2} sx={{ mb: 3 }}>
                       {filteredPodcasts.map((podcast) => (
                         <Grid item xs={12} sm={6} md={3} lg={2} xl={1.5} key={podcast.id}>
+                           <Box onClick={()=>handlePodcastClick(podcast.id)} sx={{ cursor: 'pointer' }}>
                           <MediaCard item={podcast} type="podcast" onPlay={handlePlaySong} isPlaying={isPlaying} isCurrentSong={currentSong?.id === podcast.id} />
+                          </Box>
                         </Grid>
                       ))}
                     </Grid>

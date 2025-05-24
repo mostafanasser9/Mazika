@@ -11,6 +11,7 @@ import PlaylistPage from './pages/PlaylistPage';
 import Navbar from './components/layout/Navbar';
 import ArtistPage from './pages/ArtistPage';
 import AlbumPage from './pages/AlbumPage';
+import PodcastPage from './pages/PodcastPage';
 import { PlayerProvider } from './context/PlayerContext';
 
 function App() {
@@ -22,7 +23,7 @@ function App() {
       <PlayerProvider>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<LandingPage />} />
+            <Route path="/" element={<LandingPage/>} />
             <Route
               path="/home"
               element={
@@ -47,6 +48,15 @@ function App() {
                 <>
                   <Navbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
                   <ArtistPage />
+                </>
+              }
+            />
+             <Route
+              path="/podcast/:id"
+              element={
+                <>
+                  <Navbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+                  <PodcastPage />
                 </>
               }
             />
