@@ -33,7 +33,7 @@ import ShareIcon from '@mui/icons-material/Share';
 
 import Sidebar from '../components/layout/Sidebar';
 import Footer from '../components/layout/Footer';
-import MiniPlayer, { MINIPLAYER_HEIGHT } from '../components/layout/Miniplayer';
+import MiniPlayer, { MINIPLAYER_HEIGHT } from '../components/layout/MiniPlayer';
 import { getAlbumById } from '../data/albums';
 import { getArtistById } from '../data/artists';
 import { usePlayer } from '../context/PlayerContext';

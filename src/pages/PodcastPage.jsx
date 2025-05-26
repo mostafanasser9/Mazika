@@ -21,10 +21,11 @@ import AddIcon from '@mui/icons-material/Add';
 import ShareIcon from '@mui/icons-material/Share';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import DownloadIcon from '@mui/icons-material/Download';
 
 import Sidebar from '../components/layout/Sidebar';
 import Footer from '../components/layout/Footer';
-import MiniPlayer, { MINIPLAYER_HEIGHT } from '../components/layout/Miniplayer';
+import MiniPlayer, { MINIPLAYER_HEIGHT, PlayButton } from '../components/layout/MiniPlayer';
 import { getPodcastById, getHostById } from '../data/podcasts.js';
 import { usePlayer } from '../context/PlayerContext';
 
@@ -144,12 +145,15 @@ export default function PodcastPage() {
                   alignItems: { xs: 'center', sm: 'flex-start' },
                 }}
               >
-                {/* Podcast Cover */}
+                {/* Podcast Cover + Actions */}
                 <Box 
                   sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'flex-start', // align to left
                     width: { xs: '200px', sm: '232px' },
-                    height: { xs: '200px', sm: '232px' },
-                    boxShadow: theme.shadows[4],
+                    minWidth: { xs: '200px', sm: '232px' },
+                    height: '100%',
                     flexShrink: 0,
                   }}
                 >
@@ -158,11 +162,36 @@ export default function PodcastPage() {
                     alt={podcast.title}
                     style={{ 
                       width: '100%', 
-                      height: '100%', 
+                      height: '232px', 
                       objectFit: 'cover',
-                      display: 'block'
+                      display: 'block',
+                      borderRadius: theme.shape.borderRadius
                     }}
                   />
+                  {/* Follow and More Buttons under image, side by side */}
+                  <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, mt: 2, width: '100%', justifyContent: 'flex-start', alignItems: 'center' }}>
+                    <Button
+                      variant="outlined"
+                      sx={{
+                        borderColor: theme.palette.text.secondary,
+                        color: theme.palette.text.primary,
+                        borderRadius: theme.shape.borderRadius,
+                        textTransform: 'none',
+                        width: '55%', // less width
+                        minWidth: 60,
+                        maxWidth: 120,
+                        '&:hover': {
+                          borderColor: theme.palette.text.primary,
+                          backgroundColor: theme.palette.action.hover
+                        }
+                      }}
+                    >
+                      Follow
+                    </Button>
+                    <IconButton sx={{ color: theme.palette.text.secondary, '&:hover': { color: theme.palette.text.primary } }}>
+                      <MoreHorizIcon />
+                    </IconButton>
+                  </Box>
                 </Box>
 
                 {/* Podcast Info */}
@@ -183,7 +212,7 @@ export default function PodcastPage() {
                     variant="h2" 
                     sx={{ 
                       fontWeight: 'bold',
-                      fontSize: { xs: '2rem', sm: '3rem', md: '4rem' },
+                      fontSize: { xs: '1.2rem', sm: '1.7rem', md: '2.2rem' }, // smaller font size
                       letterSpacing: '-0.02em',
                       mb: 1,
                       color: theme.palette.text.primary
@@ -207,152 +236,119 @@ export default function PodcastPage() {
                   >
                     {podcast.host}
                   </Typography>
-
-                  {/* Follow and More Buttons */}
-                  <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
-                    <Button
-                      variant="outlined"
-                      sx={{
-                        borderColor: theme.palette.text.secondary,
-                        color: theme.palette.text.primary,
-                        borderRadius: theme.shape.borderRadius,
-                        textTransform: 'none',
-                        '&:hover': {
-                          borderColor: theme.palette.text.primary,
-                          backgroundColor: theme.palette.action.hover
-                        }
-                      }}
-                    >
-                      Follow
-                    </Button>
-                    <IconButton sx={{ color: theme.palette.text.secondary, '&:hover': { color: theme.palette.text.primary } }}>
-                      <MoreHorizIcon />
-                    </IconButton>
-                  </Box>
                 </Box>
               </Box>
             
               <Box sx={{ px: { xs: 2, md: 4 }, py: 2 }}>
-                <Grid container spacing={4}>
-                  {/* Episodes Section */}
-                  <Grid item xs={500} md={80}>
+                <Grid container spacing={4} alignItems="flex-start">
+                  {/* Episodes + About Section Side by Side */}
+                  <Grid item xs={12} md={8}>
                     <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 2, color: theme.palette.text.primary }}>
                       ALL EPISODES
                     </Typography>
-                    {podcast.episodes.map((episode) => (
-
-                      <Box
-                        key={episode.id}
-                        sx={{
-    
-        
-                           
-                          display: 'flex',
-                          alignItems: 'center',
-                          mb: 2,
-                          p: 1,
-                
-                          bgcolor: currentSong && currentSong.id === episode.id ? 'rgba(80, 197, 249, 0.1)' : 'transparent',
-                          '&:hover': {
-                            bgcolor: theme.palette.background.cardHover,
-                            cursor: 'pointer'
-                          }
-                        }}
-                        onClick={() => handlePlayEpisode(episode)}
-                      >
-                        <Avatar
-                          src={podcast.coverImage.startsWith('/') ? podcast.coverImage : `/${podcast.coverImage}`}
-                          alt={episode.title}
-                          variant="square"
-                          sx={{ width: 56, height: 56, mr: 2 }}
-                        />
-                        <Box sx={{ flex: 1 }}>
-                          <Typography
-                            variant="body1"
+                    <Box sx={{ display: 'flex', gap: 3, alignItems: 'flex-start' }}>
+                      <Box sx={{ flex: 2, minWidth: 0 }}>
+                        {podcast.episodes.map((episode, idx) => (
+                          <Box
+                            key={episode.id}
                             sx={{
-                              color: currentSong && currentSong.id === episode.id ? theme.palette.primary.light : theme.palette.text.primary,
-                              fontWeight: currentSong && currentSong.id === episode.id ? 'bold' : 'normal',
+                              display: 'flex',
+                              flexDirection: 'row',
+                              alignItems: 'center',
+                              mb: 3,
+                              minHeight: 180,
+                              borderRadius: 0,
+                              overflow: 'hidden',
+                              bgcolor: 'transparent',
+                              boxShadow: 'none',
+                              position: 'relative',
+                              transition: 'background 0.2s',
+                              cursor: 'pointer',
+                              '&:hover': {
+                                bgcolor: theme.palette.action.hover,
+                              },
                             }}
                           >
-                            {episode.title}
-                            {episode.explicit && (
-                              <Box
-                                component="span"
-                                sx={{
-                                  display: 'inline-flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                  ml: 1,
-                                  bgcolor: theme.palette.secondary.main,
-                                  color: theme.palette.common.black,
-                                  width: 16,
-                                  height: 16,
-                                  borderRadius: '2px',
-                                  fontSize: '10px',
-                                  fontWeight: 'bold',
-                                }}
+                            {/* Left: Image */}
+                            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 140, height: 180, flexShrink: 0, ml: 2 }}>
+                              <Avatar
+                                src={podcast.coverImage.startsWith('/') ? podcast.coverImage : `/${podcast.coverImage}`}
+                                alt={episode.title}
+                                variant="square"
+                                sx={{ width: 150, height: 150, borderRadius: 0 }}
+                              />
+                            </Box>
+                            {/* Center: Info */}
+                            <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', px: 3, py: 2 }}>
+                              <Typography
+                                variant="h6"
+                                sx={{ fontWeight: 'bold', color: theme.palette.text.primary, mb: 0.5 }}
                               >
-                                E
+                                {episode.title}
+                              </Typography>
+                              <Typography variant="body2" sx={{ color: theme.palette.text.secondary, mb: 0.5 }}>
+                                {podcast.title}
+                              </Typography>
+                              <Typography variant="body2" sx={{ color: theme.palette.text.secondary, mb: 1, overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+                                {episode.description || 'No description available.'}
+                              </Typography>
+                              {/* White section for date/duration and action buttons */}
+                              <Box sx={{ px: 0, py: 0, bgcolor: 'transparent', boxShadow: 'none', display: 'flex', flexDirection: 'column', gap: 1, mt: 1 }}>
+                                <Typography variant="body2" sx={{ color: theme.palette.text.secondary, mb: 1 }}>
+                                  {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} • {episode.duration}
+                                </Typography>
+                                <Box sx={{ display: 'flex', gap: 1 }}>
+                                  <IconButton size="small" sx={{ color: theme.palette.text.secondary }}>
+                                    <AddIcon />
+                                  </IconButton>
+                                  <IconButton size="small" sx={{ color: theme.palette.text.secondary }}>
+                                    <DownloadIcon />
+                                  </IconButton>
+                                  <IconButton size="small" sx={{ color: theme.palette.text.secondary }}>
+                                    <ShareIcon />
+                                  </IconButton>
+                                  <IconButton size="small" sx={{ color: theme.palette.text.secondary }}>
+                                    <MoreHorizIcon />
+                                  </IconButton>
+                                </Box>
                               </Box>
-                            )}
-                          </Typography>
-                          <Typography variant="body2" sx={{ color: theme.palette.text.secondary }}>
-                            {podcast.title}
-                          </Typography>
-                          <Typography variant="body2" sx={{ color: theme.palette.text.secondary }}>
-                            {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} • {episode.duration}
-                          </Typography>
-                          <Typography variant="body2" sx={{ color: theme.palette.text.secondary, fontSize: '0.75rem' }}>
-                            Hosted on Acast. See acast.com/privacy for more information.
-                          </Typography>
-                        </Box>
-                        <Box sx={{ display: 'flex', gap: 1 }}>
-                          <IconButton sx={{ color: theme.palette.text.secondary, '&:hover': { color: theme.palette.text.primary } }}>
-                            <AddIcon />
-                          </IconButton>
-                          <IconButton sx={{ color: theme.palette.text.secondary, '&:hover': { color: theme.palette.text.primary } }}>
-                            <ShareIcon />
-                          </IconButton>
-                          <IconButton
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handlePlayEpisode(episode);
-                            }}
-                            sx={{
-                              color: theme.palette.text.secondary,
-                              '&:hover': { color: theme.palette.primary.hover }
-                            }}
-                          >
-                            {currentSong && currentSong.id === episode.id && isPlaying ? (
-                              <PauseIcon />
-                            ) : (
-                              <PlayArrowIcon />
-                            )}
-                          </IconButton>
-                        </Box>
+                            </Box>
+                            {/* Right: Play/Pause Button styled like MiniPlayer */}
+                            <Box sx={{ display: 'flex', alignItems: 'center', pr: 3, pl: 2, bgcolor: 'transparent', borderTopRightRadius: 0, borderBottomRightRadius: 0 }}>
+                              <PlayButton
+                                onClick={e => {
+                                  e.stopPropagation();
+                                  handlePlayEpisode(episode);
+                                }}
+                                isPlaying={currentSong && currentSong.id === episode.id && isPlaying}
+                                size={56}
+                                ariaLabel={currentSong && currentSong.id === episode.id && isPlaying ? 'Pause' : 'Play'}
+                              />
+                            </Box>
+                          </Box>
+                        ))}
                       </Box>
-                    ))}
-                  </Grid>
-
-                  {/* About Section */}
-                  <Grid item xs={12} md={4}>
-                    <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 2, color: theme.palette.text.primary }}>
-                      About
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: theme.palette.text.secondary }}>
-                      On the first of September 2023 the world was introduced to "Ma3 Kamel A7terami" a comedy podcast that reflects what’s on everyone’s mind! Through colorful language...
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        color: theme.palette.primary.light,
-                        mt: 1,
-                        cursor: 'pointer',
-                        '&:hover': { textDecoration: 'underline' }
-                      }}
-                    >
-                      Show More
-                    </Typography>
+                      {/* About Section next to first episode */}
+                      <Box sx={{ flex: 1, minWidth: 280, maxWidth: 480, borderRadius: 0, p: 0, boxShadow: 'none', ml: 3 }}>
+                        <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2, color: theme.palette.text.primary, fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.5rem' } }}>
+                          About
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: theme.palette.text.secondary }}>
+                          {podcast.description || 'No description available.'}
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            color: theme.palette.primary.light,
+                            mt: 1,
+                            cursor: 'pointer',
+                            '&:hover': { textDecoration: 'underline' }
+                          }}
+                        >
+                          Show More
+                        </Typography>
+                      </Box>
+                    </Box>
                   </Grid>
                 </Grid>
 

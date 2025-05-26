@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 
 import Sidebar from '../components/layout/Sidebar';
 import Footer from '../components/layout/Footer';
-import MiniPlayer, { MINIPLAYER_HEIGHT } from '../components/layout/Miniplayer';
+import MiniPlayer, { MINIPLAYER_HEIGHT } from '../components/layout/MiniPlayer';
 import MediaCard from '../components/layout/Mediacard';
 import { usePlayer } from '../context/PlayerContext';
 
@@ -44,11 +44,11 @@ const artists = [
 ];
 
 const podcasts = [
-  { id: "Ma3 Kamel A7teramy - مع كامل احترامي", title: 'Ma3 Kamel A7teramy - مع كامل احترامي', host: 'Mohamed Abdelaty', img: 'images/abdelaty.jpeg', type: 'podcast' },
-  { id:"Daheeh", title: 'الدحيح', host: 'Daheeh', img: 'images/daheeh.jpeg', type: 'podcast' },
-  { id: "The Joe Rogan Experience", title: 'The Joe Rogan Experience', host: 'Joe Rogan', img: 'images/joe.jpeg', type: 'podcast' },
-  { id: "TED Daily Talks", title: 'TED Daily Talks', host: 'TED', img: 'images/ted.jpeg', type: 'podcast' },
-  { id: "The Daily", title: 'The Daily', host: 'New York Times', img: 'images/daily.jpeg', type: 'podcast' },
+  { id: "ma3-kamel-a7teramy", title: 'Ma3 Kamel A7teramy - مع كامل احترامي', host: 'Mohamed Abdelaty', img: 'images/abdelaty.jpeg', type: 'podcast' },
+  { id: "daheeh", title: 'الدحيح', host: 'Ahmed El Ghandour', img: 'images/daheeh.jpeg', type: 'podcast' },
+  { id: "the-joe-rogan-experience", title: 'The Joe Rogan Experience', host: 'Joe Rogan', img: 'images/joe.jpeg', type: 'podcast' },
+  { id: "ted-daily-talks", title: 'TED Daily Talks', host: 'TED', img: 'images/ted.jpeg', type: 'podcast' },
+  { id: "the-daily", title: 'The Daily', host: 'Michael Barbaro', img: 'images/daily.jpeg', type: 'podcast' },
 ];
 
 const filterBySearch = (items, fields, searchQuery) => {
