@@ -19,7 +19,7 @@ const sidebarWidth = 240;
 const NAVBAR_HEIGHT = 64;
 
 const trendingSongs = [
-  { id: 1, title: 'Emshy', artist: 'Tommy Gun, Rally', img: 'images/emshy.jpeg', type: 'song' },
+  { id: 1, title: 'Emshy', artist: 'Tommy Gun, Rally', img: 'images/emshy.jpeg', type: 'song', audio: '/audio/emshy.mp3' },
   { id: 2, title: 'Kadaba', artist: 'Karim Osama', img: 'images/kadaba.jpeg', type: 'song' },
   { id: 3, title: 'FAWATER EL 3ETAB', artist: 'Marwan Moussa', img: 'images/fawater.jpeg', type: 'song' },
 ];

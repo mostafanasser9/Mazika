@@ -438,6 +438,17 @@ const MiniPlayer = ({ song, isPlaying, onPlayPause }) => {
           />
         </Box>
       </Box>
+
+      {/* Add audio element for playback */}
+      <audio
+        ref={audioRef}
+        src={song.audio ? song.audio : undefined}
+        style={{ display: 'none' }}
+        onTimeUpdate={e => setCurrentTime(e.target.currentTime)}
+        onLoadedMetadata={e => setDuration(e.target.duration)}
+        onEnded={() => onPlayPause(false)}
+        autoPlay={isPlaying}
+      />
     </Box>
   );
 };
