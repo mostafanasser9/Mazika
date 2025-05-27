@@ -284,13 +284,18 @@ export default function ArtistPage() {
                 <Box 
                   sx={{ 
                     position: 'relative',
-                    height: { xs: 240, md: 340 },
+                    height: { xs: 340, sm: 400, md: 480 },
                     backgroundImage: `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.8)), url(${artist.coverImage})`,
                     backgroundSize: 'cover',
-                    backgroundPosition: 'center',
+                    backgroundPosition: 'top center',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundAttachment: 'scroll',
                     display: 'flex',
                     alignItems: 'flex-end',
                     p: { xs: 2, md: 4 },
+                    overflow: 'hidden',
+                    backgroundColor: 'background.default',
+                    transform: 'translateZ(0)', // Helps with background image performance
                   }}
                 >
                   {/* Artist Info Container */}

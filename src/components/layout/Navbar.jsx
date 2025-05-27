@@ -200,16 +200,20 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
 
         {/* Menu options */}
         <Box sx={{ mt: 3 }}>
+          {/* Main Menu Items */}
           <ListItem 
             button 
-            onClick={handleDrawerToggle}
+            onClick={() => { navigate('/home'); handleDrawerToggle(); }}
             sx={{ 
               py: 1.5,
               '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.04)' }
             }}
           >
+            <ListItemIcon sx={{ color: 'inherit', minWidth: 40 }}>
+              <HomeIcon />
+            </ListItemIcon>
             <ListItemText 
-              primary="Premium" 
+              primary="Home" 
               primaryTypographyProps={{
                 fontSize: '1.1rem',
                 letterSpacing: '0.2px'
@@ -224,6 +228,87 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
               '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.04)' }
             }}
           >
+            <ListItemIcon sx={{ color: 'inherit', minWidth: 40 }}>
+              <PremiumIcon />
+            </ListItemIcon>
+            <ListItemText 
+              primary="Premium" 
+              primaryTypographyProps={{
+                fontSize: '1.1rem',
+                letterSpacing: '0.2px'
+              }}
+            />
+          </ListItem>
+
+          {/* Playlists Section */}
+          <Box sx={{ mt: 3, mb: 2 }}>
+            <Typography variant="subtitle2" sx={{ px: 2, mb: 1, color: 'text.secondary' }}>
+              YOUR PLAYLISTS
+            </Typography>
+            <ListItem 
+              button 
+              onClick={() => { navigate('/playlist/liked'); handleDrawerToggle(); }}
+              sx={{ 
+                py: 1.5,
+                '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.04)' }
+              }}
+            >
+              <ListItemText 
+                primary="Liked Songs" 
+                primaryTypographyProps={{
+                  fontSize: '1rem',
+                  letterSpacing: '0.2px'
+                }}
+              />
+            </ListItem>
+            <ListItem 
+              button 
+              onClick={() => { navigate('/playlist/rock-classics'); handleDrawerToggle(); }}
+              sx={{ 
+                py: 1.5,
+                '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.04)' }
+              }}
+            >
+              <ListItemText 
+                primary="Rock Classics" 
+                primaryTypographyProps={{
+                  fontSize: '1rem',
+                  letterSpacing: '0.2px'
+                }}
+              />
+            </ListItem>
+            <ListItem 
+              button 
+              onClick={() => { navigate('/playlist/pop-hits'); handleDrawerToggle(); }}
+              sx={{ 
+                py: 1.5,
+                '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.04)' }
+              }}
+            >
+              <ListItemText 
+                primary="Pop Hits" 
+                primaryTypographyProps={{
+                  fontSize: '1rem',
+                  letterSpacing: '0.2px'
+                }}
+              />
+            </ListItem>
+          </Box>
+
+          <Divider sx={{ borderColor: 'rgba(255, 255, 255, 0.08)', my: 2 }} />
+
+          {/* Footer Menu Items */}
+          <ListItem 
+            button 
+            onClick={handleDrawerToggle}
+            sx={{ 
+              py: 1.5,
+              '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.04)' }
+            }}
+          >
+            <ListItemIcon sx={{ color: 'inherit', minWidth: 40 }}>
+              <HelpIcon />
+            </ListItemIcon>
             <ListItemText 
               primary="Help"
               primaryTypographyProps={{
@@ -240,6 +325,9 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
               '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.04)' }
             }}
           >
+            <ListItemIcon sx={{ color: 'inherit', minWidth: 40 }}>
+              <DownloadIcon />
+            </ListItemIcon>
             <ListItemText 
               primary="Download"
               primaryTypographyProps={{
@@ -256,6 +344,9 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
               '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.04)' }
             }}
           >
+            <ListItemIcon sx={{ color: 'inherit', minWidth: 40 }}>
+              <PrivacyIcon />
+            </ListItemIcon>
             <ListItemText 
               primary="Privacy"
               primaryTypographyProps={{
@@ -272,6 +363,9 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
               '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.04)' }
             }}
           >
+            <ListItemIcon sx={{ color: 'inherit', minWidth: 40 }}>
+              <TermsIcon />
+            </ListItemIcon>
             <ListItemText 
               primary="Terms"
               primaryTypographyProps={{

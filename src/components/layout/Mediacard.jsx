@@ -8,7 +8,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { PlayButton } from '../layout/Miniplayer';
+import { PlayButton } from '../layout/MiniPlayer';
 
 // Reusable Card for Song/Artist/Podcast
 const MediaCard = ({ item, type = 'song', layout = 'vertical', onPlay, isPlaying, isCurrentSong }) => {
@@ -21,6 +21,8 @@ const MediaCard = ({ item, type = 'song', layout = 'vertical', onPlay, isPlaying
   const handleClick = () => {
     if (type === 'artist') {
       navigate(`/artist/${item.id}`);
+    } else if (type === 'podcast') {
+      navigate(`/podcast/${item.id}`);
     }
   };
 
@@ -79,31 +81,37 @@ const MediaCard = ({ item, type = 'song', layout = 'vertical', onPlay, isPlaying
           alt={title}
         />
 
-        {onPlay && (
+        {/* Only show play button for songs, not for podcasts or artists */}
+        {onPlay && type === 'song' && (
           <Box
             className="playButton"
             sx={{
               position: 'absolute',
               bottom: '8px',
               right: '8px',
-              opacity: { xs: 1, md: isCurrentSong ? 1 : 0 },
-              transition: theme.transitions.create('all', {
+              opacity: isCurrentSong ? 1 : 0,
+              transition: theme.transitions.create('opacity', {
                 duration: theme.transitions.duration.shorter,
                 easing: theme.transitions.easing.easeInOut,
               }),
               cursor: 'pointer',
               zIndex: 10,
+              bgcolor: 'transparent',
+              borderRadius: '50%',
+              padding: '4px',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
               '& .MuiIconButton-root': {
                 bgcolor: 'primary.light',
-                width: { xs: '48px', md: '56px' },
-                height: { xs: '48px', md: '56px' },
+                width: '56px',
+                height: '56px',
                 '&:hover': {
                   bgcolor: 'primary.hover',
                   transform: 'scale(1.1)',
                 },
                 '& .MuiSvgIcon-root': {
                   color: 'black',
-                  fontSize: { xs: 28, md: 32 },
                 },
               },
             }}
