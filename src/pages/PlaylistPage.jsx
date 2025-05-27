@@ -30,7 +30,7 @@ import { useTheme } from '@mui/material/styles';
 
 import Sidebar from '../components/layout/Sidebar';
 import Footer from '../components/layout/Footer';
-import MiniPlayer, { MINIPLAYER_HEIGHT } from '../components/layout/Miniplayer';
+import MiniPlayer, { MINIPLAYER_HEIGHT } from '../components/layout/MiniPlayer';
 import { usePlayer } from '../context/PlayerContext';
 
 const sidebarWidth = 240;
@@ -42,7 +42,7 @@ const playlists = {
     id: 'liked',
     title: "Liked Songs",
     description: "Your favorite tracks",
-    coverImage: "https://picsum.photos/300/300?random=41",
+    coverImage: "/images/likedsongs.jpeg",
     songs: [
       { 
         id: 1, 
@@ -77,7 +77,7 @@ const playlists = {
     id: 'top-hits',
     title: "Today's Top Hits",
     description: "The most popular tracks right now",
-    coverImage: "https://picsum.photos/300/300?random=42",
+    coverImage: "/images/tophits.jpeg",
     songs: [
       { 
         id: 1, 
@@ -130,7 +130,7 @@ const playlists = {
     id: 'jazz',
     title: "Jazz Collection",
     description: "The best jazz tracks",
-    coverImage: "https://picsum.photos/300/300?random=43",
+    coverImage: "/images/jazzcollection.jpeg",
     songs: [
       {
         id: 1,
@@ -165,7 +165,7 @@ const playlists = {
     id: 'rap',
     title: "Rap Essentials",
     description: "The best rap tracks of all time",
-    coverImage: "https://picsum.photos/300/300?random=44",
+    coverImage: "/images/rapessentials.jpeg",
     songs: [
       {
         id: 1,
@@ -200,7 +200,7 @@ const playlists = {
     id: 'rock',
     title: "Rock Classics",
     description: "The greatest rock songs ever",
-    coverImage: "https://picsum.photos/300/300?random=45",
+    coverImage: "/images/rockclassics.jpeg",
     songs: [
       {
         id: 1,
@@ -235,7 +235,7 @@ const playlists = {
     id: 'metal',
     title: "Metal Masters",
     description: "The heaviest metal tracks",
-    coverImage: "https://picsum.photos/300/300?random=46",
+    coverImage: "/images/metalmasters.jpeg",
     songs: [
       {
         id: 1,
@@ -270,7 +270,7 @@ const playlists = {
     id: 'pop',
     title: "Pop Hits",
     description: "The biggest pop songs",
-    coverImage: "https://picsum.photos/300/300?random=47",
+    coverImage: "/images/pophits.jpeg",
     songs: [
       {
         id: 1,
@@ -305,7 +305,7 @@ const playlists = {
     id: 'country',
     title: "Country Roads",
     description: "The best country music",
-    coverImage: "https://picsum.photos/300/300?random=48",
+    coverImage: "/images/countryroads.jpeg",
     songs: [
       {
         id: 1,
@@ -340,7 +340,7 @@ const playlists = {
     id: 'reggae',
     title: "Reggae Vibes",
     description: "The best reggae tracks",
-    coverImage: "https://picsum.photos/300/300?random=49",
+    coverImage: "/images/reggaevibes.jpeg",
     songs: [
       {
         id: 1,
@@ -470,17 +470,21 @@ export default function PlaylistPage() {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', bgcolor: 'background.default' }}>
       <Box sx={{ display: 'flex', flexGrow: 1 }}>
-        <Sidebar width={sidebarWidth} topOffset={NAVBAR_HEIGHT} />
+        {/* Hide Sidebar on mobile */}
+        <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+          <Sidebar width={sidebarWidth} topOffset={NAVBAR_HEIGHT} />
+        </Box>
 
         <Box
           component="main"
           sx={{
-            ml: `${sidebarWidth}px`,
+            ml: { xs: 0, md: `${sidebarWidth}px` },
             mt: `${NAVBAR_HEIGHT}px`,
-            p: 3,
+            p: { xs: 2, md: 3 },
             color: 'white',
             background: 'linear-gradient(180deg, rgba(3,26,68,1) 0%, rgba(18,18,18,1) 100%)',
             flexGrow: 1,
+            width: '100%',
             paddingBottom: `${MINIPLAYER_HEIGHT + 16}px`,
           }}
         >
@@ -502,16 +506,21 @@ export default function PlaylistPage() {
                     pt: 2,
                   }}
                 >
-                  {/* Playlist Cover */}
-                  <Box
+                  {/* Playlist Cover */}                    <Box
                     component="img"
                     sx={{
-                      width: { xs: 180, sm: 220 },
-                      height: { xs: 180, sm: 220 },
+                      width: { xs: 160, sm: 220 },
+                      height: { xs: 160, sm: 220 },
                       objectFit: 'cover',
                       boxShadow: '0 4px 60px rgba(0,0,0,0.5)',
+                      borderRadius: 1,
+                      transition: theme.transitions.create(['transform', 'box-shadow']),
+                      '&:hover': {
+                        transform: 'scale(1.02)',
+                        boxShadow: '0 4px 70px rgba(0,0,0,0.7)',
+                      }
                     }}
-                    src={playlist.coverImage}
+                    src={playlist.coverImage.startsWith('/') ? playlist.coverImage : `/${playlist.coverImage}`}
                     alt={playlist.title}
                   />
                   
@@ -557,7 +566,7 @@ export default function PlaylistPage() {
                     sx={{
                       bgcolor: 'primary.light',
                       color: 'black',
-                      p: 1.5,
+                      p: { xs: 2, md: 1.5 },
                       '&:hover': {
                         bgcolor: 'primary.hover',
                         transform: 'scale(1.1)',
@@ -572,11 +581,13 @@ export default function PlaylistPage() {
                     }}
                     aria-label={isPlaying ? "Pause" : "Play"}
                   >
-                    {isPlaying ? <PauseIcon sx={{ fontSize: 38, color: 'black' }} /> : <PlayArrowIcon sx={{ fontSize: 38, color: 'black' }} />}
+                    {isPlaying ? 
+                      <PauseIcon sx={{ fontSize: { xs: 44, md: 38 }, color: 'black' }} /> : 
+                      <PlayArrowIcon sx={{ fontSize: { xs: 44, md: 38 }, color: 'black' }} />}
                   </IconButton>
 
                   {/* Search and Sort */}
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, width: { xs: '100%', sm: 'auto' } }}>
                     <TextField
                       placeholder="Search in playlist"
                       variant="outlined"
@@ -710,12 +721,12 @@ export default function PlaylistPage() {
                     }
                   }}
                 >
-                  <Table sx={{ minWidth: 650 }} aria-label="playlist songs table">
+                  <Table sx={{ minWidth: { xs: 300, sm: 650 } }} aria-label="playlist songs table">
                     <TableHead>
                       <TableRow sx={{ borderBottom: '1px solid #282828' }}>
                         <TableCell sx={{ color: '#b3b3b3', width: '40px', borderBottom: 'none' }}>#</TableCell>
                         <TableCell sx={{ color: '#b3b3b3', borderBottom: 'none' }}>TITLE</TableCell>
-                        <TableCell sx={{ color: '#b3b3b3', borderBottom: 'none' }}>ALBUM</TableCell>
+                        <TableCell sx={{ color: '#b3b3b3', borderBottom: 'none', display: { xs: 'none', md: 'table-cell' } }}>ALBUM</TableCell>
                         <TableCell align="right" sx={{ color: '#b3b3b3', borderBottom: 'none' }}>
                           <AccessTimeIcon fontSize="small" />
                         </TableCell>
@@ -726,16 +737,15 @@ export default function PlaylistPage() {
                         <TableRow 
                           key={song.id}
                           onClick={() => handlePlaySong(song)}
-                          sx={{ 
-                            cursor: 'pointer',
-                            '&:last-child td, &:last-child th': { border: 0 },
-                            bgcolor: currentSong.id === song.id ? 'rgba(80, 197, 249, 0.1)' : 'transparent',
-                          }}
-                        >
-                          <TableCell 
+                          sx={{                          cursor: 'pointer',
+                          '&:last-child td, &:last-child th': { border: 0 },
+                          bgcolor: currentSong?.id === song.id ? 'rgba(80, 197, 249, 0.1)' : 'transparent',
+                        }}
+                      >
+                        <TableCell 
                             sx={{ 
-                              color: currentSong.id === song.id ? 'primary.light' : '#b3b3b3',
-                              fontWeight: currentSong.id === song.id ? 'bold' : 'normal',
+                              color: currentSong?.id === song.id ? 'primary.light' : '#b3b3b3',
+                              fontWeight: currentSong?.id === song.id ? 'bold' : 'normal',
                               borderBottom: 'none',
                               position: 'relative'
                             }}
@@ -757,7 +767,7 @@ export default function PlaylistPage() {
                                 }
                               }}
                             >
-                              {currentSong.id === song.id && isPlaying ? (
+                              {currentSong?.id === song.id && isPlaying ? (
                                 <Box 
                                   sx={{ 
                                     '&:hover': {
@@ -828,7 +838,7 @@ export default function PlaylistPage() {
                           <TableCell sx={{ borderBottom: 'none' }}>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                               <Avatar 
-                                src={song.img} 
+                                src={song.img.startsWith('/') ? song.img : `/${song.img}`} 
                                 alt={song.title}
                                 variant="square"
                                 sx={{ width: 40, height: 40 }}
@@ -837,8 +847,8 @@ export default function PlaylistPage() {
                                 <Typography 
                                   variant="body1"
                                   sx={{ 
-                                    color: currentSong.id === song.id ? 'primary.light' : 'white',
-                                    fontWeight: currentSong.id === song.id ? 'bold' : 'normal',
+                                    color: currentSong?.id === song.id ? 'primary.light' : 'white',
+                                    fontWeight: currentSong?.id === song.id ? 'bold' : 'normal',
                                   }}
                                 >
                                   {song.title}
@@ -849,7 +859,7 @@ export default function PlaylistPage() {
                               </Box>
                             </Box>
                           </TableCell>
-                          <TableCell sx={{ color: '#b3b3b3', borderBottom: 'none' }}>{song.album}</TableCell>
+                          <TableCell sx={{ color: '#b3b3b3', borderBottom: 'none', display: { xs: 'none', md: 'table-cell' } }}>{song.album}</TableCell>
                           <TableCell align="right" sx={{ color: '#b3b3b3', borderBottom: 'none' }}>{song.duration}</TableCell>
                         </TableRow>
                       ))}
@@ -862,12 +872,17 @@ export default function PlaylistPage() {
         </Box>
       </Box>
 
+      {/* Mini Player */}
       <MiniPlayer 
         song={currentSong} 
         isPlaying={isPlaying}
         onPlayPause={handlePlayPause}
       />
-      <Footer />
+
+      {/* Hide Footer on mobile */}
+      <Box sx={{ display: { xs: 'none', md: 'block' }, ml: { xs: 0, md: `${sidebarWidth}px` } }}>
+        <Footer />
+      </Box>
     </Box>
   );
 }

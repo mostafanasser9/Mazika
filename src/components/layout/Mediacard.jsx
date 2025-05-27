@@ -86,8 +86,8 @@ const MediaCard = ({ item, type = 'song', layout = 'vertical', onPlay, isPlaying
               position: 'absolute',
               bottom: '8px',
               right: '8px',
-              opacity: isCurrentSong ? 1 : 0,
-              transition: theme.transitions.create('opacity', {
+              opacity: { xs: 1, md: isCurrentSong ? 1 : 0 },
+              transition: theme.transitions.create('all', {
                 duration: theme.transitions.duration.shorter,
                 easing: theme.transitions.easing.easeInOut,
               }),
@@ -95,14 +95,15 @@ const MediaCard = ({ item, type = 'song', layout = 'vertical', onPlay, isPlaying
               zIndex: 10,
               '& .MuiIconButton-root': {
                 bgcolor: 'primary.light',
-                width: '56px',
-                height: '56px',
+                width: { xs: '48px', md: '56px' },
+                height: { xs: '48px', md: '56px' },
                 '&:hover': {
                   bgcolor: 'primary.hover',
                   transform: 'scale(1.1)',
                 },
                 '& .MuiSvgIcon-root': {
                   color: 'black',
+                  fontSize: { xs: 28, md: 32 },
                 },
               },
             }}

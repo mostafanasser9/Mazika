@@ -163,16 +163,20 @@ export default function AlbumPage() {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', bgcolor: 'background.default' }}>
       <Box sx={{ display: 'flex', flexGrow: 1 }}>
-        <Sidebar width={sidebarWidth} topOffset={NAVBAR_HEIGHT} />
+        {/* Hide Sidebar on mobile */}
+        <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+          <Sidebar width={sidebarWidth} topOffset={NAVBAR_HEIGHT} />
+        </Box>
 
         <Box
           component="main"
           sx={{
-            ml: `${sidebarWidth}px`,
+            ml: { xs: 0, md: `${sidebarWidth}px` },
             mt: `${NAVBAR_HEIGHT}px`,
-            color: 'white',
+            color: 'text.primary',
             flexGrow: 1,
             paddingBottom: `${MINIPLAYER_HEIGHT + 16}px`,
+            width: '100%',
           }}
         >
           {loading ? (
@@ -192,17 +196,19 @@ export default function AlbumPage() {
                     backgroundPosition: 'center',
                     display: 'flex',
                     gap: { xs: 3, md: 6 },
-                    flexDirection: { xs: 'column', sm: 'row' },
-                    alignItems: { xs: 'center', sm: 'flex-end' },
+                    flexDirection: { xs: 'column', md: 'row' },
+                    alignItems: { xs: 'center', md: 'flex-end' },
+                    textAlign: { xs: 'center', md: 'left' }
                   }}
                 >
-                  {/* Album Cover */}
+                  {/* Album Cover - Updated sizing to match ArtistPage */}
                   <Box 
                     sx={{
-                      width: { xs: '200px', sm: '232px' },
-                      height: { xs: '200px', sm: '232px' },
+                      width: { xs: '160px', sm: '200px', md: '232px' },
+                      height: { xs: '160px', sm: '200px', md: '232px' },
                       boxShadow: '0 4px 60px rgba(0,0,0,.5)',
                       flexShrink: 0,
+                      mb: { xs: 2, md: 0 }
                     }}
                   >
                     <img 
@@ -212,19 +218,28 @@ export default function AlbumPage() {
                         width: '100%', 
                         height: '100%', 
                         objectFit: 'cover',
-                        display: 'block'
+                        display: 'block',
+                        borderRadius: '4px'
                       }}
                     />
                   </Box>
 
                   {/* Album Info */}
-                  <Box sx={{ flex: 1, pb: { xs: 0, sm: 2 } }}>
+                  <Box sx={{ 
+                    flex: 1, 
+                    pb: { xs: 0, md: 2 },
+                    width: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: { xs: 'center', md: 'flex-start' }
+                  }}>
                     <Typography 
                       variant="overline" 
                       sx={{ 
                         fontWeight: 'bold',
                         textTransform: 'uppercase',
-                        fontSize: '0.75rem'
+                        fontSize: '0.75rem',
+                        textAlign: { xs: 'center', md: 'left' }
                       }}
                     >
                       {album.albumType}
@@ -234,16 +249,24 @@ export default function AlbumPage() {
                       variant="h2" 
                       sx={{ 
                         fontWeight: 'bold',
-                        fontSize: { xs: '2rem', sm: '3rem', md: '4rem' },
+                        fontSize: { xs: '1.75rem', sm: '2.5rem', md: '4rem' },
                         letterSpacing: '-0.02em',
                         textShadow: '0 2px 4px rgba(0,0,0,0.3)',
-                        mb: 1
+                        mb: 1,
+                        textAlign: { xs: 'center', md: 'left' }
                       }}
                     >
                       {album.title}
                     </Typography>
 
-                    <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: { xs: 0.5, md: 1 }, mb: 1 }}>
+                    <Box sx={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      flexWrap: 'wrap', 
+                      gap: { xs: 0.5, md: 1 }, 
+                      mb: 1,
+                      justifyContent: { xs: 'center', md: 'flex-start' }
+                    }}>
                       <Box
                         component="img"
                         src={artist?.profileImage?.startsWith('/') ? artist.profileImage : `/${artist?.profileImage}`}
@@ -262,7 +285,8 @@ export default function AlbumPage() {
                           '&:hover': {
                             textDecoration: 'underline',
                             cursor: 'pointer'
-                          }
+                          },
+                          textAlign: { xs: 'center', md: 'left' }
                         }}
                         onClick={handleArtistClick}
                       >
@@ -275,7 +299,7 @@ export default function AlbumPage() {
                   </Box>
                 </Box>
                 
-                {/* Controls Row */}
+                {/* Controls Row - Updated play button size */}
                 <Box 
                   sx={{ 
                     display: 'flex', 
@@ -284,15 +308,15 @@ export default function AlbumPage() {
                     p: { xs: 2, md: 4 },
                     pt: 2,
                     backgroundImage: 'linear-gradient(180deg, rgba(18,18,18,0.8) 0%, rgba(18,18,18,1) 100%)',
+                    justifyContent: { xs: 'center', md: 'flex-start' }
                   }}
                 >
-                  {/* Play Button */}
                   <IconButton 
                     onClick={handlePlayAlbum}
                     sx={{
                       bgcolor: 'primary.light',
                       color: 'black',
-                      p: 1.5,
+                      p: { xs: 2, md: 1.5 },
                       '&:hover': {
                         bgcolor: 'primary.hover',
                         transform: 'scale(1.1)',
@@ -307,7 +331,10 @@ export default function AlbumPage() {
                     }}
                     aria-label={isPlaying ? "Pause" : "Play"}
                   >
-                    {isPlaying ? <PauseIcon sx={{ fontSize: 38, color: 'black' }} /> : <PlayArrowIcon sx={{ fontSize: 38, color: 'black' }} />}
+                    {isPlaying ? 
+                      <PauseIcon sx={{ fontSize: { xs: 44, md: 38 }, color: 'black' }} /> : 
+                      <PlayArrowIcon sx={{ fontSize: { xs: 44, md: 38 }, color: 'black' }} />
+                    }
                   </IconButton>
 
                   {/* Like Button */}
@@ -542,21 +569,53 @@ export default function AlbumPage() {
 
                   {/* Album Credits */}
                   <Box sx={{ mb: 5 }}>
-                    <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 2 }}>
+                    <Typography 
+                      variant="h5" 
+                      sx={{ 
+                        fontWeight: 'bold', 
+                        mb: 2,
+                        px: { xs: 2, md: 0 }
+                      }}
+                    >
                       Credits
                     </Typography>
-                    <Grid container spacing={2}>
-                      {album.credits.map((credit, index) => (
-                        <Grid item xs={12} sm={6} md={4} key={index}>
-                          <Typography variant="body2" sx={{ color: '#b3b3b3' }}>
-                            {credit.role}
-                          </Typography>
-                          <Typography variant="body1">
-                            {credit.name}
-                          </Typography>
-                        </Grid>
-                      ))}
-                    </Grid>
+                    <Box sx={{
+                      display: { xs: 'flex', md: 'block' },
+                      flexDirection: { xs: 'row', md: 'unset' },
+                      overflowX: { xs: 'auto', md: 'unset' },
+                      gap: { xs: 2, sm: 2 },
+                      pb: { xs: 2, md: 0 },
+                      px: { xs: 2, md: 0 },
+                      '&::-webkit-scrollbar': {
+                        display: 'none'
+                      },
+                      msOverflowStyle: 'none',
+                      scrollbarWidth: 'none',
+                    }}>
+                      <Grid container spacing={2} sx={{ 
+                        flexWrap: { xs: 'nowrap', md: 'wrap' }, 
+                        width: { xs: 'max-content', md: '100%' }, 
+                        m: 0 
+                      }}>
+                        {album.credits.map((credit, index) => (
+                          <Grid item xs={12} sm={6} md={4} key={index}
+                            sx={{ 
+                              width: { xs: 200, sm: 'auto' },
+                              minWidth: { xs: 200, sm: 'auto' }
+                            }}
+                          >
+                            <Box sx={{ p: 2, bgcolor: 'background.card', borderRadius: 1 }}>
+                              <Typography variant="body2" sx={{ color: '#b3b3b3' }}>
+                                {credit.role}
+                              </Typography>
+                              <Typography variant="body1">
+                                {credit.name}
+                              </Typography>
+                            </Box>
+                          </Grid>
+                        ))}
+                      </Grid>
+                    </Box>
                   </Box>
                 </Box>
               </Box>
@@ -565,15 +624,16 @@ export default function AlbumPage() {
         </Box>
       </Box>
 
-      {/* Mini Player */}
       <MiniPlayer 
         song={currentSong} 
         isPlaying={isPlaying}
         onPlayPause={handlePlayPause}
       />
 
-      {/* Footer */}
-      <Footer />
+      {/* Hide Footer on mobile */}
+      <Box sx={{ display: { xs: 'none', md: 'block' }, ml: { xs: 0, md: `${sidebarWidth}px` } }}>
+        <Footer />
+      </Box>
     </Box>
   );
 }

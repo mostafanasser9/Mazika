@@ -12,14 +12,21 @@ const Footer = () => {
     <Box
       component="footer"
       sx={{
+        display: 'flex',
+        flexDirection: { xs: 'row', md: 'row' },
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '100%',
+        position: 'static',
+        left: 'unset',
+        bottom: 'unset',
         bgcolor: 'background.paper',
-        color: 'text.primary',
-        py: 6,
-        mt: 0,
-        ml: `${sidebarWidth}px`,
-        borderTop: `1px solid ${theme.palette.divider}`,
-        position: 'relative',
-        zIndex: 1000,
+        zIndex: 1300,
+        p: { xs: 0.5, md: 2 }, // Smaller padding on mobile
+        borderTop: 1,
+        borderColor: 'divider',
+        boxSizing: 'border-box',
+        minHeight: { xs: 36, md: 56 }, // Smaller height on mobile
       }}
     >
       <Container maxWidth="lg">

@@ -15,6 +15,7 @@ import {
   ListItem,
   ListItemText,
   ListItemIcon,
+  Divider,
 } from '@mui/material';
 import {
   Search as SearchIcon,
@@ -23,6 +24,12 @@ import {
   MusicNote as MusicNoteIcon,
   ArrowBack as ArrowBackIcon,
   ArrowForward as ArrowForwardIcon,
+  Close as CloseIcon,
+  Help as HelpIcon,
+  GetApp as DownloadIcon,
+  Gavel as TermsIcon,
+  Security as PrivacyIcon,
+  WorkspacePremium as PremiumIcon,
 } from '@mui/icons-material';
 import { styled, alpha } from '@mui/material/styles';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -119,6 +126,7 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [showMobileSearch, setShowMobileSearch] = React.useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -143,20 +151,148 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
   };
 
   const drawer = (
-    <Box sx={{ width: 250 }} role="presentation" onClick={handleDrawerToggle}>
-      <List>
-        <ListItem button onClick={goToHome}>
-          <ListItemIcon>
-            <HomeIcon />
-          </ListItemIcon>
-          <ListItemText primary="Home" />
+    <Box 
+      sx={{ 
+        height: '100%',
+        color: 'common.white',
+        position: 'relative',
+        bgcolor: '#000000'
+      }} 
+      role="presentation"
+    >
+      <List sx={{ px: 3, pt: 3 }}>
+        {/* Auth options */}
+        <ListItem 
+          button 
+          onClick={handleDrawerToggle}
+          sx={{ 
+            py: 2,
+            '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.04)' }
+          }}
+        >
+          <ListItemText 
+            primary="Log in" 
+            primaryTypographyProps={{
+              fontSize: '1.5rem',
+              letterSpacing: '-0.5px'
+            }}
+          />
         </ListItem>
+        <ListItem 
+          button 
+          onClick={handleDrawerToggle}
+          sx={{ 
+            py: 2,
+            mb: 3,
+            '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.04)' }
+          }}
+        >
+          <ListItemText 
+            primary="Sign up"
+            primaryTypographyProps={{
+              fontSize: '1.5rem',
+              letterSpacing: '-0.5px'
+            }}
+          />
+        </ListItem>
+
+        <Divider sx={{ borderColor: 'rgba(255, 255, 255, 0.08)' }} />
+
+        {/* Menu options */}
+        <Box sx={{ mt: 3 }}>
+          <ListItem 
+            button 
+            onClick={handleDrawerToggle}
+            sx={{ 
+              py: 1.5,
+              '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.04)' }
+            }}
+          >
+            <ListItemText 
+              primary="Premium" 
+              primaryTypographyProps={{
+                fontSize: '1.1rem',
+                letterSpacing: '0.2px'
+              }}
+            />
+          </ListItem>
+          <ListItem 
+            button 
+            onClick={handleDrawerToggle}
+            sx={{ 
+              py: 1.5,
+              '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.04)' }
+            }}
+          >
+            <ListItemText 
+              primary="Help"
+              primaryTypographyProps={{
+                fontSize: '1.1rem',
+                letterSpacing: '0.2px'
+              }}
+            />
+          </ListItem>
+          <ListItem 
+            button 
+            onClick={handleDrawerToggle}
+            sx={{ 
+              py: 1.5,
+              '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.04)' }
+            }}
+          >
+            <ListItemText 
+              primary="Download"
+              primaryTypographyProps={{
+                fontSize: '1.1rem',
+                letterSpacing: '0.2px'
+              }}
+            />
+          </ListItem>
+          <ListItem 
+            button 
+            onClick={handleDrawerToggle}
+            sx={{ 
+              py: 1.5,
+              '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.04)' }
+            }}
+          >
+            <ListItemText 
+              primary="Privacy"
+              primaryTypographyProps={{
+                fontSize: '1.1rem',
+                letterSpacing: '0.2px'
+              }}
+            />
+          </ListItem>
+          <ListItem 
+            button 
+            onClick={handleDrawerToggle}
+            sx={{ 
+              py: 1.5,
+              '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.04)' }
+            }}
+          >
+            <ListItemText 
+              primary="Terms"
+              primaryTypographyProps={{
+                fontSize: '1.1rem',
+                letterSpacing: '0.2px'
+              }}
+            />
+          </ListItem>
+        </Box>
       </List>
     </Box>
   );
 
   return (
-    <AppBar position="fixed" sx={{ zIndex: theme.zIndex.drawer + 1 }}>
+    <AppBar 
+      position="fixed" 
+      sx={{ 
+        zIndex: theme.zIndex.drawer + 1,
+        display: { xs: mobileOpen ? 'none' : 'block', md: 'block' }
+      }}
+    >
       <Toolbar>
         {isMobile && (
           <IconButton
@@ -178,6 +314,7 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
           </Logo>
         </Box>
 
+        {/* Desktop navigation and search */}
         {!isMobile && (
           <Box sx={{ display: 'flex', alignItems: 'center', ml: 3 }}>
             <IconButton 
@@ -209,30 +346,66 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
           </Box>
         )}
 
-        {/* Search Bar */}
-        <Search sx={{ 
-          flexGrow: 1, 
-          maxWidth: { xs: '100%', md: '400px' }, 
-          mx: 'auto',
-          height: '40px',
-          '& .MuiInputBase-root': {
-            height: '100%',
-            borderRadius: '24px',
-          },
-        }}>
-          <SearchIconWrapper>
-            <SearchIcon sx={{ fontSize: 20 }} />
-          </SearchIconWrapper>
-          <StyledInputBase
-            placeholder="Search…"
-            inputProps={{ 'aria-label': 'search' }}
-            fullWidth
-            value={searchQuery}
-            onChange={handleSearchChange}
-          />
-        </Search>
+        {/* Responsive Search Bar */}
+        {!isMobile && (
+          <Search sx={{ 
+            flexGrow: 1, 
+            maxWidth: { xs: '100%', md: '400px' }, 
+            mx: 'auto',
+            height: '40px',
+            '& .MuiInputBase-root': {
+              height: '100%',
+              borderRadius: '24px',
+            },
+          }}>
+            <SearchIconWrapper>
+              <SearchIcon sx={{ fontSize: 20 }} />
+            </SearchIconWrapper>
+            <StyledInputBase
+              placeholder="Search…"
+              inputProps={{ 'aria-label': 'search' }}
+              fullWidth
+              value={searchQuery}
+              onChange={handleSearchChange}
+            />
+          </Search>
+        )}
 
-        {/* Auth Buttons */}
+        {/* Mobile: show search icon, expand to search bar on click */}
+        {isMobile && !showMobileSearch && (
+          <IconButton
+            color="inherit"
+            aria-label="open search"
+            onClick={() => setShowMobileSearch(true)}
+            sx={{ ml: 'auto' }}
+          >
+            <SearchIcon />
+          </IconButton>
+        )}
+        {isMobile && showMobileSearch && (
+          <Box sx={{ flexGrow: 1, mx: 2, display: 'flex', alignItems: 'center' }}>
+            <Search sx={{ width: '100%', height: '40px' }}>
+              <SearchIconWrapper>
+                <SearchIcon sx={{ fontSize: 20 }} />
+              </SearchIconWrapper>
+              <StyledInputBase
+                autoFocus
+                placeholder="Search…"
+                inputProps={{ 'aria-label': 'search' }}
+                fullWidth
+                value={searchQuery}
+                onChange={handleSearchChange}
+                sx={{ width: '100%' }}
+              />
+            </Search>
+            <IconButton color="inherit" onClick={() => setShowMobileSearch(false)}>
+              {/* X icon to close search */}
+              <svg width="20" height="20" viewBox="0 0 20 20"><path d="M6 6l8 8M6 14L14 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
+            </IconButton>
+          </Box>
+        )}
+
+        {/* Auth Buttons (desktop only) */}
         <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 2 }}>
           <Button
             variant="text"
@@ -285,11 +458,26 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
           open={mobileOpen}
           onClose={handleDrawerToggle}
           ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
+            keepMounted: true,
+          }}
+          PaperProps={{
+            sx: {
+              bgcolor: '#000',
+              height: '100%',
+              color: 'common.white',
+            }
           }}
           sx={{
             display: { xs: 'block', md: 'none' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 240 },
+            '& .MuiBackdrop-root': {
+              backgroundColor: 'rgba(0, 0, 0, 0.85)'
+            },
+            '& .MuiDrawer-paper': { 
+              width: '100%',
+              border: 'none',
+              display: 'flex',
+              flexDirection: 'column',
+            },
           }}
         >
           {drawer}

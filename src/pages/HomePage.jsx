@@ -20,16 +20,16 @@ const NAVBAR_HEIGHT = 64;
 
 const trendingSongs = [
   { id: 1, title: 'Emshy', artist: 'Tommy Gun, Rally', img: 'images/emshy.jpeg', type: 'song', audio: '/audio/emshy.mp3' },
-  { id: 2, title: 'Kadaba', artist: 'Karim Osama', img: 'images/kadaba.jpeg', type: 'song' },
-  { id: 3, title: 'FAWATER EL 3ETAB', artist: 'Marwan Moussa', img: 'images/fawater.jpeg', type: 'song' },
+  { id: 2, title: 'Kadaba', artist: 'Karim Osama', img: 'images/kadaba.jpeg', type: 'song', audio: '/audio/kadaba.mp3' },
+  { id: 3, title: 'FAWATER EL 3ETAB', artist: 'Marwan Moussa', img: 'images/fawater.jpeg', type: 'song', audio: '/audio/fawater.mp3' },
 ];
 
 const allSongs = [
   ...trendingSongs,
-  { id: 4, title: 'Heart Shaped Box', artist: 'Nirvana', img: 'images/inutero.jpeg', type: 'song' },
-  { id: 5, title: 'عالعموم', artist: 'Shehab', img: 'images/3al3mom.jpeg', type: 'song' },
-  { id: 6, title: 'Strangers In The Night', artist: 'Frank Sinatra', img: 'images/strangers.jpeg', type: 'song' },
-  { id: 7, title: 'Wicked Game', artist: 'Chris Isaak', img: 'images/wickedgame.jpeg', type: 'song' },
+  { id: 4, title: 'Heart Shaped Box', artist: 'Nirvana', img: 'images/inutero.jpeg', type: 'song', audio: '/audio/heartshapedbox.mp3' },
+  { id: 5, title: 'عالعموم', artist: 'Shehab', img: 'images/3al3mom.jpeg', type: 'song', audio: '/audio/3al3mom.mp3' },
+  { id: 6, title: 'Strangers In The Night', artist: 'Frank Sinatra', img: 'images/strangers.jpeg', type: 'song', audio: '/audio/strangers.mp3' },
+  { id: 7, title: 'Wicked Game', artist: 'Chris Isaak', img: 'images/wickedgame.jpeg', type: 'song', audio: '/audio/wickedgame.mp3' },
 ];
 
 const artists = [
@@ -106,24 +106,30 @@ export default function Home({ searchQuery }) {
       : [];
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', bgcolor: 'background.default' }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', bgcolor: 'background.default', width: '100vw', overflowX: 'hidden' }}>
       <Box sx={{ display: 'flex', flexGrow: 1 }}>
-        <Sidebar width={sidebarWidth} topOffset={NAVBAR_HEIGHT} />
+        {/* Sidebar: hide on mobile */}
+        <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+          <Sidebar width={sidebarWidth} topOffset={NAVBAR_HEIGHT} />
+        </Box>
 
         <Box
           component="main"
           sx={{
-            ml: `${sidebarWidth}px`,
+            ml: { xs: 0, md: `${sidebarWidth}px` },
             mt: `${NAVBAR_HEIGHT}px`,
-            p: 3,
+            p: { xs: 1, sm: 2, md: 3 },
             color: 'white',
             background: 'linear-gradient(180deg, rgba(3,26,68,1) 0%, rgba(18,18,18,1) 100%)',
             flexGrow: 1,
             paddingBottom: `${MINIPLAYER_HEIGHT + 16}px`,
             minHeight: `calc(100vh - ${NAVBAR_HEIGHT}px)`,
+            paddingTop: { xs: '8px', md: '24px' },
+            width: '100%',
+            boxSizing: 'border-box',
           }}
         >
-          <Box sx={{ display: 'flex', justifyContent: 'flex-start', gap: 2, mb: 4 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-start', gap: { xs: 2, sm: 2 }, mb: { xs: 2, md: 4 } }}>
             {['all', 'songs', 'podcasts'].map((option) => (
               <Box
                 key={option}
@@ -182,13 +188,28 @@ export default function Home({ searchQuery }) {
                     >
                       Trending Songs
                     </Typography>
-                    <Grid container spacing={2} sx={{ mb: 3 }}>
-                      {trendingSongs.map((song) => (
-                        <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={song.id}>
-                          <MediaCard item={song} type="song" onPlay={handlePlaySong} isPlaying={isPlaying} isCurrentSong={currentSong?.id === song.id} />
-                        </Grid>
-                      ))}
-                    </Grid>
+                    {/* Horizontal scroll on mobile */}
+                    <Box sx={{
+                      display: { xs: 'flex', md: 'block' },
+                      flexDirection: { xs: 'row', md: 'unset' },
+                      overflowX: { xs: 'auto', md: 'unset' },
+                      gap: { xs: 3, sm: 2 },
+                      mb: 3,
+                      pb: { xs: 1, md: 0 },
+                      '&::-webkit-scrollbar': {
+                        display: { xs: 'none', md: 'auto' }
+                      },
+                      msOverflowStyle: { xs: 'none', md: 'auto' },
+                      scrollbarWidth: { xs: 'none', md: 'auto' },
+                    }}>
+                      <Grid container spacing={{ xs: 4, md: 2 }} sx={{ flexWrap: { xs: 'nowrap', md: 'wrap' }, width: { xs: 'max-content', md: '100%' }, m: 0 }}>
+                        {trendingSongs.map((song) => (
+                          <Grid item xs={8} sm={6} md={4} lg={3} xl={2} key={song.id} sx={{ minWidth: { xs: 180, sm: 'unset' } }}>
+                            <MediaCard item={song} type="song" onPlay={handlePlaySong} isPlaying={isPlaying} isCurrentSong={currentSong?.id === song.id} />
+                          </Grid>
+                        ))}
+                      </Grid>
+                    </Box>
                   </>
                 )}
 
@@ -206,13 +227,27 @@ export default function Home({ searchQuery }) {
                     >
                       All Songs
                     </Typography>
-                    <Grid container spacing={2} sx={{ mb: 3 }}>
-                      {filteredSongs.map((song) => (
-                        <Grid item xs={12} sm={6} md={3} lg={2} xl={1.5} key={song.id}>
-                          <MediaCard item={song} type="song" onPlay={handlePlaySong} isPlaying={isPlaying} isCurrentSong={currentSong?.id === song.id} />
-                        </Grid>
-                      ))}
-                    </Grid>
+                    <Box sx={{
+                      display: { xs: 'flex', md: 'block' },
+                      flexDirection: { xs: 'row', md: 'unset' },
+                      overflowX: { xs: 'auto', md: 'unset' },
+                      gap: { xs: 3, sm: 2 },
+                      mb: 3,
+                      pb: { xs: 1, md: 0 },
+                      '&::-webkit-scrollbar': {
+                        display: { xs: 'none', md: 'auto' }
+                      },
+                      msOverflowStyle: { xs: 'none', md: 'auto' },
+                      scrollbarWidth: { xs: 'none', md: 'auto' },
+                    }}>
+                      <Grid container spacing={{ xs: 4, md: 2 }} sx={{ flexWrap: { xs: 'nowrap', md: 'wrap' }, width: { xs: 'max-content', md: '100%' }, m: 0 }}>
+                        {filteredSongs.map((song) => (
+                          <Grid item xs={8} sm={6} md={3} lg={2} xl={1.5} key={song.id} sx={{ minWidth: { xs: 180, sm: 'unset' } }}>
+                            <MediaCard item={song} type="song" onPlay={handlePlaySong} isPlaying={isPlaying} isCurrentSong={currentSong?.id === song.id} />
+                          </Grid>
+                        ))}
+                      </Grid>
+                    </Box>
                   </>
                 )}
 
@@ -230,15 +265,29 @@ export default function Home({ searchQuery }) {
                     >
                       Artists
                     </Typography>
-                    <Grid container spacing={2} sx={{ mb: 3 }}>
-                      {filteredArtists.map((artist) => (
-                        <Grid item xs={6} sm={4} md={3} lg={2} xl={1.5} key={artist.id}>
-                          <Box onClick={() => handleArtistClick(artist.id)} sx={{ cursor: 'pointer' }}>
-                            <MediaCard item={artist} type="artist" isPlaying={isPlaying} isCurrentSong={currentSong?.id === artist.id} />
-                          </Box>
-                        </Grid>
-                      ))}
-                    </Grid>
+                    <Box sx={{
+                      display: { xs: 'flex', md: 'block' },
+                      flexDirection: { xs: 'row', md: 'unset' },
+                      overflowX: { xs: 'auto', md: 'unset' },
+                      gap: { xs: 3, sm: 2 },
+                      mb: 3,
+                      pb: { xs: 1, md: 0 },
+                      '&::-webkit-scrollbar': {
+                        display: { xs: 'none', md: 'auto' }
+                      },
+                      msOverflowStyle: { xs: 'none', md: 'auto' },
+                      scrollbarWidth: { xs: 'none', md: 'auto' },
+                    }}>
+                      <Grid container spacing={{ xs: 4, md: 2 }} sx={{ flexWrap: { xs: 'nowrap', md: 'wrap' }, width: { xs: 'max-content', md: '100%' }, m: 0 }}>
+                        {filteredArtists.map((artist) => (
+                          <Grid item xs={8} sm={4} md={3} lg={2} xl={1.5} key={artist.id} sx={{ minWidth: { xs: 180, sm: 'unset' } }}>
+                            <Box onClick={() => handleArtistClick(artist.id)} sx={{ cursor: 'pointer' }}>
+                              <MediaCard item={artist} type="artist" isPlaying={isPlaying} isCurrentSong={currentSong?.id === artist.id} />
+                            </Box>
+                          </Grid>
+                        ))}
+                      </Grid>
+                    </Box>
                   </>
                 )}
 
@@ -256,15 +305,29 @@ export default function Home({ searchQuery }) {
                     >
                       Podcasts
                     </Typography>
-                    <Grid container spacing={2} sx={{ mb: 3 }}>
-                      {filteredPodcasts.map((podcast) => (
-                        <Grid item xs={12} sm={6} md={3} lg={2} xl={1.5} key={podcast.id}>
-                           <Box onClick={()=>handlePodcastClick(podcast.id)} sx={{ cursor: 'pointer' }}>
-                          <MediaCard item={podcast} type="podcast" onPlay={handlePlaySong} isPlaying={isPlaying} isCurrentSong={currentSong?.id === podcast.id} />
-                          </Box>
-                        </Grid>
-                      ))}
-                    </Grid>
+                    <Box sx={{
+                      display: { xs: 'flex', md: 'block' },
+                      flexDirection: { xs: 'row', md: 'unset' },
+                      overflowX: { xs: 'auto', md: 'unset' },
+                      gap: { xs: 3, sm: 2 },
+                      mb: 3,
+                      pb: { xs: 1, md: 0 },
+                      '&::-webkit-scrollbar': {
+                        display: { xs: 'none', md: 'auto' }
+                      },
+                      msOverflowStyle: { xs: 'none', md: 'auto' },
+                      scrollbarWidth: { xs: 'none', md: 'auto' },
+                    }}>
+                      <Grid container spacing={{ xs: 4, md: 2 }} sx={{ flexWrap: { xs: 'nowrap', md: 'wrap' }, width: { xs: 'max-content', md: '100%' }, m: 0 }}>
+                        {filteredPodcasts.map((podcast) => (
+                          <Grid item xs={8} sm={6} md={3} lg={2} xl={1.5} key={podcast.id} sx={{ minWidth: { xs: 180, sm: 'unset' } }}>
+                            <Box onClick={()=>handlePodcastClick(podcast.id)} sx={{ cursor: 'pointer' }}>
+                              <MediaCard item={podcast} type="podcast" onPlay={handlePlaySong} isPlaying={isPlaying} isCurrentSong={currentSong?.id === podcast.id} />
+                            </Box>
+                          </Grid>
+                        ))}
+                      </Grid>
+                    </Box>
                   </>
                 )}
               </Box>
@@ -278,7 +341,9 @@ export default function Home({ searchQuery }) {
         isPlaying={isPlaying}
         onPlayPause={handlePlayPause}
       />
-      <Footer />
+      <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+        <Footer />
+      </Box>
     </Box>
   );
 }

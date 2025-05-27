@@ -367,13 +367,17 @@ export default function PodcastPage() {
         </Box>
       </Box>
 
+      {/* Mini Player */}
       <MiniPlayer 
         song={currentSong} 
         isPlaying={isPlaying}
         onPlayPause={handlePlayPause}
       />
 
-      <Footer />
+      {/* Footer */}
+      <Box sx={{ ml: { xs: 0, md: `${sidebarWidth}px` } }}>
+        <Footer />
+      </Box>
     </Box>
   );
 }

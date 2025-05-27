@@ -14,8 +14,9 @@ import {
   Avatar,
   useTheme,
 } from '@mui/material';
-
 import { useNavigate, useLocation } from 'react-router-dom';
+import { MINIPLAYER_HEIGHT } from './MiniPlayer';
+import { usePlayer } from '../../context/PlayerContext';
 
 import AddIcon from '@mui/icons-material/Add';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -26,47 +27,48 @@ const playlists = [
   {
     id: 'top-hits',
     name: "Today's Top Hits",
-    image: 'https://picsum.photos/200/200?random=1',
+    image: '/images/tophits.jpeg',
   },
   {
     id: 'jazz',
     name: "Jazz Collection",
-    image: 'https://picsum.photos/200/200?random=2',
+    image: '/images/jazzcollection.jpeg',
   },
   {
     id: 'rap',
     name: "Rap Essentials",
-    image: 'https://picsum.photos/200/200?random=3',
+    image: '/images/rapessentials.jpeg',
   },
   {
     id: 'rock',
     name: "Rock Classics",
-    image: 'https://picsum.photos/200/200?random=4',
+    image: '/images/rockclassics.jpeg',
   },
   {
     id: 'metal',
     name: "Metal Masters",
-    image: 'https://picsum.photos/200/200?random=5',
+    image: '/images/metalmasters.jpeg',
   },
   {
     id: 'pop',
     name: "Pop Hits",
-    image: 'https://picsum.photos/200/200?random=6',
+    image: '/images/pophits.jpeg',
   },
   {
     id: 'country',
     name: "Country Roads",
-    image: 'https://picsum.photos/200/200?random=7',
+    image: '/images/countryroads.jpeg',
   },
   {
     id: 'reggae',
     name: "Reggae Vibes",
-    image: 'https://picsum.photos/200/200?random=8',
+    image: '/images/reggaevibes.jpeg',
   },
 ];
 
 const Sidebar = () => {
   const theme = useTheme();
+  const { currentSong } = usePlayer();
   const [anchorEl, setAnchorEl] = useState(null);
   const addBtnRef = useRef(null);
   const navigate = useNavigate();
@@ -91,16 +93,19 @@ const Sidebar = () => {
         top: 64,
         left: 0,
         width: 240,
-        height: 'calc(100vh - 64px)',
+        height: { 
+          xs: 'calc(100vh - 64px)', 
+          md: currentSong ? `calc(100vh - 64px - ${MINIPLAYER_HEIGHT}px)` : 'calc(100vh - 64px)'
+        },
         bgcolor: 'background.paper',
         color: 'text.primary',
         display: 'flex',
         flexDirection: 'column',
         zIndex: 1200,
         borderRight: `1px solid ${theme.palette.divider}`,
-        transition: theme.transitions.create(['width', 'margin'], {
+        transition: theme.transitions.create(['width', 'margin', 'height'], {
           easing: theme.transitions.easing.sharp,
-          duration: theme.transitions.duration.leavingScreen,
+          duration: theme.transitions.duration.standard,
         }),
       }}
     >
