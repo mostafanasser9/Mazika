@@ -29,7 +29,7 @@ const allSongs = [
   { id: 4, title: 'Heart Shaped Box', artist: 'Nirvana', img: 'images/inutero.jpeg', type: 'song', audio: '/audio/heartshapedbox.mp3' },
   { id: 5, title: 'عالعموم', artist: 'Shehab', img: 'images/3al3mom.jpeg', type: 'song', audio: '/audio/3al3mom.mp3' },
   { id: 6, title: 'Strangers In The Night', artist: 'Frank Sinatra', img: 'images/strangers.jpeg', type: 'song', audio: '/audio/strangers.mp3' },
-  { id: 7, title: 'Wicked Game', artist: 'Chris Isaak', img: 'images/wickedgame.jpeg', type: 'song', audio: '/audio/wickedgame.mp3' },
+  { id: 7, title: 'Wicked Game', artist: 'Chris Isaak', img: 'images/wickedgame.jpeg', type: 'song', audio: '/audio/wicked-game.mp3' },
 ];
 
 const artists = [
