@@ -100,7 +100,7 @@ const LoginForm = () => {
           backgroundColor: '#fff',
           color: '#000',
           '&:hover': {
-            backgroundColor: '#f1f1f1',
+            backgroundColor: '#DB4437',
           }
         }}
       >
