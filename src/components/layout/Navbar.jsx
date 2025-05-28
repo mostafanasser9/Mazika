@@ -164,7 +164,10 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
         {/* Auth options */}
         <ListItem 
           button 
-          onClick={handleDrawerToggle}
+          onClick={() => {
+            navigate('/login');
+            handleDrawerToggle();
+          }}
           sx={{ 
             py: 2,
             '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.04)' }
@@ -180,7 +183,10 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
         </ListItem>
         <ListItem 
           button 
-          onClick={handleDrawerToggle}
+          onClick={() => {
+            navigate('/signup');
+            handleDrawerToggle();
+          }}
           sx={{ 
             py: 2,
             mb: 3,
@@ -499,30 +505,14 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
           </Box>
         )}
 
-        {/* Auth Buttons (desktop only) */}
-        <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 2 }}>
+        {/* Auth buttons */}
+        <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 2, ml: 'auto', alignItems: 'center' }}>
           <Button
             variant="text"
+            onClick={() => navigate('/login')}
             sx={{
               color: 'text.secondary',
-              fontSize: '0.9rem',
               backgroundColor: 'transparent',
-              transition: 'color 0.2s ease-in-out',
-              '&:hover': {
-                color: 'text.primary',
-                backgroundColor: 'transparent',
-              },
-            }}
-          >
-            Become Premium
-          </Button>
-          <Button
-            variant="text"
-            sx={{
-              color: 'text.secondary',
-              fontSize: '0.9rem',
-              backgroundColor: 'transparent',
-              transition: 'color 0.2s ease-in-out',
               '&:hover': {
                 color: 'text.primary',
                 backgroundColor: 'transparent',
@@ -533,6 +523,7 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
           </Button>
           <Button
             variant="contained"
+            onClick={() => navigate('/signup')}
             sx={{
               backgroundColor: 'primary.main',
               color: 'white',

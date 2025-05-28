@@ -1,1 +1,0 @@
-res.write('<head><title>Enter Message</title></head>');

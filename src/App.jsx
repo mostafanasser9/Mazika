@@ -8,6 +8,8 @@ import theme from './styles/theme';
 import LandingPage from './pages/LandingPage';
 import HomePage from './pages/HomePage';
 import PlaylistPage from './pages/PlaylistPage';
+import LogInPage from './pages/LogInPage';
+import SignUpPage from './pages/SignUpPage';
 import Navbar from './components/layout/Navbar';
 import ArtistPage from './pages/ArtistPage';
 import AlbumPage from './pages/AlbumPage';
@@ -23,7 +25,9 @@ function App() {
       <PlayerProvider>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<LandingPage/>} />
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/login" element={<LogInPage />} />
+            <Route path="/signup" element={<SignUpPage />} />
             <Route
               path="/home"
               element={
@@ -51,7 +55,7 @@ function App() {
                 </>
               }
             />
-             <Route
+            <Route
               path="/podcast/:id"
               element={
                 <>

@@ -232,8 +232,8 @@ const LandingPage = () => {
       {/* Hero Section */}
       <HeroSection>
         <AuthContainer>
-          <AuthButton>Log In</AuthButton>
-          <AuthButton>Sign Up</AuthButton>
+          <AuthButton onClick={() => navigate('/login')}>Log In</AuthButton>
+          <AuthButton onClick={() => navigate('/signup')}>Sign Up</AuthButton>
         </AuthContainer>
         <Container sx={{ position: 'relative', zIndex: 2 }}>
           <Box sx={{ textAlign: 'center', mb: 8 }}>
