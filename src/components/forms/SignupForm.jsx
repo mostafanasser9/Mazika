@@ -4,11 +4,11 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Button, TextField, Typography, Divider } from '@mui/material';
 import { signupSchema } from '../../schemas/validation';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import {
   Google as GoogleIcon,
   Facebook as FacebookIcon,
   Apple as AppleIcon,
-  Phone as PhoneIcon
 } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 
@@ -50,11 +50,9 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
       color: 'rgba(255, 255, 255, 0.9)',
     },
   },
-  '& .MuiOutlinedInput-input': {
-    '&::placeholder': {
-      color: 'rgba(255, 255, 255, 0.5)',
-      opacity: 1,
-    },
+  '& .MuiOutlinedInput-input::placeholder': {
+    color: 'rgba(255, 255, 255, 0.5)',
+    opacity: 1,
   },
 }));
 
@@ -68,9 +66,27 @@ const SignupForm = () => {
     resolver: yupResolver(signupSchema),
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
-    navigate('/login'); // Navigate to login page after successful signup
+  const onSubmit = async (data) => {
+    console.log('Submitting:', data);
+    alert("Submitting signup form..."); // Debug alert
+
+    try {
+      // Use /api/signup to match your backend route
+      const response = await axios.post('http://localhost:3000/api/signup', data);
+
+      console.log('Response:', response.data);
+
+      if (response.status === 200) {
+        alert("Signup successful!");
+        navigate('/login');
+      } else {
+        console.error('Signup failed:', response.data.message || 'Unknown error');
+        alert("Signup failed: " + (response.data.message || 'Unknown error'));
+      }
+    } catch (error) {
+      console.error('Signup error:', error);
+      alert("Error: " + (error.response?.data?.message || error.message));
+    }
   };
 
   return (
@@ -94,65 +110,35 @@ const SignupForm = () => {
         Sign up for Mazika
       </Typography>
 
-      <SocialButton 
+      <SocialButton
         startIcon={<GoogleIcon />}
-        sx={{ 
-          backgroundColor: '#fff',
-          color: '#000',
-          '&:hover': {
-            backgroundColor: '#f1f1f1',
-          }
-        }}
+        sx={{ backgroundColor: '#fff', color: '#000', '&:hover': { backgroundColor: '#f1f1f1' } }}
       >
         Continue with Google
       </SocialButton>
 
-      <SocialButton 
+      <SocialButton
         startIcon={<FacebookIcon />}
-        sx={{ 
-          backgroundColor: '#1877f2',
-          color: '#fff',
-          borderColor: '#1877f2',
-          '&:hover': {
-            backgroundColor: '#1864d4',
-            borderColor: '#1864d4',
-          }
-        }}
+        sx={{ backgroundColor: '#1877f2', color: '#fff', borderColor: '#1877f2', '&:hover': { backgroundColor: '#1864d4' } }}
       >
         Continue with Facebook
       </SocialButton>
 
-      <SocialButton 
+      <SocialButton
         startIcon={<AppleIcon />}
-        sx={{ 
-          backgroundColor: '#000',
-          color: '#fff',
-          borderColor: '#000',
-          '&:hover': {
-            backgroundColor: '#1a1a1a',
-            borderColor: '#1a1a1a',
-          }
-        }}
+        sx={{ backgroundColor: '#000', color: '#fff', borderColor: '#000', '&:hover': { backgroundColor: '#1a1a1a' } }}
       >
         Continue with Apple
       </SocialButton>
 
-      <Divider sx={{ 
-        my: 2, 
-        '&::before, &::after': { 
-          borderColor: 'rgba(255, 255, 255, 0.1)'
-        },
-        '& .MuiDivider-wrapper': {
-          color: 'rgba(255, 255, 255, 0.7)',
-          padding: '0 10px',
-        },
-        '&.MuiDivider-root': {
-          '&::before, &::after': {
-            borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-          }
-        },
-        backgroundColor: 'transparent'
-      }}>
+      <Divider
+        sx={{
+          my: 2,
+          '&::before, &::after': { borderColor: 'rgba(255, 255, 255, 0.1)' },
+          '& .MuiDivider-wrapper': { color: 'rgba(255, 255, 255, 0.7)', padding: '0 10px' },
+          backgroundColor: 'transparent',
+        }}
+      >
         or
       </Divider>
 

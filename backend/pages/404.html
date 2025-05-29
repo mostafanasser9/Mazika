@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>404 - Lost in Music</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Share+Tech+Mono&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            height: 100vh;
+            background: radial-gradient(ellipse at center, #1e0033 0%, #000000 100%);
+            font-family: 'Orbitron', sans-serif;
+            color: #fff;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .wave {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: url('https://assets.codepen.io/1462889/waves.svg') repeat-x;
+            background-size: contain;
+            animation: wave 10s linear infinite;
+            opacity: 0.05;
+        }
+
+        @keyframes wave {
+            0% {
+                background-position-x: 0;
+            }
+
+            100% {
+                background-position-x: 1000px;
+            }
+        }
+
+        .container {
+            text-align: center;
+            z-index: 2;
+            padding: 40px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 40px rgba(255, 0, 200, 0.2);
+        }
+
+        .record {
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, #000 40%, #444 60%, #111 100%);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            border: 5px solid #ff4b91;
+            animation: spin 4s linear infinite;
+            position: relative;
+        }
+
+        .record::after {
+            content: '';
+            position: absolute;
+            top: 45%;
+            left: 45%;
+            width: 10px;
+            height: 10px;
+            background: #ff4b91;
+            border-radius: 50%;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        h1 {
+            font-size: 6rem;
+            background: linear-gradient(to right, #ff4b91, #6a5acd);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 10px #ff4b91;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin: 10px 0 20px;
+            font-family: 'Share Tech Mono', monospace;
+            color: #bbb;
+        }
+
+        p {
+            font-size: 1rem;
+            color: #ccc;
+            margin-bottom: 30px;
+        }
+
+        a {
+            background: #ff4b91;
+            color: white;
+            padding: 12px 35px;
+            text-decoration: none;
+            border-radius: 40px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px #ff4b91, 0 0 30px #ff4b91;
+            display: inline-block;
+            transform: scale(1);
+        }
+
+        a:hover {
+            background: #6a5acd;
+            box-shadow: 0 0 20px #6a5acd, 0 0 40px #6a5acd;
+            transform: scale(1.05);
+        }
+
+        .bars {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-top: 20px;
+        }
+
+        .bar {
+            width: 5px;
+            background: #ff4b91;
+            border-radius: 3px;
+            animation: bounce 1s infinite ease-in-out;
+        }
+
+        .bar:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .bar:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .bar:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+
+        .bar:nth-child(4) {
+            animation-delay: 0.3s;
+        }
+
+        .bar:nth-child(5) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                height: 10px;
+            }
+
+            50% {
+                height: 80px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wave"></div>
+    <div class="container">
+        <div class="record"></div>
+        <h1>404</h1>
+        <h2>Beat Dropped... But Not Found</h2>
+        <p>The track you’re looking for isn’t playing. Let’s head back to the home stage.</p>
+        <a href="/">Back to Home</a>
+        <div class="bars">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+    </div>
+</body>
+
+</html>

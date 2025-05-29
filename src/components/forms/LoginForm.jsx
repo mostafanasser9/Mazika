@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Button, TextField, Typography, Divider } from '@mui/material';
 import { loginSchema } from '../../schemas/validation';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import {
   Google as GoogleIcon,
   Facebook as FacebookIcon,
   Apple as AppleIcon,
-  Phone as PhoneIcon
 } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 
@@ -60,6 +60,8 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
 
 const LoginForm = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = React.useState(false);
+
   const {
     register,
     handleSubmit,
@@ -68,9 +70,24 @@ const LoginForm = () => {
     resolver: yupResolver(loginSchema),
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
-    navigate('/home'); // Navigate to home page after successful login
+  const onSubmit = async (data) => {
+    setLoading(true);
+    try {
+      const response = await axios.post('http://localhost:3000/api/signin', data);
+      // Assuming your backend sends back something like { success: true, token: '...', user: {...} }
+      if (response.status === 200 && response.data.success) {
+        // Optionally save token or user data here, e.g. localStorage.setItem('token', response.data.token)
+        alert('Login successful!');
+        navigate('/home');
+      } else {
+        alert('Login failed: ' + (response.data.message || 'Unknown error'));
+      }
+    } catch (error) {
+      // Show detailed error message if available
+      alert('Login error: ' + (error.response?.data?.message || error.message));
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -94,65 +111,62 @@ const LoginForm = () => {
         Log in to Mazika
       </Typography>
 
-      <SocialButton 
+      <SocialButton
         startIcon={<GoogleIcon />}
-        sx={{ 
+        sx={{
           backgroundColor: '#fff',
           color: '#000',
           '&:hover': {
             backgroundColor: '#DB4437',
-          }
+          },
         }}
       >
         Continue with Google
       </SocialButton>
 
-      <SocialButton 
+      <SocialButton
         startIcon={<FacebookIcon />}
-        sx={{ 
+        sx={{
           backgroundColor: '#1877f2',
           color: '#fff',
           borderColor: '#1877f2',
           '&:hover': {
             backgroundColor: '#1864d4',
             borderColor: '#1864d4',
-          }
+          },
         }}
       >
         Continue with Facebook
       </SocialButton>
 
-      <SocialButton 
+      <SocialButton
         startIcon={<AppleIcon />}
-        sx={{ 
+        sx={{
           backgroundColor: '#000',
           color: '#fff',
           borderColor: '#000',
           '&:hover': {
             backgroundColor: '#1a1a1a',
             borderColor: '#1a1a1a',
-          }
+          },
         }}
       >
         Continue with Apple
       </SocialButton>
 
-      <Divider sx={{ 
-        my: 2, 
-        '&::before, &::after': { 
-          borderColor: 'rgba(255, 255, 255, 0.1)'
-        },
-        '& .MuiDivider-wrapper': {
-          color: 'rgba(255, 255, 255, 0.7)',
-          padding: '0 10px',
-        },
-        '&.MuiDivider-root': {
+      <Divider
+        sx={{
+          my: 2,
           '&::before, &::after': {
-            borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-          }
-        },
-        backgroundColor: 'transparent'
-      }}>
+            borderColor: 'rgba(255, 255, 255, 0.1)',
+          },
+          '& .MuiDivider-wrapper': {
+            color: 'rgba(255, 255, 255, 0.7)',
+            padding: '0 10px',
+          },
+          backgroundColor: 'transparent',
+        }}
+      >
         or
       </Divider>
 
@@ -179,6 +193,7 @@ const LoginForm = () => {
         variant="contained"
         size="large"
         fullWidth
+        disabled={loading}
         sx={{
           mt: 2,
           py: 1.5,
@@ -191,7 +206,7 @@ const LoginForm = () => {
           },
         }}
       >
-        Log In
+        {loading ? 'Logging in...' : 'Log In'}
       </Button>
 
       <Box sx={{ mt: 2, textAlign: 'center' }}>
