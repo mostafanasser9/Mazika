@@ -31,6 +31,7 @@ const allSongs = [
   { id: 6, title: 'Strangers In The Night', artist: 'Frank Sinatra', img: 'images/strangers.jpeg', type: 'song', audio: '/audio/strangers.mp3' },
   { id: 7, title: 'Wicked Game', artist: 'Chris Isaak', img: 'images/wickedgame.jpeg', type: 'song', audio: '/audio/wicked-game.mp3' },
   { id: 8, title: 'Careless Whisper', artist: 'George Michael', img: 'images/carelesswhisper.jpeg', type: 'song', audio: '/audio/carelesswhisper.mp3' },
+  { id: 9, title: 'Ala Hobak', artist: 'Amr Diab', img: 'images/alahobak.jpeg', type: 'song', audio: '/audio/alahobak.mp3' },
 ];
 
 const artists = [
