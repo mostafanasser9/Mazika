@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 
 import theme from './styles/theme';
 import LandingPage from './pages/LandingPage';
@@ -23,7 +23,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <PlayerProvider>
-        <BrowserRouter>
+        <Router>
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<LogInPage />} />
@@ -74,7 +74,7 @@ function App() {
               }
             />
           </Routes>
-        </BrowserRouter>
+        </Router>
       </PlayerProvider>
     </ThemeProvider>
   );
